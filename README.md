@@ -7,7 +7,7 @@
 |[박찬혁](https://github.com/PetterChanHyuk)|컴퓨터공학전공|pchishahaboy@naver.com|
 |[박은우](https://github.com/ewoo14)|컴퓨터공학전공|ewoo2821@gmail.com|
 |[박상은](https://github.com/sangeun0612)|컴퓨터공학전공|AAA@gmail.com|
-|[이주환](https://github.com/jhan0121)|수학과|AAA@gmail.com|
+|[이주환](https://github.com/jhan0121)|수학과|jhan0121@gmail.com|
 
 ## 역할
 
