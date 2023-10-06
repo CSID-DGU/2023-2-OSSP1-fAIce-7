@@ -43,14 +43,8 @@ class EmotionDetectionView(View):
         print("post() 메서드에 들어왔습니다.")
         data = request.POST
         selected_emotion = data.get('selected_emotion')
-        print(f'DEBUG: selected_emotion value in views.py: {selected_emotion}')
         min_people = int(data.get('min_people'))
         emotion_threshold = float(data.get('emotion_threshold'))
-        
-        from FacialEmotion import consumers
-        consumers.selected_emotion_global = selected_emotion
-        consumers.min_people_global = min_people
-        consumers.emotion_threshold_global = emotion_threshold
 
         # 필요한 작업을 여기서 수행하고 결과 반환
         result = {
@@ -72,6 +66,6 @@ class EmotionDetectionView(View):
             'min_people': min_people,
             'emotion_threshold': emotion_threshold,
         })
-        print("Message sent to the channel group 'emotion_group'")
+        print("'emotion_group' 채널 그룹에 메세지를 성공적으로 전송했습니다.")
 
         return JsonResponse(result)

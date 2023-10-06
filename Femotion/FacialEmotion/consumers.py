@@ -36,6 +36,16 @@ emotion_colors_bgr = {
     
 def render_emotion_info(image, faces, emotion_labels):
     for (x, y, w, h), emotion in zip(faces, emotions):
+        # 좌표 유효성 검사
+        if not all(isinstance(coord, int) for coord in [x, y, w, h]):
+            print(f"Invalid coordinates: {(x, y, w, h)}")
+            continue  # Skip this iteration if coordinates are invalid
+
+        # 색상 유효성 검사
+        if emotion not in emotion_colors_bgr:
+            print(f"Invalid emotion: {emotion}")
+            continue  # Skip this iteration if emotion is invalid
+    
         cv2.rectangle(image, (x, y), (x+w, y+h), emotion_colors_bgr[emotion], 2)
         cv2.putText(image, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, emotion_colors_bgr[emotion], 2)
     return image
@@ -70,33 +80,31 @@ class EmotionConsumer(AsyncWebsocketConsumer):
     
     async def connect(self):
         await self.channel_layer.group_add("emotion_group", self.channel_name)
-        global selected_emotion, min_people_global, emotion_threshold_global
-        print(f"Selected Emotion: {selected_emotion}")
-        print(f"min_people_global: {min_people_global}")
-        print(f"emotion_threshold_global: {emotion_threshold_global}")
         print("웹소켓 연결완료")
         await self.accept()
         
     async def update_emotion(self, event):
+        # print(f"update_emotion 데이터: {event}")
         self.selected_emotion = event['selected_emotion']
-        self.min_people = event['min_people']
-        self.emotion_threshold = event['emotion_threshold']
-        print(f"Selected Emotion: {self.selected_emotion}")
-        print(f"Min People: {self.min_people}")
-        print(f"Emotion Threshold: {self.emotion_threshold}")
+        self.min_people = int(event['min_people'])
+        self.emotion_threshold = float(event['emotion_threshold'])
+        # print(f"Selected Emotion: {self.selected_emotion}")
+        # print(f"Min People: {self.min_people}")
+        #  print(f"Emotion Threshold: {self.emotion_threshold}")
         
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard("emotion_group", self.channel_name)
 
     async def start_stream(self, text_data_json):
         print("메세지를 받는 중")
-        text_data_json = json.loads(text_data)
-        min_people = text_data_json.get('min_people', 0)
-        emotion_threshold = text_data_json.get('emotion_threshold', 0.0)
-        print(text_data_json)
+        # text_data_json = json.loads(text_data)
+        await self.update_emotion(text_data_json)
+        # selected_emotion = text_data_json.get('selected_emotion')
+        # min_people = int(text_data_json.get('min_people'))
+        # emotion_threshold = float(text_data_json.get('emotion_threshold'))
+        # print(text_data_json)
         global should_save_screenshot
         should_save_screenshot = False
-        self.emotion_threshold = float(text_data_json.get('emotion_threshold'))
         print(f"Selected Emotion: {self.selected_emotion}")
         print(f"Min People: {self.min_people}")
         print(f"Emotion Threshold: {self.emotion_threshold}")
@@ -125,7 +133,7 @@ class EmotionConsumer(AsyncWebsocketConsumer):
             print(frame.shape)
             detected_emotions, emotion_probability, valid_people_count = self.detect_emotions(frame, self.emotion_threshold,  self.selected_emotion)
 
-        # Analyze the frame and send it back to the client
+        # 프레임 분석 후 클라이언트에 데이터 전송
         while not should_save_screenshot:
             detected_emotions, emotion_probability, valid_people_count = self.detect_emotions(frame, self.emotion_threshold, self.selected_emotion)
             faces = [emotion['coordinates'] for emotion in detected_emotions]
@@ -139,7 +147,11 @@ class EmotionConsumer(AsyncWebsocketConsumer):
                 'emotion_probability': emotion_probability,
                 'valid_people_count': valid_people_count,
                 'should_save_screenshot': should_save_screenshot,
-            }))
+            }, cls=JSONEncoderWithNumpy))
+            # print(f"detected_emotions: {detected_emotions}")
+            # print(f"emotion_probability: {emotion_probability}")
+            # print(f"valid_people_count: {valid_people_count}")
+            # print(f"should_save_screenshot: {should_save_screenshot}")
         
     async def save_screenshot(self):
         global temp_screenshot
@@ -158,6 +170,7 @@ class EmotionConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get('type')
+        print(f"Available keys: {text_data_json.keys()}")
 
         if message_type == 'start_stream':
             await self.start_stream(text_data_json)
@@ -167,8 +180,10 @@ class EmotionConsumer(AsyncWebsocketConsumer):
             await self.restart_stream()
 
     def detect_emotions(self, frame_data, emotion_threshold, selected_emotion):
-        gray = cv2.cvtColor(frame_data, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+        gray2 = cv2.cvtColor(frame_data, cv2.COLOR_BGR2GRAY)
+        gray = cv2.equalizeHist(gray2)
+        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+        print(f"Detected {len(faces)} faces")
 
         emotion_probability = 0.0
         detected_emotions = []
@@ -180,15 +195,17 @@ class EmotionConsumer(AsyncWebsocketConsumer):
             face_roi = img_to_array(face_roi)
             face_roi = np.expand_dims(face_roi, axis=0)
             
-            index = emotions.index(selected_emotion) if selected_emotion is not None else 0
+            index = emotions.index(self.selected_emotion) if self.selected_emotion is not None else 0
             emotion_threshold = self.emotion_threshold if self.emotion_threshold is not None else 0
 
             emotion_prediction = model.predict(face_roi)[0]
             emotion_probability = round(emotion_prediction[index] * 100, 2)
+            print(f"Emotion predictions: {emotion_prediction}, Selected emotion index: {index}, Probability: {emotion_probability}%")
 
             if emotion_probability >= emotion_threshold:
                 valid_people_count += 1
-
+            print(f"Valid people count: {valid_people_count}")
+            
             emotion_label = f"Person {i+1}"
 
             detected_emotions.append({
