@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => response.json())
             .then(data => {
+                selected_emotion = data.selected_emotion;
                 min_people = data.min_people;
                 emotion_threshold = data.emotion_threshold;
             })
@@ -57,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             canvas.height = localVideoElement.videoHeight;
                             canvas.getContext("2d").drawImage(localVideoElement, 0, 0);
                             let frameData = canvas.toDataURL("image/jpeg");
-                            ws.send(JSON.stringify({ type: "start_stream", frameData: frameData }));
+                            ws.send(JSON.stringify({ type: "start_stream", selected_emotion: selected_emotion, min_people: min_people, emotion_threshold: emotion_threshold, frameData: frameData }));
                         }
                     }, 100);  // Sending frame every 100ms
                 };
