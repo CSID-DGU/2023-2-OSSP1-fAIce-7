@@ -119,18 +119,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Draw rectangles and text
                     data.detected_emotions.forEach((emotion) => {
                         const coordinates = emotion['coordinates'];
-                        const emotionLabel = emotion['emotion_label'] + ': ' + emotion['emotion_probability'] + '%';
-                        const color = `rgb(${emotion['color'][0]}, ${emotion['color'][1]}, ${emotion['color'][2]})`;
+                        const emotionLabel = emotion['emotion_label'];
+                        const selectedEmotionLabel = selected_emotion.charAt(0).toUpperCase() + selected_emotion.slice(1) + ': ' + emotion['emotion_probability'] + '%';
+                        const color = `rgb(${emotion['color'][2]}, ${emotion['color'][1]}, ${emotion['color'][0]})`;
                     
                         // Draw the rectangle
                         ctx.strokeStyle = color;
                         ctx.lineWidth = 2;
                         ctx.strokeRect(coordinates['x'], coordinates['y'], coordinates['w'], coordinates['h']);
                     
-                        // Draw the emotion label
+                        // Draw the emotion label below the rectangle
                         ctx.fillStyle = color;
                         ctx.font = '16px Arial';
-                        ctx.fillText(emotionLabel, coordinates['x'], coordinates['y'] - 10);
+                        ctx.fillText(emotionLabel, coordinates['x'], coordinates['y'] + coordinates['h'] + 20);
+                        
+                        // Draw the selected emotion probability above the rectangle
+                        ctx.fillText(selectedEmotionLabel, coordinates['x'], coordinates['y'] - 10);
                     });
                 }
             })
