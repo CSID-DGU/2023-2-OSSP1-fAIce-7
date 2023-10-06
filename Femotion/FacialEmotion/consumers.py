@@ -74,6 +74,7 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.face_cascade_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'haarcascade_frontalface_default.xml')
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
+        self.frame_data = None
         self.selected_emotion = None
         self.min_people = 0
         self.emotion_threshold = 0.0
@@ -83,14 +84,28 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         print("웹소켓 연결완료")
         await self.accept()
         
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message_type = text_data_json.get('type')
+        print(f"Available keys: {text_data_json.keys()}")
+
+        if message_type == 'start_stream':
+            await self.start_stream(text_data_json)
+        elif message_type == 'save_button':
+            await self.save_screenshot()
+        elif message_type == 'restart_stream':
+            await self.restart_stream()
+        
     async def update_emotion(self, event):
         # print(f"update_emotion 데이터: {event}")
+        self.frame_data = event['frameData'].replace("data:image/jpeg;base64,", "")
         self.selected_emotion = event['selected_emotion']
         self.min_people = int(event['min_people'])
         self.emotion_threshold = float(event['emotion_threshold'])
         # print(f"Selected Emotion: {self.selected_emotion}")
         # print(f"Min People: {self.min_people}")
         #  print(f"Emotion Threshold: {self.emotion_threshold}")
+        print("emotion_updated!")
         
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard("emotion_group", self.channel_name)
@@ -110,13 +125,14 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         print(f"Emotion Threshold: {self.emotion_threshold}")
         
         # Extract frame data from the received message
-        frame_data = text_data_json.get('frameData').replace("data:image/jpeg;base64,", "")
-        frame_decoded_data = base64.b64decode(frame_data)
+        # frame_data = text_data_json.get('frameData').replace("data:image/jpeg;base64,", "")
+        print(f"Received frame data (last 100 chars): {self.frame_data[-100:]}")
+        frame_decoded_data = base64.b64decode(self.frame_data)
         
         decoded_data = None
 
         try:
-            decoded_data = base64.b64decode(repair_base64(frame_data))
+            decoded_data = base64.b64decode(repair_base64(self.frame_data))
         except binascii.Error:
             pass
 
@@ -134,25 +150,23 @@ class EmotionConsumer(AsyncWebsocketConsumer):
             detected_emotions, emotion_probability, valid_people_count = self.detect_emotions(frame, self.emotion_threshold,  self.selected_emotion)
 
         # 프레임 분석 후 클라이언트에 데이터 전송
-        while not should_save_screenshot:
-            detected_emotions, emotion_probability, valid_people_count = self.detect_emotions(frame, self.emotion_threshold, self.selected_emotion)
-            faces = [emotion['coordinates'] for emotion in detected_emotions]
-            emotion_labels = [emotion['emotion_label'] for emotion in detected_emotions]
-            frame = render_emotion_info(frame, faces, emotion_labels)
-            _, buffer = cv2.imencode('.jpg', frame)
-            frame_base64 = base64.b64encode(buffer).decode('utf-8')
-            await self.send(text_data=json.dumps({
-                'frame': frame_base64,
-                'detected_emotions': detected_emotions,
-                'emotion_probability': emotion_probability,
-                'valid_people_count': valid_people_count,
-                'should_save_screenshot': should_save_screenshot,
-            }, cls=JSONEncoderWithNumpy))
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame_base64 = base64.b64encode(buffer).decode('utf-8')
+        await self.send(text_data=json.dumps({
+            'frame': frame_base64,
+            'detected_emotions': detected_emotions,
+            'emotion_probability': emotion_probability,
+            'valid_people_count': valid_people_count,
+            'should_save_screenshot': should_save_screenshot,
+        }, cls=JSONEncoderWithNumpy))
+            # print(f"Send to Client frame data (last 100 chars): {frame_data[-100:]}")
             # print(f"detected_emotions: {detected_emotions}")
             # print(f"emotion_probability: {emotion_probability}")
             # print(f"valid_people_count: {valid_people_count}")
             # print(f"should_save_screenshot: {should_save_screenshot}")
-        
+            
+        # if should_save_screenshot:
+            
     async def save_screenshot(self):
         global temp_screenshot
         if temp_screenshot is not None:
@@ -166,18 +180,6 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         should_save_screenshot = False
         temp_screenshot = None
         await self.start_stream(text_data_json)
-
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message_type = text_data_json.get('type')
-        print(f"Available keys: {text_data_json.keys()}")
-
-        if message_type == 'start_stream':
-            await self.start_stream(text_data_json)
-        elif message_type == 'save_button':
-            await self.save_screenshot()
-        elif message_type == 'restart_stream':
-            await self.restart_stream()
 
     def detect_emotions(self, frame_data, emotion_threshold, selected_emotion):
         gray2 = cv2.cvtColor(frame_data, cv2.COLOR_BGR2GRAY)
@@ -222,5 +224,9 @@ class EmotionConsumer(AsyncWebsocketConsumer):
             print("Coordinates:", {'x': x, 'y': y, 'w': w, 'h': h})
             print("Color:", emotion_colors_bgr[selected_emotion])
             print("-------------------------------")
+        
+        # faces_info = [emotion['coordinates'] for emotion in detected_emotions]
+        # emotion_labels = [emotion['emotion_label'] for emotion in detected_emotions]
+        # frame_data_info = render_emotion_info(frame_data, faces_info, emotion_labels)
             
         return detected_emotions, emotion_probability, valid_people_count
