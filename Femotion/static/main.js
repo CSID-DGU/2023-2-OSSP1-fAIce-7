@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 localVideoElement.srcObject = stream;
                 localVideoElement.play();
 
+                localVideoElement.addEventListener('timeupdate', function() {
+                    console.log('Webcam frame updated');
+                }, false);
+
                 console.log("Wait to open WebSocket");
 
                 // Establish WebSocket connection
@@ -59,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             canvas.getContext("2d").drawImage(localVideoElement, 0, 0);
                             let frameData = canvas.toDataURL("image/jpeg");
                             ws.send(JSON.stringify({ type: "start_stream", selected_emotion: selected_emotion, min_people: min_people, emotion_threshold: emotion_threshold, frameData: frameData }));
+                            console.log("Sent frame data (last) 100 chars):", frameData.slice(-100));
                         }
                     }, 100);  // Sending frame every 100ms
                 };
@@ -76,6 +81,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log("Detected Emotions: ", data.detected_emotions);
                     console.log("Emotion Probability: ", data.emotion_probability);
                     console.log("Valid People Count: ", data.valid_people_count);
+
+                    // Create a new image and set its source
+                    const image = new Image();
+                    image.src = "data:image/jpeg;base64," + data.frame;
+
+                    // Ensure the image is loaded before drawing on it
+                    image.onload = function() {
+                        
+                        // Draw the image onto the canvas
+                        const ctx = remoteVideoElement.getContext('2d');
+                        ctx.drawImage(image, 0, 0, remoteVideoElement.width, remoteVideoElement.height);
+
+                        // Draw emotions on top of the image
+                        drawEmotions(data, remoteVideoElement);
+                    };
+
                     if (data.should_save_screenshot) {
                         remoteVideoElement.pause();
                         saveButton.style.display = "block";
@@ -86,6 +107,32 @@ document.addEventListener("DOMContentLoaded", function () {
                         remoteVideoElement.src = "data:image/jpeg;base64," + data.frame;
                     }
                 };
+
+                function drawEmotions(data, canvasElement) {
+                    // Get the canvas context
+                    if (!(canvasElement instanceof HTMLCanvasElement)) {
+                        console.error("remoteVideo is not recognized as a canvas element");
+                        return;
+                    }
+                    const ctx = canvasElement.getContext('2d');
+    
+                    // Draw rectangles and text
+                    data.detected_emotions.forEach((emotion) => {
+                        const coordinates = emotion['coordinates'];
+                        const emotionLabel = emotion['emotion_label'] + ': ' + emotion['emotion_probability'] + '%';
+                        const color = `rgb(${emotion['color'][0]}, ${emotion['color'][1]}, ${emotion['color'][2]})`;
+                    
+                        // Draw the rectangle
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(coordinates['x'], coordinates['y'], coordinates['w'], coordinates['h']);
+                    
+                        // Draw the emotion label
+                        ctx.fillStyle = color;
+                        ctx.font = '16px Arial';
+                        ctx.fillText(emotionLabel, coordinates['x'], coordinates['y'] - 10);
+                    });
+                }
             })
             .catch(err => {
                 console.error("Error accessing the camera: ", err);
