@@ -1,9 +1,0 @@
-
-# External Packages
-opencv-python
-numpy
-
-# Django & Channels
-Django
-channels
-channels_redis
