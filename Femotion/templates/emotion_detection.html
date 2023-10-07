@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>Emotion Detection</title>
+</head>
+<body>
+    <h1>Emotion Detection</h1>
+    <form id="initialForm">
+        {% csrf_token %}
+        <label for="min_people">최소 인원:</label>
+        <select name="min_people" id="min_people">
+            {% for i in '123456789' %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="selected_emotion">감정 선택:</label>
+        <select name="selected_emotion" id="selected_emotion">
+            <option value="happiness">웃을</option>
+            <option value="surprise">놀랄</option>
+            <option value="sadness">슬플</option>
+            <option value="anger">화날</option>
+            <option value="disgust">역겨울</option>
+            <option value="fear">무서울</option>
+        </select>
+        <br>
+        <label for="emotion_threshold">감정 수치 (0-100):</label>
+        <input type="number" name="emotion_threshold" id="emotion_threshold" min="0" max="100" placeholder="0-100">
+        <br>
+        <button id="startButton">시작</button>
+    </form>
+    
+    <div id="emotionStreamForm" style="display: none;">
+        <video id="localVideo" width="640" height="480" autoplay></video>
+        <canvas id="remoteVideo" width="640" height="480"></canvas>
+        <button id="saveButton">저장</button>
+        <button id="restartButton">재시작</button>
+        <button id="initialButton">처음</button>
+    </div>
+
+    <script type="text/javascript">
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    </script>
+    <script src="{% static 'main.js' %}"></script>
+</body>
+</html>
