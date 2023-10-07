@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+label, select, input, button {
+    display: block;
+    margin: 10px auto;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+    margin: 20px auto;
+}
+
+/* 웹캠 관련 스타일 추가 */
+#webcam-container {
+    text-align: center;
+    margin: 20px auto;
+}
+
+#webcam-feed {
+    position: relative;
+    width: 640px; /* 웹캠 비디오의 가로 폭 */
+    height: 480px; /* 웹캠 비디오의 세로 높이 */
+    margin: 0 auto;
+}
+
+#emotion-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#capture-button, #restart-button, #reset-button {
+    display: inline-block;
+    margin: 5px;
+}
+
+
