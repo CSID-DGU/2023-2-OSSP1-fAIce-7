@@ -2,6 +2,8 @@
 # External Packages
 opencv-python
 numpy
+whitenoise
+uvicorn
 
 # Django & Channels
 Django
