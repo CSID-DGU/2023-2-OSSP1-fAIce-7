@@ -4,6 +4,7 @@ opencv-python
 numpy
 whitenoise
 uvicorn
+websocket
 
 # Django & Channels
 Django
