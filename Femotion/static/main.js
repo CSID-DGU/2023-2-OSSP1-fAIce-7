@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     startButton.addEventListener("click", function (event) {
         event.preventDefault();
-        // Hide initial form and show video elements
+        // 시작버튼 클릭 시 초기 폼 화면을 숨기고 비디오 표시
 
         initialForm.style.display = "none";
         emotionStreamForm.style.display = "block";
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         restartButton.style.display = "none";
         initialButton.style.display = "none";
 
-        // POST 요청을 보냅니다.
+        // POST 요청 전송
         const formData = new FormData(initialForm);
 
         fetch('/', {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error('Error:', error);
             });
 
-        // Start local video stream
+        // 실시간 웹캠 시작
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 localVideoElement.srcObject = stream;
@@ -48,13 +48,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 console.log("Wait to open WebSocket");
 
-                // Establish WebSocket connection
+                // 웹소켓 연결 활성화
                 ws = new WebSocket("ws://localhost:8000/ws/emotion/");
 
                 ws.onopen = function (event) {
                     console.log("WebSocket is open now.");
 
-                    // Send frames to the server via WebSocket
+                    // 웹소켓을 통해 서버로 비디오 데이터 전송
                     setInterval(() => {
                         if (ws.readyState === WebSocket.OPEN) {
                             let canvas = document.createElement("canvas");
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             ws.send(JSON.stringify({ type: "start_stream", selected_emotion: selected_emotion, min_people: min_people, emotion_threshold: emotion_threshold, frameData: frameData }));
                             console.log("Sent frame data (last) 100 chars):", frameData.slice(-100));
                         }
-                    }, 100);  // Sending frame every 100ms
+                    }, 100);  // 100ms 마다 프레임 전송
                 };
 
                 ws.onclose = function (event) {
@@ -82,58 +82,58 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log("Emotion Probability: ", data.emotion_probability);
                     console.log("Valid People Count: ", data.valid_people_count);
 
-                    // Create a new image and set its source
+                    // 새로운 이미지 객체에 받은 프레임을 삽입
                     const image = new Image();
                     image.src = "data:image/jpeg;base64," + data.frame;
 
-                    // Ensure the image is loaded before drawing on it
                     image.onload = function() {
                         
-                        // Draw the image onto the canvas
+                        // 캔버스 위에 받은 비디오 이미지 그리기
                         const ctx = remoteVideoElement.getContext('2d');
                         ctx.drawImage(image, 0, 0, remoteVideoElement.width, remoteVideoElement.height);
 
-                        // Draw emotions on top of the image
+                        // 감정 데이터를 이미지 위에 그리기
                         drawEmotions(data, remoteVideoElement);
                     };
 
+                    // 조건을 만족한 경우 스크린샷 변수를 true로 변경
                     if (data.should_save_screenshot) {
+                        // 서버 비디오 화면 일시중지 및 관련 버튼 활성화
                         remoteVideoElement.pause();
-                        saveButton.style.display = "block";
-                        restartButton.style.display = "block";
-                        initialButton.style.display = "block";
-                        // Rest of the logic for pausing/stopping local stream
+                        saveButton.style.display = "inline";
+                        restartButton.style.display = "inline";
+                        initialButton.style.display = "inline";
                     } else {
                         remoteVideoElement.src = "data:image/jpeg;base64," + data.frame;
                     }
                 };
 
                 function drawEmotions(data, canvasElement) {
-                    // Get the canvas context
+                    // HTML에 canvas로 불러오고 있는건지 체크
                     if (!(canvasElement instanceof HTMLCanvasElement)) {
                         console.error("remoteVideo is not recognized as a canvas element");
                         return;
                     }
                     const ctx = canvasElement.getContext('2d');
     
-                    // Draw rectangles and text
+                    // 얼굴 사각형과 데이터 수치 표시
                     data.detected_emotions.forEach((emotion) => {
                         const coordinates = emotion['coordinates'];
                         const emotionLabel = emotion['emotion_label'];
                         const selectedEmotionLabel = selected_emotion.charAt(0).toUpperCase() + selected_emotion.slice(1) + ': ' + emotion['emotion_probability'] + '%';
                         const color = `rgb(${emotion['color'][2]}, ${emotion['color'][1]}, ${emotion['color'][0]})`;
                     
-                        // Draw the rectangle
+                        // 얼굴 사각형 그리기
                         ctx.strokeStyle = color;
                         ctx.lineWidth = 2;
                         ctx.strokeRect(coordinates['x'], coordinates['y'], coordinates['w'], coordinates['h']);
                     
-                        // Draw the emotion label below the rectangle
+                        // 얼굴 사각형 위에 감정과 감정 수치 표시
                         ctx.fillStyle = color;
                         ctx.font = '16px Arial';
                         ctx.fillText(emotionLabel, coordinates['x'], coordinates['y'] + coordinates['h'] + 20);
                         
-                        // Draw the selected emotion probability above the rectangle
+                        // 얼굴 사각형 아래에 사람 객체 표시
                         ctx.fillText(selectedEmotionLabel, coordinates['x'], coordinates['y'] - 10);
                     });
                 }
