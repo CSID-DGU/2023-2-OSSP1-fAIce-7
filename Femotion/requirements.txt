@@ -7,6 +7,7 @@ uvicorn
 websocket
 tensorflow
 pyQt5
+channels_redis
 
 # Django & Channels
 Django
