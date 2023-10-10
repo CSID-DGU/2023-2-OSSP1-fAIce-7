@@ -6,6 +6,7 @@ whitenoise
 uvicorn
 websocket
 tensorflow
+pyQt5
 
 # Django & Channels
 Django
