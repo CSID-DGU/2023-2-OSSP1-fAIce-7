@@ -5,6 +5,7 @@ numpy
 whitenoise
 uvicorn
 websocket
+tensorflow
 
 # Django & Channels
 Django
