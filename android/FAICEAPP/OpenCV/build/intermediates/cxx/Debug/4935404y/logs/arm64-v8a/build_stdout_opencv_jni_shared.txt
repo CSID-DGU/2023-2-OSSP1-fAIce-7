@@ -1,0 +1,2 @@
+ninja: Entering directory `C:\Users\flinter\AndroidStudioProjects\FAICEAPP\OpenCV\.cxx\Debug\4935404y\arm64-v8a'
+ninja: no work to do.
