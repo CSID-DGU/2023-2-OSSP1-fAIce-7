@@ -12,5 +12,12 @@
 ## 역할
 
 ## 프로젝트 소개
+![DALL·E 2023-10-17 13 25 07 - Vector design of a logo where the word 'fAIce' is the main focus, written exactly as specified with the 'AI' in uppercase  The letters are integrated ](https://github.com/CSID-DGU/2023-2-OSSP1-fAIce-7/assets/137492766/81e56bb7-8c30-4cc8-a16d-0d83a3b40222)
+
+### 소개
+> 저희 팀은 **감정인식하는 교육모델**을 활용하여 **카메라 촬영**을 보조하거나 **컨셉사진**을 찍을수 있는 앱을 제작하기로 기획했습니다. 
+### 목적
+
+### 주요기능
 
 ## 프로젝트의 목표
