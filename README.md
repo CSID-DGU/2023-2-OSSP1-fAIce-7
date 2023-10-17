@@ -12,7 +12,7 @@
 ## 역할
 
 ## 프로젝트 소개
-![fAIce](https://github.com/CSID-DGU/2023-2-OSSP1-fAIce-7/assets/137492766/0cf3fc6b-2edf-48a9-9102-d246e5daacbc)
+<p align="center"><img src="https://github.com/CSID-DGU/2023-2-OSSP1-fAIce-7/assets/137492766/0cf3fc6b-2edf-48a9-9102-d246e5daacbc" height="300px" width="300px"></p>
 
 ### 소개
 > 저희 팀은 **감정인식하는 교육모델**을 활용하여 **카메라 촬영**을 보조하거나 **컨셉사진**을 찍을수 있는 앱을 제작하기로 기획했습니다. 
