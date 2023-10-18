@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,6 +20,11 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private lateinit var cameraView: CameraBridgeViewBase
+
+    val spinnerMinimum: Spinner = findViewById(R.id.spinnerMinimum) // "최소인원" 스피너 추가
+    val spinnerEmotion: Spinner = findViewById(R.id.spinnerEmotion)
+    val editTextEmotionValue: EditText = findViewById(R.id.editTextEmotionValue)
+    val confirmButton: Button = findViewById(R.id.confirmButton)
 
     companion object {
         private const val CAMERA_PERMISSION_REQUEST_CODE = 100

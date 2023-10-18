@@ -12,4 +12,4 @@
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/flinter/AndroidStudioProjects/FAICEAPP/OpenCV/.cxx/Debug/4935404y/x86
+-- Build files have been written to: C:/Users/flinter/Desktop/ossproj/2023-2-OSSP1-fAIce-7/android/FAICEAPP/OpenCV/.cxx/Debug/4935404y/x86
