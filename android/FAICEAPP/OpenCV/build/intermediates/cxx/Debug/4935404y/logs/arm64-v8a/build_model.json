@@ -6,9 +6,9 @@
     "deprecated": false,
     "default": true
   },
-  "cxxBuildFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\.cxx\\Debug\\4935404y\\arm64-v8a",
-  "soFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y\\obj\\arm64-v8a",
-  "soRepublishFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a",
+  "cxxBuildFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\.cxx\\Debug\\4935404y\\arm64-v8a",
+  "soFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y\\obj\\arm64-v8a",
+  "soRepublishFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a",
   "abiPlatformVersion": 26,
   "cmake": {
     "effectiveConfiguration": {
@@ -33,13 +33,13 @@
     "implicitBuildTargetSet": [],
     "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
     "module": {
-      "cxxFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\.cxx",
-      "intermediatesBaseFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates",
-      "intermediatesFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx",
+      "cxxFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\.cxx",
+      "intermediatesBaseFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates",
+      "intermediatesFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx",
       "gradleModulePathName": ":OpenCV",
-      "moduleRootFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV",
-      "moduleBuildFile": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build.gradle",
-      "makeFile": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\libcxx_helper\\CMakeLists.txt",
+      "moduleRootFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV",
+      "moduleBuildFile": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build.gradle",
+      "makeFile": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\libcxx_helper\\CMakeLists.txt",
       "buildSystem": "CMAKE",
       "ndkFolder": "C:\\Users\\flinter\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393",
       "ndkVersion": "25.1.8937393",
@@ -123,7 +123,7 @@
         "SYSTEM": {}
       },
       "project": {
-        "rootBuildGradleFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP",
+        "rootBuildGradleFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP",
         "sdkFolder": "C:\\Users\\flinter\\AppData\\Local\\Android\\Sdk",
         "isBuildOnlyTargetAbiEnabled": true,
         "ideBuildTargetAbi": "arm64-v8a,armeabi-v7a,armeabi",
@@ -143,12 +143,12 @@
   "buildSettings": {
     "environmentVariables": []
   },
-  "prefabFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\.cxx\\Debug\\4935404y\\prefab\\arm64-v8a",
+  "prefabFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\.cxx\\Debug\\4935404y\\prefab\\arm64-v8a",
   "isActiveAbi": true,
   "fullConfigurationHash": "4935404y2g57721i2p59470392g2b32pg581r1r1a36271b3o6z2w5jf4b6z",
   "fullConfigurationHashKey": "# Values used to calculate the hash in this folder name.\n# Should not depend on the absolute path of the project itself.\n#   - AGP: 8.1.1.\n#   - $NDK is the path to NDK 25.1.8937393.\n#   - $PROJECT is the path to the parent folder of the root Gradle build file.\n#   - $ABI is the ABI to be built with. The specific value doesn\u0027t contribute to the value of the hash.\n#   - $HASH is the hash value computed from this text.\n#   - $CMAKE is the path to CMake 3.22.1.\n#   - $NINJA is the path to Ninja.\n-H$PROJECT/OpenCV/libcxx_helper\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d26\n-DANDROID_PLATFORM\u003dandroid-26\n-DANDROID_ABI\u003d$ABI\n-DCMAKE_ANDROID_ARCH_ABI\u003d$ABI\n-DANDROID_NDK\u003d$NDK\n-DCMAKE_ANDROID_NDK\u003d$NDK\n-DCMAKE_TOOLCHAIN_FILE\u003d$NDK/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d$NINJA\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d$PROJECT/OpenCV/build/intermediates/cxx/Debug/$HASH/obj/$ABI\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003d$PROJECT/OpenCV/build/intermediates/cxx/Debug/$HASH/obj/$ABI\n-DCMAKE_BUILD_TYPE\u003dDebug\n-B$PROJECT/OpenCV/.cxx/Debug/$HASH/$ABI\n-GNinja\n-DANDROID_STL\u003dc++_shared",
   "configurationArguments": [
-    "-HC:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\libcxx_helper",
+    "-HC:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\libcxx_helper",
     "-DCMAKE_SYSTEM_NAME\u003dAndroid",
     "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
     "-DCMAKE_SYSTEM_VERSION\u003d26",
@@ -159,13 +159,13 @@
     "-DCMAKE_ANDROID_NDK\u003dC:\\Users\\flinter\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393",
     "-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\flinter\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393\\build\\cmake\\android.toolchain.cmake",
     "-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\flinter\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
-    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y\\obj\\arm64-v8a",
-    "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y\\obj\\arm64-v8a",
+    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y\\obj\\arm64-v8a",
+    "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y\\obj\\arm64-v8a",
     "-DCMAKE_BUILD_TYPE\u003dDebug",
-    "-BC:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\.cxx\\Debug\\4935404y\\arm64-v8a",
+    "-BC:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\.cxx\\Debug\\4935404y\\arm64-v8a",
     "-GNinja",
     "-DANDROID_STL\u003dc++_shared"
   ],
   "stlLibraryFile": "C:\\Users\\flinter\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\aarch64-linux-android\\libc++_shared.so",
-  "intermediatesParentFolder": "C:\\Users\\flinter\\AndroidStudioProjects\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y"
+  "intermediatesParentFolder": "C:\\Users\\flinter\\Desktop\\ossproj\\2023-2-OSSP1-fAIce-7\\android\\FAICEAPP\\OpenCV\\build\\intermediates\\cxx\\Debug\\4935404y"
 }
