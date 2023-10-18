@@ -4,9 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,10 +18,10 @@ class MainActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsRes
 
     private lateinit var cameraView: CameraBridgeViewBase
 
-    val spinnerMinimum: Spinner = findViewById(R.id.spinnerMinimum) // "최소인원" 스피너 추가
-    val spinnerEmotion: Spinner = findViewById(R.id.spinnerEmotion)
-    val editTextEmotionValue: EditText = findViewById(R.id.editTextEmotionValue)
-    val confirmButton: Button = findViewById(R.id.confirmButton)
+    private lateinit var selectedMinimum: String
+    private lateinit var selectedEmotion: String
+    private lateinit var emotionValue: String
+
 
     companion object {
         private const val CAMERA_PERMISSION_REQUEST_CODE = 100
@@ -44,6 +41,11 @@ class MainActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsRes
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        selectedMinimum = intent.getStringExtra("selectedMinimum") ?: "1"
+        selectedEmotion = intent.getStringExtra("selectedEmotion")  ?: "웃을때"
+        emotionValue = intent.getStringExtra("emotionValue") ?: "30"
+
 
         cameraView = findViewById(R.id.camera_view)
         cameraView.visibility = CameraBridgeViewBase.VISIBLE
