@@ -67,13 +67,30 @@ class JSONEncoderWithNumpy(json.JSONEncoder):
         return super().default(obj)
 
 class EmotionConsumer(AsyncWebsocketConsumer):
-    temp_screenshot = None
-    should_save_screenshot = False
+
+    def detect_faces_dnn(self, image):
+        h, w = image.shape[:2]
+        blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+        self.dnn_net.setInput(blob)
+        detections = self.dnn_net.forward()
+        faces = []
+        for i in range(detections.shape[2]):
+            confidence = detections[0, 0, i, 2]
+            if confidence > 0.5:  # You can adjust this threshold
+                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+                (startX, startY, endX, endY) = box.astype("int")
+                faces.append((startX, startY, endX-startX, endY-startY))
+        return faces
+        temp_screenshot = None
+        should_save_screenshot = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.face_cascade_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'haarcascade_frontalface_default.xml')
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
+
+        # Load DNN based face detection model
+        self.dnn_net = cv2.dnn.readNetFromCaffe(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy.prototxt"), os.path.join(os.path.dirname(os.path.abspath(__file__)), "res10_300x300_ssd_iter_140000_fp16.caffemodel"))
         self.frame_data = None
         self.selected_emotion = None
         self.min_people = 0
@@ -165,14 +182,14 @@ class EmotionConsumer(AsyncWebsocketConsumer):
             # print(f"valid_people_count: {valid_people_count}")
             # print(f"should_save_screenshot: {should_save_screenshot}")
             
-        if should_save_screenshot:
-            temp_screenshot = frame_base64
+        # if should_save_screenshot:
             
     async def save_screenshot(self):
-        if EmotionConsumer.temp_screenshot is not None:
-            await self.send(text_data=json.dumps({
+        global temp_screenshot
+        if temp_screenshot is not None:
+            await self.send(text_data_json=json.dumps({
                 'message_type': 'screenshot',
-                'image': EmotionConsumer.temp_screenshot
+                'image': temp_screenshot
             }))
 
     async def restart_stream(self):
@@ -184,7 +201,7 @@ class EmotionConsumer(AsyncWebsocketConsumer):
     def detect_emotions(self, frame_data, emotion_threshold, selected_emotion):
         gray2 = cv2.cvtColor(frame_data, cv2.COLOR_BGR2GRAY)
         gray = cv2.equalizeHist(gray2)
-        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+        faces = self.detect_faces_dnn(frame_data)
         print(f"Detected {len(faces)} faces")
 
         emotion_probability = 0.0
