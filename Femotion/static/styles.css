@@ -25,6 +25,20 @@ img {
     margin: 20px auto;
 }
 
+.button-container {
+	display: flex;
+	justify-content: center;
+}
+
+.button-container button{
+	margin:10px;
+}
+
+.media-container{
+	display: flex;
+	justify-content: space-between;
+}
+
 /* 웹캠 관련 스타일 추가 */
 #webcam-container {
     text-align: center;
