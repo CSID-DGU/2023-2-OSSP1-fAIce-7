@@ -26,9 +26,11 @@ def preprocess_data():
     h = 48
 
     y = np.array(labels[orig_class_names])
-    X = np.zeros((n_samples, w, h, 1))
+    X = np.zeros((n_samples, w, h, 3))
     for i in range(n_samples):
-        X[i] = np.fromstring(data['pixels'][i], dtype=int, sep=' ').reshape((h, w, 1))
+        pixels = np.fromstring(data['pixels'][i], dtype=int, sep=' ').reshape((h, w))
+        img_colored = np.stack([pixels]*3, axis=-1)
+        X[i] = img_colored
 
     return X, y
 
@@ -90,7 +92,7 @@ def show_augmented_images(datagen, x_train, y_train):
     plt.show()
 
 
-def define_model(input_shape=(48, 48, 1), classes=7):
+def define_model(input_shape=(48, 48, 3), classes=7):
     num_features = 64
 
     model = Sequential()
