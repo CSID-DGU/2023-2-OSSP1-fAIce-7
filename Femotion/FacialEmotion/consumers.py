@@ -199,8 +199,8 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         await self.start_stream(text_data_json)
 
     def detect_emotions(self, frame_data, emotion_threshold, selected_emotion):
-        gray2 = cv2.cvtColor(frame_data, cv2.COLOR_BGR2GRAY)
-        gray = cv2.equalizeHist(gray2)
+        # gray2 = cv2.cvtColor(frame_data, cv2.COLOR_BGR2GRAY)
+        # gray = cv2.equalizeHist(gray2)
         faces = self.detect_faces_dnn(frame_data)
         print(f"Detected {len(faces)} faces")
 
@@ -208,7 +208,7 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         detected_emotions = []
         valid_people_count = 0
         for i, (x, y, w, h) in enumerate(faces):  # Using enumerate to get index
-            face_roi = gray[y:y + h, x:x + w]
+            face_roi = frame_data[y:y + h, x:x + w]
             face_roi = cv2.resize(face_roi, (48, 48))
             face_roi = face_roi.astype("float") / 255.0
             face_roi = img_to_array(face_roi)
