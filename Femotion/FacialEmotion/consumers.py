@@ -207,8 +207,14 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         emotion_probability = 0.0
         detected_emotions = []
         valid_people_count = 0
-        for i, (x, y, w, h) in enumerate(faces):  # Using enumerate to get index
+        for i, (x, y, w, h) in enumerate(faces): # 얼굴 좌표 구하기
             face_roi = frame_data[y:y + h, x:x + w]
+            # 유효하지 않은 좌표값은 루프를 건너뜀
+            if 0 < w and 0 < h and 0 <= x < frame_data.shape[1] and 0 <= x+w <= frame_data.shape[1] and 0 <= y < frame_data.shape[0] and 0 <= y+h <= frame_data.shape[0]:
+                face_roi = frame_data[y:y + h, x:x + w]
+            else:
+                print(f"Invalid face coordinates: x={x}, y={y}, w={w}, h={h}")
+                continue
             face_roi = cv2.resize(face_roi, (48, 48))
             face_roi = face_roi.astype("float") / 255.0
             face_roi = img_to_array(face_roi)
