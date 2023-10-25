@@ -4,7 +4,7 @@ opencv-python
 numpy
 whitenoise
 uvicorn
-websocket
+websockets
 tensorflow
 pyQt5
 
