@@ -1,14 +1,16 @@
 
 # External Packages
-opencv-python
-numpy
-whitenoise
-uvicorn
-websockets
-tensorflow
-pyQt5
+opencv-python == 4.8.0.76
+numpy == 1.24.3
+whitenoise == 6.5.0
+uvicorn == 0.23.2
+websockets == 11.0.3
+tensorflow == 2.13.0
+pyQt5 == 5.15.9
 
 # Django & Channels
-Django
-channels
-channels_redis
+Django == 3.2.22
+channels == 4.0.0 
+channels_redis == 4.1.0
+
+#redis 7.2.1
