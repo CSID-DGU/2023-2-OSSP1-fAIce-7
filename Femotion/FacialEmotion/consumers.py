@@ -90,7 +90,12 @@ class EmotionConsumer(AsyncWebsocketConsumer):
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
 
         # Load DNN based face detection model
-        self.dnn_net = cv2.dnn.readNetFromCaffe(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy.prototxt"), os.path.join(os.path.dirname(os.path.abspath(__file__)), "res10_300x300_ssd_iter_140000_fp16.caffemodel"))
+        # 파일을 바이트로 읽어 OpenCV에 전달해서 경로에 한글이 있는 문제를 해결
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy.prototxt"), "rb") as f:
+            prototxt = f.read()
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "res10_300x300_ssd_iter_140000_fp16.caffemodel"), "rb") as f:
+            caffemodel = f.read()
+        self.dnn_net = cv2.dnn.readNetFromCaffe(prototxt, caffemodel)
         self.frame_data = None
         self.selected_emotion = None
         self.min_people = 0
