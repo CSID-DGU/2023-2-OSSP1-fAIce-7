@@ -86,8 +86,8 @@ class EmotionConsumer(AsyncWebsocketConsumer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.face_cascade_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'haarcascade_frontalface_default.xml')
-        self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
+        # self.face_cascade_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'haarcascade_frontalface_default.xml')
+        # self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
 
         # Load DNN based face detection model
         # 파일을 바이트로 읽어 OpenCV에 전달해서 경로에 한글이 있는 문제를 해결
