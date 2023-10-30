@@ -24,7 +24,7 @@ class MenuActivity : AppCompatActivity() {
         spinnerMinimum.adapter = minimumAdapter
 
         // "감정 선택" 콤보박스 설정
-        val emotionValues = arrayOf("웃을", "놀랄", "슬플", "화날", "역겨울", "무서울")
+        val emotionValues = arrayOf("neutral", "happiness", "surprise", "sadness", "anger", "disgust", "fear")
         val emotionAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, emotionValues)
         emotionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerEmotion.adapter = emotionAdapter
