@@ -43,13 +43,18 @@ class MainActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsRes
         setContentView(R.layout.activity_main)
 
         selectedMinimum = intent.getStringExtra("selectedMinimum") ?: "1"
-        selectedEmotion = intent.getStringExtra("selectedEmotion")  ?: "웃을때"
+        selectedEmotion = intent.getStringExtra("selectedEmotion")  ?: "happiness"
         emotionValue = intent.getStringExtra("emotionValue") ?: "30"
 
+        Log.d(TAG, "$selectedMinimum $selectedEmotion $emotionValue")
 
         cameraView = findViewById(R.id.camera_view)
+//        cameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT) // 전면 카메라
         cameraView.visibility = CameraBridgeViewBase.VISIBLE
-        cameraView.setCvCameraViewListener(CameraViewListener(this))
+        cameraView.setCvCameraViewListener(CameraViewListener(this,
+            selectedMinimum,
+            selectedEmotion,
+            emotionValue))
 
         // 카메라 권한 확인 및 요청
         if (hasCameraPermission()) {
