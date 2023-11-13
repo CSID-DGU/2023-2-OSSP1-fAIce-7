@@ -59,7 +59,20 @@ export default {
       return this.categories[this.interests[index - 1].category].filter(item => !selectedItems.includes(item));
     },
     submitInterests() {
-      // 관심분야 데이터를 백엔드로 전송하는 로직
+        // 관심분야 데이터를 백엔드로 전송하는 로직
+        axios.post('/api/interests', {
+            interests: this.interests
+        })
+        .then(response => {
+            // 성공 시 메인 페이지로 이동
+            this.$router.push('/Starting');
+        })
+        .catch(error => {
+            // 실패 시 경고 메시지 표시 후 로그인 화면으로 이동
+            console.error('오류:', error);
+            alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
+            this.$router.push('/');
+        });
     }
   }
 };
