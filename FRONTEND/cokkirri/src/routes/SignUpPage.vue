@@ -161,7 +161,7 @@ export default {
         },
         // 이메일 유효성 판단
         returnEmailValidationResults(){
-            if(this.member.userEmailAddress.endsWith('@dongguk.edu') | this.member.userEmailAddress.endsWith('@dgu.ac.kr')){
+            if(this.member.userEmailAddress.endsWith('@dongguk.edu') | this.member.userEmailAddress.endsWith('@dgu.ac.kr') | this.member.userEmailAddress.endsWith('@gmail.com')){
                 this.formControl.isGoodEmail = true
                 this.formControl.isErrorEmail = false
             }
