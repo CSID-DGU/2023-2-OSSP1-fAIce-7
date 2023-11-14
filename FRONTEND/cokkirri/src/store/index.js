@@ -32,6 +32,12 @@ export default createStore({
         publicMatchingRecord: null,
         classMatchingRecord: null,
 
+        // 관심분야 설정 여부
+        userInterests: {
+            isSet: false,
+            categories: []
+          },
+
         // 매칭 대기 정보 불러오기
         classMatchingWait: null,
         publicMatchingWait: null,
@@ -45,6 +51,13 @@ export default createStore({
         isExistPublicMatchingWait: false,
     },
     mutations: {
+
+        // 사용자 관심분야 설정
+        setUserInterests(state, interests) {
+            state.userInterests.categories = interests;
+            state.userInterests.isSet = interests.length === 3; // 관심분야 3개를 모두 설정했는지 확인
+          },
+
         // 매칭 대기 저장
         SaveClassWait(state,record){
             if(Object.keys(record).length > 0){
