@@ -40,7 +40,7 @@ public class NoShowMailSendService {
         try {
             mail.setSubject("Cokkiri 서비스 매칭 노쇼 신고", "utf-8");
             mail.setText(mailContent, "utf-8", "html");
-            mail.setFrom(new InternetAddress("skxkswls@gmail.com","Cokkiri"));
+            mail.setFrom(new InternetAddress("ewoo2821@gmail.com","Cokkiri"));
             mail.addRecipient(Message.RecipientType.TO, new InternetAddress(id));
             mailSender.send(mail);
         } catch (MessagingException e) {
