@@ -67,6 +67,7 @@ export default {
         interests: this.interests
       })
       .then(response => {
+        console.log("서버 응답:", response.data); // 서버 응답 로깅
         // Vuex 스토어에 관심분야 업데이트
         this.setUserInterests(this.interests);
 
@@ -86,7 +87,7 @@ export default {
 </script>
 
 <style>
-@import "../../scss/main";
+@import "../scss/main";
 
 .background-setting {
     height: 100vh;
