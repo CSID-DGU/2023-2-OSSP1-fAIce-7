@@ -78,6 +78,10 @@ public class UserService {
             e.get().setMajor(user.getMajor());
             e.get().setNumber(user.getNumber());
             e.get().setCourse(user.getCourse());
+//            e.get().setHobby1(user.getHobby1());
+//            e.get().setHobby2(user.getHobby2());
+//            e.get().setHobby3(user.getHobby3());
+
             userRepository.save(e.get());
         }
     }
@@ -108,6 +112,11 @@ public class UserService {
             e.get().setAuth(user.isAuth());
             e.get().setClassMatching(user.isClassMatching());
             e.get().setPublicMatching(user.isPublicMatching());
+
+//            e.get().setHobby1(user.getHobby1());
+//            e.get().setHobby1(user.getHobby2());
+//            e.get().setHobby1(user.getHobby3());
+
 
             userRepository.save(e.get());
         }
