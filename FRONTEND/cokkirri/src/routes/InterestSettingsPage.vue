@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../api/index.js';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -59,16 +59,29 @@ export default {
     },
     availableItems(index) {
       const selectedItems = this.interests.map(i => i.item).filter(i => i);
-      return this.categories[this.interests[index - 1].category].filter(item => !selectedItems.includes(item));
+      const selectedCategory = this.interests[index - 1]?.category;
+      
+      if (selectedCategory) {
+        return this.categories[selectedCategory].filter(item => !selectedItems.includes(item));
+      } else {
+        return [];
+      }
     },
     submitInterests() {
     // 관심분야 데이터를 백엔드로 전송
-      axios.post('/api/interests', {
-        interests: this.interests
+    axios.post('/user/interests', {
+        id: this.$store.state.id,
+        category1: this.interests[0].category,
+        hobby1: this.interests[0].item,
+        category2: this.interests[1].category,
+        hobby2: this.interests[1].item,
+        category3: this.interests[2].category,
+        hobby3: this.interests[2].item
       })
       .then(response => {
          console.log("서버 응답:", response.data); // 서버 응답 로깅
         // Vuex 스토어에 관심분야 업데이트
+        console.log(this.interests);
         this.setUserInterests(this.interests);
 
         // 성공 시 페이지 리디렉션

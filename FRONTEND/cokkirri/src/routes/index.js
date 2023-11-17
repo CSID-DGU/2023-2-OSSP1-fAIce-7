@@ -117,7 +117,7 @@ const router = createRouter({
             component: InterestSettingsPage,
             // 로그인 상태와 관심분야 설정 여부에 따른 접근 제어
             beforeEnter: (to, from, next) => {
-              if (store.state.isLogin && !store.state.userInterests.isSet) {
+              if (store.state.isLogin && !store.state.isSet) {
                 next(); // 로그인 상태이고 관심분야가 설정되지 않았다면 페이지 표시
               } else {
                 next('/'); // 그렇지 않다면 다른 페이지로 리디렉션
