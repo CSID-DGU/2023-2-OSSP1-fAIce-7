@@ -41,6 +41,19 @@ public class User {
     //학번
     @Column
     private String studentNum;
+
+//     취미 1
+//    @Column
+//    private String hobby1;
+//
+//    // 취미 2
+//    @Column
+//    private String hobby2;
+//
+//    // 취미 3
+//    @Column
+//    private String hobby3;
+
     //수업 제한날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime restrctionDate;

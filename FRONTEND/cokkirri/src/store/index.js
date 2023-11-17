@@ -294,7 +294,7 @@ export default createStore({
         },
         // sse 연결
         ConnectSse({ state }) {
-            let eventSource = new EventSource('http://3.37.37.164:8080/subscribe/' + state.id);
+            let eventSource = new EventSource('http://localhost:8080/subscribe/' + state.id);
             
             eventSource.addEventListener("sse",(event)=>{
                 try{
@@ -338,7 +338,7 @@ export default createStore({
             eventSource.onerror = error => {
                 console.error('SSE connection error', error);
                 if (eventSource.readyState === EventSource.CLOSED) {
-                    eventSource = new EventSource('http://3.37.37.164:8080/subscribe/' + state.id);
+                    eventSource = new EventSource('http://localhost:8080/subscribe/' + state.id);
                 }
                 else{
                     console.log("sse 연결된 상태입니다. 하지만 sse 응답 에러가 발생했습니다.")
