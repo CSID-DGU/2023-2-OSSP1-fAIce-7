@@ -30,7 +30,9 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapMutations } from 'vuex';
+
 
 export default {
   data() {
@@ -66,6 +68,7 @@ export default {
         interests: this.interests
       })
       .then(response => {
+        console.log(response);
         // Vuex 스토어에 관심분야 업데이트
         this.setUserInterests(this.interests);
 
@@ -84,8 +87,8 @@ export default {
 };
 </script>
 
-<style>
-@import "../../scss/main";
+<style lang="scss" scoped>
+@import "../scss/main";
 
 .background-setting {
     height: 100vh;
