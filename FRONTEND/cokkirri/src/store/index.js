@@ -33,8 +33,8 @@ export default createStore({
         classMatchingRecord: null,
 
         // 관심분야 설정 여부
-        isSet: false,
-        categories: [],
+        isSetInterests: false, // 관심분야 설정 여부 변경
+        categories: [],  // 기존 카테고리 상태
 
         // 매칭 대기 정보 불러오기
         classMatchingWait: null,
@@ -51,9 +51,8 @@ export default createStore({
     mutations: {
 
         // 사용자 관심분야 설정
-        setUserInterests(state, interests) {
-            state.categories = interests;
-            state.isSet = interests.length === 3; // 관심분야 3개를 모두 설정했는지 확인
+        setUserInterests(state, status) {
+            state.isSetInterests = status;
         },
 
         // 매칭 대기 저장
@@ -168,6 +167,10 @@ export default createStore({
         }
     },
     actions: {
+        // 관심분야 설정 업데이트
+        updateInterests({ commit }, status) {
+            commit('SET_INTERESTS', status);
+        },
         // 매칭 대기 존재하는지 반환
         async checkMatchingSubmitState({dispatch,state}){
             await dispatch('callMatchingWaitRecord')
@@ -208,7 +211,7 @@ export default createStore({
 
         // 각 컴포넌트에서 this.$store.dispatch('메소드 이름', { 데이터 변수: 입력값 }) 형식으로 사용 가능
         // 로그인 요청 및 store 정보 업데이트
-        async loginRequest({commit, dispatch}, {inputId, inputPassword}){
+        async loginRequest({commit, dispatch}, {inputId, inputPassword, isSetInterests}){
             // 로그인 api 요청 부분. 반환값에 토큰 없음.
             try{
                 await axios.post('/login', null, {
@@ -235,6 +238,10 @@ export default createStore({
                     await dispatch('callMatchingRecord')
                     if(this.state.admin){
                         router.replace('/admin')
+                    }else if(!isSetInterests){ // 로그인 후 관심분야 설정 여부로 설정 페이지 리디렉션
+                        console.log(isSetInterests)
+                        alert("관심분야를 설정하지 않으셨습니다. 설정 페이지로 넘어갑니다.")
+                        router.replace('/InterestSettingsPage')
                     }else{
                         router.replace('/Starting')
                     }

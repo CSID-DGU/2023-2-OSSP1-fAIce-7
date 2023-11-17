@@ -113,16 +113,12 @@ const router = createRouter({
             }
         }
         ,{
-            path: '/interest-settings',
+            path: '/InterestSettingsPage',
             component: InterestSettingsPage,
             // 로그인 상태와 관심분야 설정 여부에 따른 접근 제어
-            beforeEnter: (to, from, next) => {
-              if (store.state.isLogin && !store.state.isSet) {
-                next(); // 로그인 상태이고 관심분야가 설정되지 않았다면 페이지 표시
-              } else {
-                next('/'); // 그렇지 않다면 다른 페이지로 리디렉션
-              }
-            }
+            meta:{
+                requiresAuth: true
+            }   
         }
     ]
 })
@@ -132,6 +128,7 @@ router.beforeEach((to,from,next)=>{
     const requiresadminAuth = to.matched.some(record => record.meta.requiresadminAuth);
     const isLoggedIn = store.state.isLogin;
     const adminAuth = store.state.admin;
+    
     if(requiresAuth && !isLoggedIn){
         alert("로그인이 필요합니다.")
         next('/');
@@ -145,7 +142,7 @@ router.beforeEach((to,from,next)=>{
         }else{
             next('/');
         }
-    }else{
+    }else {
         next();
     }
 })

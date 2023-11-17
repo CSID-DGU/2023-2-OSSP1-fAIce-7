@@ -58,15 +58,19 @@ export default {
       this.interests[interestIndex - 1].item = '';
     },
     availableItems(index) {
-      const selectedItems = this.interests.map(i => i.item).filter(i => i);
-      const selectedCategory = this.interests[index - 1]?.category;
-      
-      if (selectedCategory) {
-        return this.categories[selectedCategory].filter(item => !selectedItems.includes(item));
-      } else {
-        return [];
-      }
-    },
+    const currentCategory = this.interests[index - 1]?.category;
+    const currentItem = this.interests[index - 1]?.item;
+    const selectedItems = this.interests.map(i => i.item);
+
+    if (currentCategory) {
+      return this.categories[currentCategory].filter(item => {
+        // 이미 선택된 항목은 선택이 불가하도록 하여 중복 방지
+        return item === currentItem || !selectedItems.includes(item);
+      });
+    } else {
+      return [];
+    }
+  },
     submitInterests() {
     // 관심분야 데이터를 백엔드로 전송
     axios.post('/user/interests', {
@@ -82,7 +86,7 @@ export default {
          console.log("서버 응답:", response.data); // 서버 응답 로깅
         // Vuex 스토어에 관심분야 업데이트
         console.log(this.interests);
-        this.setUserInterests(this.interests);
+        this.$store.commit('setUserInterests', true);
 
         // 성공 시 페이지 리디렉션
         this.$router.push('/Starting'); // 예: Starting 페이지로 리디렉션
