@@ -42,17 +42,29 @@ public class User {
     @Column
     private String studentNum;
 
-//     취미 1
-//    @Column
-//    private String hobby1;
-//
-//    // 취미 2
-//    @Column
-//    private String hobby2;
-//
-//    // 취미 3
-//    @Column
-//    private String hobby3;
+    // 취미 1의 카테고리
+    @Column
+    private String category1;
+
+    // 취미 1
+    @Column
+    private String hobby1;
+
+    // 취미 2의 카테고리
+    @Column
+    private String category2;
+
+    // 취미 2
+    @Column
+    private String hobby2;
+
+    // 취미 3의 카테고리
+    @Column
+    private String category3;
+
+    // 취미 3
+    @Column
+    private String hobby3;
 
     //수업 제한날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -89,4 +101,9 @@ public class User {
     @Column
     @ColumnDefault("false")
     private boolean isPublicMatching;
+
+    // 카테고리 3개 설정 확인 변수
+    @Column
+    @ColumnDefault("false")
+    private boolean isSet;
 }
