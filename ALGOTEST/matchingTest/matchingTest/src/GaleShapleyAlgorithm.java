@@ -10,7 +10,7 @@ import java.util.*;
  * new!! : 자카드 유사도 구현 완료!!
  *
  * next plan: 카테고리 별 점수 부여 구현
- *
+ * 
  * coded by jhan0121
  * 2023-11-18 17:31
  * */
@@ -66,8 +66,8 @@ public class GaleShapleyAlgorithm {
         HashSet<String> union = new HashSet<>(List.of(student1.hobbies));
         HashSet<String> retain = new HashSet<>(List.of(student1.hobbies));
 
-        union.addAll(List.of(student2.hobbies));
-        retain.retainAll(List.of(student2.hobbies));
+         union.addAll(List.of(student2.hobbies));
+         retain.retainAll(List.of(student2.hobbies));
 
         return (double) retain.size() / union.size();
     }
