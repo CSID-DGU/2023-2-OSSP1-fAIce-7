@@ -89,6 +89,7 @@ export default {
         this.$store.commit('setUserInterests', true);
 
         // 성공 시 페이지 리디렉션
+        alert("관심분야 설정이 완료되었습니다.")
         this.$router.push('/Starting'); // 예: Starting 페이지로 리디렉션
       })
       .catch(error => {
