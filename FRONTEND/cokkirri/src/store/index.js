@@ -211,7 +211,7 @@ export default createStore({
 
         // 각 컴포넌트에서 this.$store.dispatch('메소드 이름', { 데이터 변수: 입력값 }) 형식으로 사용 가능
         // 로그인 요청 및 store 정보 업데이트
-        async loginRequest({commit, dispatch}, {inputId, inputPassword, isSetInterests}){
+        async loginRequest({commit, dispatch}, {inputId, inputPassword}){
             // 로그인 api 요청 부분. 반환값에 토큰 없음.
             try{
                 await axios.post('/login', null, {
@@ -238,8 +238,8 @@ export default createStore({
                     await dispatch('callMatchingRecord')
                     if(this.state.admin){
                         router.replace('/admin')
-                    }else if(!isSetInterests){ // 로그인 후 관심분야 설정 여부로 설정 페이지 리디렉션
-                        console.log(isSetInterests)
+                    }else if(this.state.isSetInterests == false){ // 로그인 후 관심분야 설정 여부로 설정 페이지 리디렉션
+                        console.log(this.state.isSetInterests)
                         alert("관심분야를 설정하지 않으셨습니다. 설정 페이지로 넘어갑니다.")
                         router.replace('/InterestSettingsPage')
                     }else{
