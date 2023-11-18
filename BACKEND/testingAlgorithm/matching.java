@@ -2,14 +2,17 @@ import java.util.*;
 
 /**
  * 게일-섀플리 알고리즘 테스팅용 코드
- * 선호도 계산은 아직 미구현하였습니다.
+ * 선호도 계산은 아직 완벽 구현 못함
  *
  * 실행 후, n 값(정수 값, 매칭에 참가하는 사람의 수를 의미합니다. 취미는 20개 중 랜덤으로 3개를 선택합니다.)
  * 을 입력하면 선호도 행렬을 출력 한 뒤, 사람마다 매칭 결과를 출력합니다.
  *
- * coded by jhan0121
- * 2023-11-15 11:30
+ * new!! : 자카드 유사도 구현 완료!!
  *
+ * next plan: 카테고리 별 점수 부여 구현
+ *
+ * coded by jhan0121
+ * 2023-11-18 17:31
  * */
 
 class User implements Comparable<User> {
@@ -25,6 +28,10 @@ class User implements Comparable<User> {
     public int compareTo(User otherUser) {
         // Compare users based on their email (names)
         return this.email.compareTo(otherUser.email);
+    }
+
+    public boolean isSame(User otherUser) {
+        return this.email.equals(otherUser.email);
     }
 
     public void setRandomHobbies(List<String> availableHobbies) {
@@ -45,21 +52,24 @@ public class GaleShapleyAlgorithm {
     }
 
     // Calculate preference score based on the number of common hobbies
-    public static int calculatePreferenceScore(User student1, User student2) {
-        return countCommonHobbies(student1, student2); // Use the number of common hobbies as the preference score
+    public static double calculatePreferenceScore(User student1, User student2) {
+        if (student1.isSame(student2)) {
+            return -1;
+        } else {
+            return countCommonHobbies(student1, student2); // Use the number of common hobbies as the preference score
+        }
     }
 
     // Helper method to count the number of common hobbies between two students
-    public static int countCommonHobbies(User student1, User student2) {
+    public static double countCommonHobbies(User student1, User student2) {
         int commonHobbies = 0;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (student1.hobbies[i].equals(student2.hobbies[j])) {
-                    commonHobbies++;
-                }
-            }
-        }
-        return commonHobbies;
+        HashSet<String> union = new HashSet<>(List.of(student1.hobbies));
+        HashSet<String> retain = new HashSet<>(List.of(student1.hobbies));
+
+        union.addAll(List.of(student2.hobbies));
+        retain.retainAll(List.of(student2.hobbies));
+
+        return (double) retain.size() / union.size();
     }
 
     public static void main(String[] args) {
@@ -68,6 +78,7 @@ public class GaleShapleyAlgorithm {
         Scanner sc = new Scanner(System.in);
         numStudents = sc.nextInt();
         new GaleShapleyAlgorithm(numStudents); // Initialize the class and students list
+        List<Double> cost = new ArrayList<>(numStudents);
 
         List<String> availableHobbies = Arrays.asList(
                 "Reading", "Music", "Sports", "Art", "Cooking",
@@ -84,12 +95,10 @@ public class GaleShapleyAlgorithm {
         }
 
         // Precompute preference matrix
-        int[][] preferenceMatrix = new int[numStudents][numStudents];
+        double[][] preferenceMatrix = new double[numStudents][numStudents];
         for (int i = 0; i < numStudents; i++) {
             for (int j = 0; j < numStudents; j++) {
-                if (i != j) {
-                    preferenceMatrix[i][j] = calculatePreferenceScore(students.get(i), students.get(j));
-                }
+                preferenceMatrix[i][j] = calculatePreferenceScore(students.get(i), students.get(j));
             }
         }
 
@@ -116,12 +125,12 @@ public class GaleShapleyAlgorithm {
                     allStudentsMatched = false;
                     List<User> studentPreferences = new ArrayList<>(students);
                     Collections.shuffle(studentPreferences);
-                    int maxPreferenceScore = -1;
+                    double maxPreferenceScore = -1;
                     User bestMatch = null;
 
                     for (User preferredStudent : studentPreferences) {
                         if (!student.equals(preferredStudent) && matching.get(preferredStudent) == null) { // Exclude self-matching
-                            int preferenceScore = calculatePreferenceScore(student, preferredStudent);
+                            double preferenceScore = calculatePreferenceScore(student, preferredStudent);
                             if (preferenceScore > maxPreferenceScore) {
                                 maxPreferenceScore = preferenceScore;
                                 bestMatch = preferredStudent;
