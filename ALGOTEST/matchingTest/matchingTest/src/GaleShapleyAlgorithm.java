@@ -50,9 +50,11 @@ class User implements Comparable<User> {
 
 public class GaleShapleyAlgorithm {
     private static List<User> students; // Declare students as a class member
+    private static Random random;
 
     public GaleShapleyAlgorithm(int numStudents) {
         students = new ArrayList<>(numStudents); // Initialize students in the constructor
+        random = new Random();
     }
 
     // Calculate preference score based on the number of common hobbies
@@ -76,6 +78,7 @@ public class GaleShapleyAlgorithm {
         return (double) retain.size() / union.size();
     }
 
+
     public static void main(String[] args) {
         int numStudents = 20;
         System.out.print("n: ");
@@ -83,6 +86,9 @@ public class GaleShapleyAlgorithm {
         numStudents = sc.nextInt();
         new GaleShapleyAlgorithm(numStudents); // Initialize the class and students list
         List<Double> cost = new ArrayList<>(numStudents);
+        // Set a specific seed for random shuffling and preference score calculation
+        long seed = System.currentTimeMillis();
+        random.setSeed(seed);
 
         List<String> availableHobbies = Arrays.asList(
                 "Reading", "Music", "Sports", "Art", "Cooking",
@@ -134,7 +140,8 @@ public class GaleShapleyAlgorithm {
 
                     for (User preferredStudent : studentPreferences) {
                         if (!student.equals(preferredStudent) && matching.get(preferredStudent) == null) { // Exclude self-matching
-                            double preferenceScore = calculatePreferenceScore(student, preferredStudent);
+//                            double preferenceScore = calculatePreferenceScore(student, preferredStudent);
+                            double preferenceScore = preferenceMatrix[student.id][preferredStudent.id];
                             if (preferenceScore > maxPreferenceScore) {
                                 maxPreferenceScore = preferenceScore;
                                 bestMatch = preferredStudent;
@@ -162,7 +169,7 @@ public class GaleShapleyAlgorithm {
         for (User student : sortedStudents) {
             User partner = matching.get(student);
             if (partner != null) {
-                System.out.println(student.email + " is matched with " + partner.email + " " + preferenceMatrix[student.id][partner.id]);
+                System.out.println("P" + student.id + " is matched with P" + partner.id + " " + preferenceMatrix[student.id][partner.id]);
                 sum += preferenceMatrix[student.id][partner.id];
                 if (preferenceMatrix[student.id][partner.id] == 0) {
                     count.set(0, count.get(0) + 1);
