@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 /**
  * 게일-섀플리 알고리즘 테스팅용 코드
  * 선호도 계산은 아직 미구현하였습니다.
@@ -54,8 +53,10 @@ public class GaleShapleyAlgorithm {
     public static int countCommonHobbies(User student1, User student2) {
         int commonHobbies = 0;
         for (int i = 0; i < 3; i++) {
-            if (student1.hobbies[i].equals(student2.hobbies[i])) {
-                commonHobbies++;
+            for (int j = 0; j < 3; j++) {
+                if (student1.hobbies[i].equals(student2.hobbies[j])) {
+                    commonHobbies++;
+                }
             }
         }
         return commonHobbies;
