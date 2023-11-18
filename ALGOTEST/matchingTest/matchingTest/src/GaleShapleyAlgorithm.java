@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -16,10 +17,12 @@ import java.util.*;
  * */
 
 class User implements Comparable<User> {
+    int id; // Add an 'id' field to store the user's ID
     String email;
     String[] hobbies; // Change to an array to store hobbies
 
-    public User(String email) {
+    public User(int id, String email) {
+        this.id = id; // Store the user's ID
         this.email = email;
         this.hobbies = new String[3]; // Initialize the hobbies array
     }
@@ -43,6 +46,7 @@ class User implements Comparable<User> {
         }
     }
 }
+
 
 public class GaleShapleyAlgorithm {
     private static List<User> students; // Declare students as a class member
@@ -89,7 +93,7 @@ public class GaleShapleyAlgorithm {
 
         // Create students and assign random hobbies
         for (int i = 0; i < numStudents; i++) {
-            User student = new User("student" + i + "@example.com");
+            User student = new User(i, "student" + i + "@example.com"); // Pass the user's ID and email
             student.setRandomHobbies(availableHobbies);
             students.add(student);
         }
@@ -152,15 +156,37 @@ public class GaleShapleyAlgorithm {
         // Print the final matching sorted by student names
         List<User> sortedStudents = new ArrayList<>(matching.keySet());
         Collections.sort(sortedStudents);
+        double sum = 0;
+        ArrayList<Integer> count = new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0));
 
         for (User student : sortedStudents) {
             User partner = matching.get(student);
             if (partner != null) {
-                System.out.println(student.email + " is matched with " + partner.email);
+                System.out.println(student.email + " is matched with " + partner.email + " " + preferenceMatrix[student.id][partner.id]);
+                sum += preferenceMatrix[student.id][partner.id];
+                if (preferenceMatrix[student.id][partner.id] == 0) {
+                    count.set(0, count.get(0) + 1);
+                } else if (preferenceMatrix[student.id][partner.id] == 0.2) {
+                    count.set(1, count.get(1) + 1);
+                } else if (preferenceMatrix[student.id][partner.id] == 0.5) {
+                    count.set(2, count.get(2) + 1);
+                }else if (preferenceMatrix[student.id][partner.id] == 1) {
+                    count.set(3, count.get(3) + 1);
+                }
+
             } else {
                 System.out.println(student.email + " is not matched with anyone.");
             }
         }
+
+        ArrayList<Double> idx = new ArrayList<>(Arrays.asList(0.0, 0.2, 0.5, 1.0));
+
+        System.out.println();
+        for (int i = 0; i < 4; i++) {
+            System.out.print(idx.get(i) + ": " + count.get(i) / 2 + " // ");
+        }
+
+        System.out.println("average: " + sum / numStudents);
         sc.close();
     }
 }
