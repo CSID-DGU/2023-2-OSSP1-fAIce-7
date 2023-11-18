@@ -107,6 +107,7 @@ export default createStore({
             state.heart = payload.heart
             state.restrctionDate = payload.restrctionDate
             state.admin = payload.admin
+            state.isSetInterests = payload.setInterests // 관심분야 설정 여부 확인
         },
         dateReform(state){
             if(state.restrctionDate===null){
@@ -213,41 +214,32 @@ export default createStore({
         // 로그인 요청 및 store 정보 업데이트
         async loginRequest({commit, dispatch}, {inputId, inputPassword}){
             // 로그인 api 요청 부분. 반환값에 토큰 없음.
-            try{
-                await axios.post('/login', null, {
+            try {
+                const response = await axios.post('/login', null, {
                     params: {
                         id: inputId,
                         password: inputPassword,
                     }
-                }).then((result) => {
-                    if(result.status === 200){
-                        if(result.data === true){
-                            commit('loginSuccess', inputId);
-                            alert('로그인 되었습니다.')
-                        }
-                        else{
-                            alert(result.data.password+'아이디 및 비밀번호에 대응되는 회원 정보가 없습니다.')
-                        }
-                    }
-                }).catch(function(error){
-                    console.log(error);
                 });
-                if(this.state.isLogin){
-                    dispatch('ConnectSse')
-                    await dispatch('userInfoUpdate')
-                    await dispatch('callMatchingRecord')
+                if(response.status === 200 && response.data === true) {
+                    commit('loginSuccess', inputId);
+                    await dispatch('userInfoUpdate'); // 사용자 정보 업데이트
+                    await dispatch('callMatchingRecord');
+                    dispatch('ConnectSse');
+        
                     if(this.state.admin){
-                        router.replace('/admin')
-                    }else if(this.state.isSetInterests == false){ // 로그인 후 관심분야 설정 여부로 설정 페이지 리디렉션
-                        console.log(this.state.isSetInterests)
-                        alert("관심분야를 설정하지 않으셨습니다. 설정 페이지로 넘어갑니다.")
-                        router.replace('/InterestSettingsPage')
-                    }else{
-                        router.replace('/Starting')
+                        router.replace('/admin');
+                    } else if(!this.state.isSetInterests) { // 관심분야 설정 여부 확인
+                        alert("관심분야를 설정하지 않으셨습니다. 설정 페이지로 넘어갑니다.");
+                        router.replace('/InterestSettingsPage');
+                    } else {
+                        router.replace('/Starting');
                     }
+                } else {
+                    alert(response.data.password + '아이디 및 비밀번호에 대응되는 회원 정보가 없습니다.');
                 }
-            } catch(error){
-                console.log(error);
+            } catch(error) {
+                console.log('로그인 오류:', error);
             }
         },
         // vuex의 state.id 기반으로 현재 유저의 정보를 업데이트한다.
