@@ -146,7 +146,7 @@ public class UserService {
         existingUser.setHobby2(newUser.getHobby2());
         existingUser.setCategory3(newUser.getCategory3());
         existingUser.setHobby3(newUser.getHobby3());
-        existingUser.setSet(true);
+        existingUser.setSetInterests();
     }
 
     // 사용자의 취미 정보를 조회하는 메소드
