@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3baa5c2e-8a34-463c-a0cf-0a0930c0726a" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/../FRONTEND/cokkirri/src/assets/login/background.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../FRONTEND/cokkirri/src/assets/login/background.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FRONTEND/cokkirri/src/assets/startmainpage/MainBack.png" beforeDir="false" afterPath="$PROJECT_DIR$/../FRONTEND/cokkirri/src/assets/startmainpage/MainBack.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2YLPvqy0n5PFQhqMpaVX2ANtXJs" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/ewoo2/Library/CloudStorage/OneDrive-개인/문서/GitHub/공개SW프로젝트-Mac/2023-2-OSSP1-fAIce-7/ALGOTEST",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="3baa5c2e-8a34-463c-a0cf-0a0930c0726a" name="변경" comment="" />
+      <created>1700302119879</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700302119879</updated>
+      <workItem from="1700302120896" duration="243000" />
+      <workItem from="1700304274796" duration="2000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
