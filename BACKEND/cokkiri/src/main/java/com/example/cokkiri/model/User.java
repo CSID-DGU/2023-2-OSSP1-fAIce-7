@@ -89,7 +89,7 @@ public class User {
 
     //하트
     @Column
-    @ColumnDefault("10000")
+    @ColumnDefault("0")
     private int heart;
     
     //수업매칭중인지 확인 변수
@@ -105,5 +105,5 @@ public class User {
     // 카테고리 3개 설정 확인 변수
     @Column
     @ColumnDefault("false")
-    private boolean isSet;
+    private boolean isSetInterests;
 }
