@@ -57,7 +57,7 @@ public class GaleShapleyAlgorithm {
         random = new Random();
     }
 
-    // Calculate preference score based on the number of common hobbies
+    // 자카드 유사도 계산
     public static double calculatePreferenceScore(User student1, User student2) {
         if (student1.isSame(student2)) {
             return -1;
@@ -105,16 +105,20 @@ public class GaleShapleyAlgorithm {
         }
 
         // Precompute preference matrix
+        System.out.println("Preference Matrix:");
+        System.out.print("     ");
         double[][] preferenceMatrix = new double[numStudents][numStudents];
         for (int i = 0; i < numStudents; i++) {
             for (int j = 0; j < numStudents; j++) {
                 preferenceMatrix[i][j] = calculatePreferenceScore(students.get(i), students.get(j));
             }
+            System.out.print("P"+i+"  ");
         }
+        System.out.println();
 
         // Print the preference matrix
-        System.out.println("Preference Matrix:");
         for (int i = 0; i < numStudents; i++) {
+            System.out.print("P"+i+"  ");
             for (int j = 0; j < numStudents; j++) {
                 System.out.print(preferenceMatrix[i][j] + " ");
             }
@@ -127,7 +131,7 @@ public class GaleShapleyAlgorithm {
             matching.put(student, null);
         }
 
-        // Implement Gale-Shapley algorithm with preference scores (excluding self-matching)
+        // 우선 순위를 사용한 게일 세플리 알고리즘 구현(자기 자신과 매칭되는 경우 제외)
         while (true) {
             boolean allStudentsMatched = true;
             for (User student : students) {
@@ -169,7 +173,7 @@ public class GaleShapleyAlgorithm {
         for (User student : sortedStudents) {
             User partner = matching.get(student);
             if (partner != null) {
-                System.out.println("P" + student.id + " is matched with P" + partner.id + " " + preferenceMatrix[student.id][partner.id]);
+                System.out.println("P" + student.id + " is matched with P" + partner.id + ", |J| = " +  preferenceMatrix[student.id][partner.id]);
                 sum += preferenceMatrix[student.id][partner.id];
                 if (preferenceMatrix[student.id][partner.id] == 0) {
                     count.set(0, count.get(0) + 1);
