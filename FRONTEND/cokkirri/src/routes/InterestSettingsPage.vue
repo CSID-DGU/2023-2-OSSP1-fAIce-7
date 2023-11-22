@@ -34,11 +34,18 @@
           <span>{{ interest.score }}</span>
         </div>
         <!-- 삭제 버튼 -->
+        <div class="button-container">
         <button @click="removeInterest(index)">-</button>
+        </div>
       </div>
-      <!-- 항목 추가 및 완료 버튼 -->
-      <button @click="addInterest">+</button>
-      <button :disabled="!isComplete" @click="submitInterests">완료</button>
+      <!-- 항목 추가 버튼 -->
+      <div class="button-container">
+        <button @click="addInterest">+</button>
+      </div>
+      <!-- 항목 완료 버튼 -->
+      <div class="button-container">
+        <button :disabled="!isComplete" @click="submitInterests">완료</button>
+      </div>
     </div>
     <!-- 남은 관심도 점수 표시 영역 -->
     <div class="remaining-score-display">
@@ -215,6 +222,12 @@ button {
 button:disabled {
   background-color: #ccc; /* 비활성화 버튼의 배경 색상 */
 }
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px; /* 버튼 상단 마진 추가 */
+  margin-down: 15px; /* 버튼 하단 마진 추가 */
+}
 
 .remaining-score-display {
   width: 34%; /* 전체 너비의 34% */
@@ -271,5 +284,13 @@ input[type="range"]::-ms-thumb {
   cursor: pointer;
   border-radius: 50%;
   margin-left: -15px; /* 슬라이더 막대의 가운데 정렬을 위해 왼쪽으로 이동 */
+}
+
+select + div {
+  margin-top: 10px; /* 간격 크기 조절 */
+}
+
+div + div {
+  margin-top: 10px; /* 간격 크기 조절 */
 }
 </style>
