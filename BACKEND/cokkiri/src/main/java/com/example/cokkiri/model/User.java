@@ -46,26 +46,6 @@ public class User {
     @Column
     private String category1;
 
-    // 취미 1
-    @Column
-    private String hobby1;
-
-    // 취미 2의 카테고리
-    @Column
-    private String category2;
-
-    // 취미 2
-    @Column
-    private String hobby2;
-
-    // 취미 3의 카테고리
-    @Column
-    private String category3;
-
-    // 취미 3
-    @Column
-    private String hobby3;
-
     //수업 제한날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime restrctionDate;
@@ -89,7 +69,7 @@ public class User {
 
     //하트
     @Column
-    @ColumnDefault("0")
+    @ColumnDefault("10000")
     private int heart;
     
     //수업매칭중인지 확인 변수
