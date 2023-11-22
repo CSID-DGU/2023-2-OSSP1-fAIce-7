@@ -13,14 +13,10 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Hobby {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     // User에 있는 id와 join
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @Id
+    @Column
+    private String id;
 
     // 취미 1 - 20
     private Integer hobby1;
@@ -155,10 +151,6 @@ public class Hobby {
             case 24 -> this.hobby24 = score;
             default -> throw new IllegalArgumentException("Invalid hobby number");
         }
-    }
-
-    public String getUserId() {
-        return this.user.getId(); // User 객체의 getEmail 메소드를 호출
     }
 }
 

@@ -52,8 +52,8 @@ public class HobbyServiceTest {
         UserHobbiesDTO userHobbiesDTO = new UserHobbiesDTO();
         userHobbiesDTO.setId("temp@gmail.com");
         userHobbiesDTO.setHobbies(Arrays.asList(
-                new HobbyDTO("축구", 8),
-                new HobbyDTO("컴퓨터", 2)
+                new HobbyDTO("스포츠", "축구", 8),
+                new HobbyDTO("게임", "컴퓨터", 2)
         ));
 
         // 서비스 메소드 호출
@@ -69,8 +69,7 @@ public class HobbyServiceTest {
 
         // 캡처된 Hobby 객체의 상태를 출력
         Hobby capturedHobby = hobbyCaptor.getValue();
-        System.out.println("Hobby scores for user " + capturedHobby.getUserId() + ":"); // User의 이메일 출력
-        System.out.println("Hobby scores for user " + capturedHobby.getUser().getId() + ":");
+        System.out.println("Hobby scores for user " + capturedHobby.getId() + ":");
         IntStream.rangeClosed(1, 24).forEach(i -> {
             int score = capturedHobby.getHobbyScore(i); // getHobbyScore 메소드는 각 취미의 점수를 반환합니다.
             System.out.println("Hobby " + i + ": " + score);

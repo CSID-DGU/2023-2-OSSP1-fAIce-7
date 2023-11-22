@@ -7,13 +7,18 @@ import com.example.cokkiri.repository.HobbyRepository;
 import com.example.cokkiri.dto.UserHobbiesDTO;
 import com.example.cokkiri.dto.HobbyDTO;
 import com.example.cokkiri.utils.HobbyUtils;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
+import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Service
 public class HobbyService {
+
+    private static final Logger logger = LoggerFactory.getLogger(HobbyService.class);
 
     @Autowired
     private HobbyRepository hobbyRepository;
@@ -22,19 +27,27 @@ public class HobbyService {
     private UserRepository userRepository;
 
     public void saveUserHobbies(UserHobbiesDTO userHobbiesDTO) {
+        // 유저 ID로 User 객체를 찾거나 새로 생성
         User user = userRepository.findById(userHobbiesDTO.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setId(userHobbiesDTO.getId());
+                    return userRepository.save(newUser); // 새로 생성된 User 저장
+                });
 
+        // 취미 정보 생성 및 저장
         Hobby hobby = new Hobby();
-        hobby.setUser(user);
+        hobby.setId(user.getId()); // User ID 설정
 
-        Map<String, Integer> hobbyScores = userHobbiesDTO.getHobbies().stream()
-                .collect(Collectors.toMap(HobbyDTO::getCategory, HobbyDTO::getScore));
+        Map<String, Integer> hobbyScores = userHobbiesDTO.getInterests().stream()
+                .collect(Collectors.toMap(HobbyDTO::getItem, HobbyDTO::getScore));
+        logger.info(userHobbiesDTO.toString());
 
         for (int i = 0; i < HobbyUtils.HOBBIES.size(); i++) {
             String hobbyName = HobbyUtils.HOBBIES.get(i);
             int score = hobbyScores.getOrDefault(hobbyName, 0);
-            hobby.setHobby(i + 1, score); // 1부터 시작하는 hobby 필드 인덱스에 맞추어 점수 설정
+            hobby.setHobby(i + 1, score);
+            logger.info("Hobby: {}, Score: {}", hobbyName, score);
         }
 
         hobbyRepository.save(hobby);

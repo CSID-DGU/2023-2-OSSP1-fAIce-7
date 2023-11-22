@@ -42,10 +42,6 @@ public class User {
     @Column
     private String studentNum;
 
-    // 취미 1의 카테고리
-    @Column
-    private String category1;
-
     //수업 제한날짜
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime restrctionDate;

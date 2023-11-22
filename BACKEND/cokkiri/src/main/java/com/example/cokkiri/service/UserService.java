@@ -113,8 +113,6 @@ public class UserService {
             e.get().setClassMatching(user.isClassMatching());
             e.get().setPublicMatching(user.isPublicMatching());
 
-            e.get().setCategory1(user.getCategory1());
-
             userRepository.save(e.get());
         }
     }
@@ -134,7 +132,6 @@ public class UserService {
     }
 
     private void copyUserInterests(User existingUser, User newUser) {
-        existingUser.setCategory1(newUser.getCategory1());
         existingUser.setSetInterests(true);
     }
 

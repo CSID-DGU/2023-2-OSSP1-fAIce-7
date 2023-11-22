@@ -120,7 +120,7 @@ export default {
 
     submitInterests() {
       // 관심분야 데이터 백엔드로 전송
-      axios.post('/user/interests', {
+      axios.post('/hobby/interests', {
           id: this.$store.state.id,
           interests: this.interests.map(interest => ({
             category: interest.category,
@@ -137,7 +137,7 @@ export default {
         .catch(error => {
           console.error('오류:', error);
           alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-          this.$router.push('/');
+          this.$router.push('/InterestSettingsPage');
         });
     },
     

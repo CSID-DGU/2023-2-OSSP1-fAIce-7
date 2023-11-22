@@ -8,13 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
 public class HobbyController {
 
     @Autowired
     private HobbyService hobbyService;
 
-    @PostMapping("/user/interests")
+    @PostMapping("/hobby/interests")
     public ResponseEntity<?> saveUserHobbies(@RequestBody UserHobbiesDTO userHobbies) {
         try {
             hobbyService.saveUserHobbies(userHobbies);
