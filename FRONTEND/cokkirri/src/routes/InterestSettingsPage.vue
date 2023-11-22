@@ -27,7 +27,7 @@
         <span>{{ interest.score }}</span> <!-- 현재 관심도 점수 표시 -->
       </div>
       <!-- 삭제 버튼 -->
-      <button @click="removeInterest(index)">삭제</button>
+      <button @click="removeInterest(index)">-</button>
     </div>
     <!-- 항목 추가 버튼 -->
     <button @click="addInterest">+</button>
@@ -42,15 +42,23 @@ import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
+      categories: {
+        '스포츠': ['축구', '농구', '야구', '당구'],
+        '게임': ['컴퓨터', '스위치', '보드게임', '오락실'],
+        '관람/감상': ['영화', '드라마', '뮤지컬', '전시회'],
+        '미용/패션': ['의류', '악세사리', '화장품', '네일'],
+        '애완동물': ['강아지', '고양이', '조류', '식물'],
+        '창작': ['그림', '음악', '사진', '글쓰기'],
+      },
       interests: [{ category: '', item: '', score: 10 }], // 초기 관심분야 데이터
-      categories: {} // 카테고리 데이터
+      // categories: {} // 카테고리 데이터
     };
   },
-
+  /*
   created() {
     this.fetchCategories(); // 컴포넌트 생성 시 카테고리 데이터 불러오기
   },
-  
+  */
   computed: {
     isComplete() {
       // 모든 관심분야가 적절히 설정되었는지 및 총점이 10점인지 확인
@@ -79,7 +87,14 @@ export default {
         .filter((_, i) => i !== index)
         .map(interest => interest.item);
 
-      return this.categories[this.interests[index].category]?.filter(item => !selectedItems.includes(item)) || [];
+      const currentItem = this.interests[index];
+
+      if (currentItem) {
+        const currentItemCategory = currentItem.category;
+        return this.categories[currentItemCategory]?.filter(item => !selectedItems.includes(item) && item !== currentItem.item) || [];
+      } else {
+        return [];
+      }
     },
 
     addInterest() {
