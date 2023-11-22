@@ -11,7 +11,7 @@
           <select v-model="interest.category">
             <option disabled value="">카테고리</option>
             <!-- 카테고리 옵션 반복 -->
-            <option v-for="category in categories" :key="category" :value="category">
+            <option v-for="(category, categoryIndex) in Object.keys(categories)" :key="categoryIndex" :value="category">
               {{ category }}
             </option>
           </select>
@@ -21,8 +21,8 @@
           <label :for="'item' + index">항목 {{ index + 1 }}</label>
           <select v-model="interest.item">
             <option disabled value="">항목</option>
-            <!-- 항목 옵션 반복 -->
-            <option v-for="item in availableItems(index)" :key="item" :value="item">
+            <!-- 선택한 카테고리에 따른 항목 옵션 반복 -->
+            <option v-for="(item, itemIndex) in availableItems(index)" :key="itemIndex" :value="item">
               {{ item }}
             </option>
           </select>
@@ -54,7 +54,15 @@ import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
-      categories: {}, // 카테고리 데이터
+      // categories: {}, // 카테고리 데이터
+      categories: {
+        '스포츠': ['축구', '농구', '야구', '당구'],
+        '게임': ['컴퓨터', '스위치', '보드게임', '오락실'],
+        '관람/감상': ['영화', '드라마', '뮤지컬', '전시회'],
+        '미용/패션': ['의류', '악세사리', '화장품', '네일'],
+        '애완동물': ['강아지', '고양이', '조류', '식물'],
+        '창작': ['그림', '음악', '사진', '글쓰기'],
+      },
       interests: [{ category: '', item: '', score: 10 }], // 초기 관심분야 데이터
     };
   },
