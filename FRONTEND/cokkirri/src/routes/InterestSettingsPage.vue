@@ -74,6 +74,7 @@ export default {
       // 백엔드에서 카테고리 데이터 불러오기
       axios.get('/api/interest-categories')
         .then(response => {
+          console.log(response.data);
           this.categories = response.data;
         })
         .catch(error => {
@@ -157,8 +158,13 @@ export default {
           this.$router.push('/');
         });
     },
+    
+    created() {
+      this.fetchCategories(); // 컴포넌트 생성 시 fetchCategories 호출
+    },
   }
 };
+
 </script>
 
 
