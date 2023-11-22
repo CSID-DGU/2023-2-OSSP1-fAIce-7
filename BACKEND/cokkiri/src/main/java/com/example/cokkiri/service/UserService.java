@@ -113,44 +113,7 @@ public class UserService {
             e.get().setClassMatching(user.isClassMatching());
             e.get().setPublicMatching(user.isPublicMatching());
 
-            e.get().setCategory1(user.getCategory1());
-            e.get().setHobby1(user.getHobby1());
-            e.get().setCategory2(user.getCategory2());
-            e.get().setHobby1(user.getHobby2());
-            e.get().setCategory3(user.getCategory3());
-            e.get().setHobby1(user.getHobby3());
-
-
             userRepository.save(e.get());
         }
-    }
-
-    // 사용자의 취미 정보를 저장하는 메소드
-    public User setUserInterests(User user) {
-        Optional<User> userOptional = userRepository.findById(user.getId());
-        if (userOptional.isPresent()) {
-            User existingUser = userOptional.get();
-            // 취미 정보를 기존 사용자 정보에 복사
-            copyUserInterests(existingUser, user);
-            userRepository.save(existingUser);
-            return existingUser;
-        } else {
-            return null;
-        }
-    }
-
-    private void copyUserInterests(User existingUser, User newUser) {
-        existingUser.setCategory1(newUser.getCategory1());
-        existingUser.setHobby1(newUser.getHobby1());
-        existingUser.setCategory2(newUser.getCategory2());
-        existingUser.setHobby2(newUser.getHobby2());
-        existingUser.setCategory3(newUser.getCategory3());
-        existingUser.setHobby3(newUser.getHobby3());
-        existingUser.setSetInterests(true);
-    }
-
-    // 사용자의 취미 정보를 조회하는 메소드
-    public User getUserInterests(String userId) {
-        return userRepository.findById(userId).orElse(null);
     }
 }
