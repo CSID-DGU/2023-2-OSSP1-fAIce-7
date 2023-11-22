@@ -34,7 +34,9 @@
           <span>{{ interest.score }}</span>
         </div>
         <!-- 삭제 버튼 -->
+        <div class="button-container">
         <button @click="removeInterest(index)">-</button>
+        </div>
       </div>
       <!-- 항목 추가 버튼 -->
       <div class="button-container">
@@ -218,6 +220,7 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   margin-top: 15px; /* 버튼 상단 마진 추가 */
+  margin-down: 15px; /* 버튼 하단 마진 추가 */
 }
 
 .remaining-score-display {
@@ -275,5 +278,13 @@ input[type="range"]::-ms-thumb {
   cursor: pointer;
   border-radius: 50%;
   margin-left: -15px; /* 슬라이더 막대의 가운데 정렬을 위해 왼쪽으로 이동 */
+}
+
+select + div {
+  margin-top: 10px; /* 간격 크기 조절 */
+}
+
+div + div {
+  margin-top: 10px; /* 간격 크기 조절 */
 }
 </style>
