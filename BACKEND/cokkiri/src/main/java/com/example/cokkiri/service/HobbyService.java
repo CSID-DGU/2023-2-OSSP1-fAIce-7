@@ -43,13 +43,14 @@ public class HobbyService {
                 .collect(Collectors.toMap(HobbyDTO::getItem, HobbyDTO::getScore));
         logger.info(userHobbiesDTO.toString());
 
+
         for (int i = 0; i < HobbyUtils.HOBBIES.size(); i++) {
             String hobbyName = HobbyUtils.HOBBIES.get(i);
             int score = hobbyScores.getOrDefault(hobbyName, 0);
             hobby.setHobby(i + 1, score);
             logger.info("Hobby: {}, Score: {}", hobbyName, score);
         }
-
+        logger.info("저장 완료");
         hobbyRepository.save(hobby);
     }
 }
