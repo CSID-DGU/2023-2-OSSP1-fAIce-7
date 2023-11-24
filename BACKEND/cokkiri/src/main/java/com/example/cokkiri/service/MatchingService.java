@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.awt.print.PrinterAbortException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -43,11 +45,13 @@ public class MatchingService {
     @Autowired
     private NoShowClassMatchListRepository noShowClassMatchRepository;
     @Autowired
-    private NoShowHobbyMatchListRepository noShowHobbyMatchListRepository;
+    private NoShowHobbyMatchListRepository noShowHobbyMatchRepository;
     @Autowired
     private AccusationRepository accusationRepository;
     @Autowired
     private PublicAccusationRepository publicAccusationRepository;
+    @Autowired
+    private HobbyAccusationRepository hobbyAccusationRepository;
     @Autowired
     private  UserRepository userRepository;
 
@@ -55,17 +59,18 @@ public class MatchingService {
     private PublicMatchingWaitRepository publicMatchingWaitRepository;
     @Autowired
     private ClassMatchingWaitRepository classMatchingWaitRepository;
-
+    @Autowired
+    private HobbyMatchingWaitRepository hobbyMatchingWaitRepository;
     // 배열에 저장 (공강)
     List<PublicMatching> publicLectureUsers = new ArrayList<>();
     // 배열에 저장 (수업)
     List<ClassMatching> classLectureUsers = new ArrayList<>();
+    //배열에 저장 (취미)
+    List<HobbyMatching> hobbyLectureUsers = new ArrayList<>();
     //반환 배열
     List<PublicMatching> publicUsersList = new ArrayList<>();
     List<ClassMatching> classUserList =new ArrayList<>();
-
-
-
+    List<HobbyMatching> hobbyUserList = new ArrayList<>();
 
     @PostConstruct
     public void init() {
@@ -84,7 +89,6 @@ public class MatchingService {
     //매치된 user들 지우는 용도
     List<Integer> usermatched = new ArrayList<>();
 
-
     // 겹치는 학수번호 확인
     public static Set<String> findDuplicatesCourse(List<String>List) {
         Set<String> seen = new HashSet<>();
@@ -96,7 +100,6 @@ public class MatchingService {
         }
         return duplicates;
     }
-
 
     // 겹치는 시간 확인 알고리즘
     public static List<LocalTime> findDuplicatTime(List<LocalTime>user , List<LocalTime>lastUser) {
@@ -207,6 +210,20 @@ public class MatchingService {
         waitUser.setCourseNumber(userList.get(userList.size()-1).getCourseNumber());
         classMatchingWaitRepository.save(waitUser);
         return  waitUser;
+    }
+
+    public HobbyMatchingWait saveHobbyMatchingWaitUser(List<HobbyMatching>userList) {
+        Optional<User> user = userRepository.findById(userList.get(userList.size()-1).getEmail());
+        user.get().setHobbyMatching(true);
+        userRepository.save(user.get());
+
+        HobbyMatchingWait waitUser = new HobbyMatchingWait();
+        waitUser.setMatchingType(userList.get(userList.size()-1).getMatchingType());
+        waitUser.setEmail(userList.get(userList.size()-1).getEmail());
+        waitUser.setStatus("매칭 대기중");
+
+        hobbyMatchingWaitRepository.save(waitUser);
+        return waitUser;
     }
 
     // 매칭 대기중 유저 모두 반환
@@ -594,6 +611,10 @@ public class MatchingService {
         return publicMatchedListRepository.findByMatchingId(id);
     }
 
+    public HobbyMatchedList findHobbyMatchingByMatchId(int id) {
+        return hobbyMatchedListRepository.findByMatchingId(id);
+    }
+
     // 매칭 타입별로 저장
     public ClassMatchedList saveClassUser(ClassMatchedList matchedList){
         for(int i = 0 ; i < matchedList.getEmailList().size() ; i++){
@@ -614,6 +635,45 @@ public class MatchingService {
         return classMatchedListRepository.save(matchedList); // 데베에 저장
 
     };
+    public PublicMatchedList savePublicUser(PublicMatchedList matchedList){
+        for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
+            String email = matchedList.getEmailList().get(i);
+            Optional<User> user = userRepository.findById(email);
+            user.get().setPublicMatching(false);
+            user.get().setHeart((user.get().getHeart())-10); //하트 10개 차감
+            userRepository.save(user.get());
+
+            Optional<PublicMatchingWait> waitUser = publicMatchingWaitRepository.findByEmail(email);
+            if(waitUser.isEmpty()){
+                continue;
+            }else{
+                if(waitUser.get().getMatchingType().equals("free")){
+                    publicMatchingWaitRepository.delete(waitUser.get());
+                }
+            }
+        }
+        return publicMatchedListRepository.save(matchedList); // 데베에 저장
+    };
+
+    public HobbyMatchedList saveHobbyUser(HobbyMatchedList matchedList) {
+        for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
+            String email = matchedList.getEmailList().get(i);
+            Optional<User> user = userRepository.findById(email);
+            user.get().setPublicMatching(false);
+            user.get().setHeart((user.get().getHeart())-10); //하트 10개 차감
+            userRepository.save(user.get());
+
+            Optional<HobbyMatchingWait> waitUser = hobbyMatchingWaitRepository.findByEmail(email);
+            if(waitUser.isEmpty()){
+                continue;
+            }else{
+                if(waitUser.get().getMatchingType().equals("free")){
+                    hobbyMatchingWaitRepository.delete(waitUser.get());
+                }
+            }
+        }
+        return hobbyMatchedListRepository.save(matchedList); // 데베에 저장
+    }
 
     @Autowired
     SseService sseService;
@@ -637,25 +697,17 @@ public class MatchingService {
         }
 
     }
-    public PublicMatchedList savePublicUser(PublicMatchedList matchedList){
-        for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
-            String email = matchedList.getEmailList().get(i);
-            Optional<User> user = userRepository.findById(email);
-            user.get().setPublicMatching(false);
-            user.get().setHeart((user.get().getHeart())-10); //하트 10개 차감
-            userRepository.save(user.get());
 
-            Optional<PublicMatchingWait> waitUser = publicMatchingWaitRepository.findByEmail(email);
-            if(waitUser.isEmpty()){
-                continue;
-            }else{
-                if(waitUser.get().getMatchingType().equals("free")){
-                    publicMatchingWaitRepository.delete(waitUser.get());
-                }
-            }
+    public void sendSSEtoHobbyUser(HobbyMatchedList matchedList) {
+        List<String> receiver = matchedList.getEmailList();
+        String content = "매칭이 성사되었습니다.";
+        String type = matchedList.getMatchingType();
+        for(int i = 0 ; i < receiver.size() ; i ++){
+            String email = receiver.get(i);
+            sseService.send(email,content,type);
         }
-        return publicMatchedListRepository.save(matchedList); // 데베에 저장
-    };
+    }
+
 
     //노쇼 취소
     public NoShowPublicMatchList deleteNoShowPublicUser(int id, String matchingType){
@@ -667,6 +719,12 @@ public class MatchingService {
     public NoShowClassMatchList deleteNoShowClassUser(int id, String matchingType){
         NoShowClassMatchList user =noShowClassMatchRepository.findByMatchingIdAndMatchingType(id, matchingType);
         noShowClassMatchRepository.delete(user);
+        return  user;
+    }
+
+    public NoShowHobbyMatchList deleteNoShowHobbyUser(int id, String matchingType) {
+        NoShowHobbyMatchList user =noShowHobbyMatchRepository.findByMatchingIdAndMatchingType(id, matchingType);
+        noShowHobbyMatchRepository.delete(user);
         return  user;
     }
     // 매치된 리스트에서 삭제
@@ -684,6 +742,16 @@ public class MatchingService {
         ClassMatchedList list = classMatchedListRepository.findByMatchingId(id);
         if (list != null) {
             classMatchedListRepository.delete(list);;
+            return "삭제 되었습니다";
+        }else{
+            return "해당 매칭 아이디에 맞는 리스트가 조회되지 않습니다";
+        }
+    }
+
+    public String deleteHobbyUser(int id) {
+        HobbyMatchedList list = hobbyMatchedListRepository.findByMatchingId(id);
+        if (list != null) {
+            hobbyMatchedListRepository.delete(list);;
             return "삭제 되었습니다";
         }else{
             return "해당 매칭 아이디에 맞는 리스트가 조회되지 않습니다";
@@ -718,6 +786,21 @@ public class MatchingService {
         }
         userRepository.save(user.get());
         classMatchingWaitRepository.delete(waitUser);
+        return  waitUser;
+    }
+
+    public HobbyMatchingWait deleteHobbyMatchingWaitById(int id) {
+        HobbyMatchingWait waitUser = hobbyMatchingWaitRepository.findById(id);
+        String email = waitUser.getEmail();
+        Optional<User> user = userRepository.findById(email);
+        user.get().setClassMatching(false);
+        for (int i = 0 ; i < hobbyLectureUsers.size() ; i ++){
+            if(email.equals(hobbyLectureUsers.get(i).getEmail())){
+                hobbyLectureUsers.remove(hobbyLectureUsers.get(i)); // 배열에서 삭제
+            }
+        }
+        userRepository.save(user.get());
+        hobbyMatchingWaitRepository.delete(waitUser);
         return  waitUser;
     }
 
@@ -777,6 +860,32 @@ public class MatchingService {
         }
     }
 
+    public String hobbyMatchAgree(int matchingId,String id) {
+        List<String> HobbyAgreeEmail  = new ArrayList<>();
+        HobbyMatchedList matchedList = hobbyMatchedListRepository.findByMatchingIdAndEmailListContains(matchingId,id);
+        if(matchedList == null){
+            return "매칭 번호로 매칭을 조회할 수 없습니다. 매칭타입과 매칭 번호를 확인해 주세요.";
+        }
+        if(matchedList.getAgreeList().contains(id)){
+            return "이미 매칭 완료 버튼을 누르셨습니다." ;
+        }else{
+            HobbyAgreeEmail.add(id);
+            matchedList.setAgreeList(HobbyAgreeEmail);
+            matchedList.setMatchingAgree(matchedList.getMatchingAgree() + 1); // 1씩 증가
+            hobbyMatchedListRepository.save(matchedList);
+        }
+        if(matchedList== null){
+            return "해당 매치를 찾지 못했습니다.";
+        }
+        if(matchedList.getMatchingAgree() != matchedList.getHeadCount()) {
+            return " 매칭완료 버튼을 눌렀습니다.";
+        }else{
+            matchedList.setMatchingRes("매칭완료");
+            hobbyMatchedListRepository.save(matchedList);
+            return "매칭인원이 충족 되었습니다.";
+        }
+    }
+
     // 노쇼 리스트 반환
     public List<NoShowPublicMatchList> getNoShowPublicMatchList(){
         List<NoShowPublicMatchList> noshow = new ArrayList<>();
@@ -789,7 +898,11 @@ public class MatchingService {
         return noshow;
     }
 
-
+    public List<NoShowHobbyMatchList> getNoShowHobbyMatchList() {
+        List<NoShowHobbyMatchList> noshow = new ArrayList<>();
+        noShowHobbyMatchRepository.findAll().forEach(e->noshow.add(e));
+        return noshow;
+    }
 
     // 신고 등록, 타입별
     public ClassAccusation postClassDeclarationList(ClassAccusation accusation){
@@ -840,23 +953,58 @@ public class MatchingService {
         }
     }
 
+    public HobbyAccusation postHobbyDeclarationList(HobbyAccusation accusation){
+        String classType = accusation.getMatchingType();
+        String email = accusation.getEmail();
+        int id = accusation.getMatchingId();
+        if(classType.equals("free")){
+            Optional<HobbyAccusation> acc = hobbyAccusationRepository.findByMatchingIdAndEmail(id,email);
+            if(acc.isEmpty()){
+                HobbyAccusation list = new HobbyAccusation();
+                list.setMatchingId(id);
+                list.setEmail(email);
+                list.setTitle(accusation.getTitle());
+                list.setComment(accusation.getComment());
+                list.setMatchingType(classType);
+                return hobbyAccusationRepository.save(list);
+            }else{
+                acc.get().setTitle(accusation.getTitle());
+                acc.get().setComment(accusation.getComment());
+                return hobbyAccusationRepository.save(acc.get());
+            }
+        }else{
+            return  null;
+        }
+    }
+
     public List<PublicAccusation> getPublicDeclaration(String matchingType){
         List<PublicAccusation> list = publicAccusationRepository.findByMatchingType(matchingType);
-        return  list;
+        return list;
     }
 
     public List<ClassAccusation> getClassDeclaration(String matchingType){
         List<ClassAccusation> list = accusationRepository.findByMatchingType(matchingType);
-        return  list;
+        return list;
     }
+
+    public List<HobbyAccusation> getHobbyDeclaration(String matchingType) {
+        List<HobbyAccusation> list = hobbyAccusationRepository.findByMatchingType(matchingType);
+        return list;
+    }
+
     public List<PublicAccusation> getPublicDeclarationList(int id, String matchingType){
         List<PublicAccusation> list =publicAccusationRepository.findByMatchingIdAndMatchingType(id, matchingType);
-        return  list;
+        return list;
     }
 
     public List<ClassAccusation> getClassDeclarationList(int id, String matchingType){
         List<ClassAccusation> list =accusationRepository.findByMatchingIdAndMatchingType(id, matchingType);
-        return  list;
+        return list;
+    }
+
+    public List<HobbyAccusation> getHobbyDeclarationList(int id, String matchingType){
+        List<HobbyAccusation> list = hobbyAccusationRepository.findByMatchingIdAndMatchingType(id, matchingType);
+        return list;
     }
 
     public  NoShowPublicMatchList postNoShowPublicUser(NoShowPublicMatchList user){
@@ -914,6 +1062,34 @@ public class MatchingService {
         }
     }
 
+    public NoShowHobbyMatchList postNoShowHobbyUser(NoShowHobbyMatchList user) {
+        NoShowHobbyMatchList noShowUser = new NoShowHobbyMatchList();
+        Optional<User> users = userRepository.findById(user.getEmail());
+
+        if(users.isEmpty()) {
+            return null;
+        } else {
+            if(users.get().getRestrctionDate() != null) {
+                return null;
+            } else {
+                if(user.getMatchingId() != 0 && user.getMatchingType() != null && user.getEmail() != null) {
+                    LocalDateTime time = LocalDateTime.now().plusDays(7);
+
+                    noShowUser.setMatchingId(user.getMatchingId());
+                    noShowUser.setEmail(user.getEmail());
+                    noShowUser.setMatchingType(user.getMatchingType());
+                    noShowUser.setRestrictionTime(time);
+
+                    Optional<User> noshowuser = userRepository.findById(user.getEmail());
+                    noshowuser.get().setRestrctionDate(time); // 일주일 제한
+                    userRepository.save(noshowuser.get()); // 다시 저장
+                    return noShowHobbyMatchRepository.save(noShowUser);
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
 
     //하트 반환
     public  User rollbackHeart(String id){
@@ -953,4 +1129,17 @@ public class MatchingService {
         }
     }
 
+    public User changeHobbyNoShowUserStatus(String email) {
+        Optional<User> noshowUser= userRepository.findById(email);
+        if(noshowUser.isEmpty()){
+            return  null;
+        }else{
+            noshowUser.get().setRestrctionDate(null);
+            userRepository.save(noshowUser.get());
+
+            NoShowHobbyMatchList user  = noShowHobbyMatchRepository.findByEmail(email);
+            noShowHobbyMatchRepository.delete(user);
+            return noshowUser.get();
+        }
+    }
 }
