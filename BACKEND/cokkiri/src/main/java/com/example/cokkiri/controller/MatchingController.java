@@ -51,6 +51,18 @@ public class MatchingController {
         }
     }
 
+
+    //데이터를 받아서 매치 타입 확인 후 match서비스로 연결 해준다.
+    @PostMapping("/hobby")
+    public ResponseEntity<HobbyMatchedList> hobbyMatch(@RequestBody HobbyMatching user){
+        if(user.getMatchingType().equals("hobby")) {
+//            return  new ResponseEntity<>(matchingService.hobbyMatch(user), HttpStatus.OK); // 구현 필요
+        }else{
+            System.out.println("잘못된 송출");
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // 매치된 리스트 삭제
     @GetMapping("delete/free")
     public  ResponseEntity<String> deletePublicMatch(@RequestParam(value = "matchingId")int id){
