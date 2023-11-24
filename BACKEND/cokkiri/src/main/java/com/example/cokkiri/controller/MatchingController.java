@@ -57,6 +57,7 @@ public class MatchingController {
     public ResponseEntity<HobbyMatchedList> hobbyMatch(@RequestBody HobbyMatching user){
         if(user.getMatchingType().equals("hobby")) {
 //            return  new ResponseEntity<>(matchingService.hobbyMatch(user), HttpStatus.OK); // 구현 필요
+            return new ResponseEntity<>(HttpStatus.OK); // 오류 제거 임시용
         }else{
             System.out.println("잘못된 송출");
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
