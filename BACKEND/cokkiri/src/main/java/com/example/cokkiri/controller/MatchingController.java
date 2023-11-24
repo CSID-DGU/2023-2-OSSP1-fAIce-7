@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.Temporal;
 import java.util.List;
 
 @Controller
@@ -60,6 +61,10 @@ public class MatchingController {
         return new ResponseEntity<String>(matchingService.deleteClassUser(id),HttpStatus.OK);
     }
 
+    @GetMapping("delete/hobby")
+    public ResponseEntity<String> deleteHobbyMatch(@RequestParam(value = "matchingId")int id){
+        return new ResponseEntity<String>(matchingService.deleteHobbyUser(id), HttpStatus.OK);
+    }
 
     // 매칭 완료 버튼
     @PutMapping("agree/free")
@@ -76,7 +81,12 @@ public class MatchingController {
         return new ResponseEntity<String>(comment,HttpStatus.OK);
     }
 
+    @PutMapping("agree/hobby")
+    public ResponseEntity<String> hobbyMatchingAgree(@RequestParam(value = "matchingId")int matchingId,@RequestParam(value = "userId")String id){
 
+        String comment = matchingService.hobbyMatchAgree(matchingId,id);
+        return new ResponseEntity<String>(comment, HttpStatus.OK);
+    }
 
     @GetMapping("get/noshow/public")
     public ResponseEntity<List<NoShowPublicMatchList>> getPublicNoShowList(){
@@ -86,6 +96,11 @@ public class MatchingController {
     public ResponseEntity<List<NoShowClassMatchList>> getClassNoShowList(){
         List<NoShowClassMatchList> noShowLists = matchingService.getNoShowClassMatchList();
         return new ResponseEntity<List<NoShowClassMatchList>>(noShowLists,HttpStatus.OK);
+    }
+    @GetMapping("get/noshow/hobby")
+    public ResponseEntity<List<NoShowHobbyMatchList>> getHobbyNoShowList(){
+        List<NoShowHobbyMatchList> noShowLists = matchingService.getNoShowHobbyMatchList();
+        return new ResponseEntity<List<NoShowHobbyMatchList>>(noShowLists,HttpStatus.OK);
     }
 
     // 노쇼 취소
@@ -103,6 +118,12 @@ public class MatchingController {
         NoShowClassMatchList user = matchingService.deleteNoShowClassUser(id, matchingType);
         return new ResponseEntity<NoShowClassMatchList>(user, HttpStatus.OK);
 
+    }
+
+    @GetMapping("delete/noshow/hobby")
+    public ResponseEntity<NoShowHobbyMatchList> removeNoShowHobbyUser(@RequestParam(value = "matchingId")int id , @RequestParam (value = "matchingType")String matchingType){
+        NoShowHobbyMatchList user = matchingService.deleteNoShowHobbyUser(id, matchingType);
+        return new ResponseEntity<NoShowHobbyMatchList>(user, HttpStatus.OK);
     }
 
     //노쇼의심유저에게 메일 보내기
@@ -124,6 +145,12 @@ public class MatchingController {
         NoShowClassMatchList noShowUser = matchingService.postNoShowClassUser(user);
         return  new ResponseEntity<NoShowClassMatchList>(noShowUser, HttpStatus.OK);
     }
+
+    @PostMapping("post/noshow/hobby")
+    public ResponseEntity<NoShowHobbyMatchList> postNoShowHobbyList(@RequestBody NoShowHobbyMatchList user){
+        NoShowHobbyMatchList noShowUser = matchingService.postNoShowHobbyUser(user);
+        return  new ResponseEntity<NoShowHobbyMatchList>(noShowUser, HttpStatus.OK);
+    }
     // 신고 등록
     @PostMapping("post/class/accusation")
     public ResponseEntity<ClassAccusation> postAccusation(@RequestBody ClassAccusation declaration){
@@ -135,7 +162,11 @@ public class MatchingController {
         PublicAccusation list = matchingService.postPublicDeclarationList(declaration);
         return new ResponseEntity<PublicAccusation>(list,HttpStatus.OK);
     }
-
+    @PostMapping("post/hobby/accusation")
+    public ResponseEntity<HobbyAccusation> postAccusation(@RequestBody HobbyAccusation declaration){
+        HobbyAccusation list = matchingService.postHobbyDeclarationList(declaration);
+        return new ResponseEntity<HobbyAccusation>(list,HttpStatus.OK);
+    }
 
     // 타입별 신고목록 조회
     @GetMapping("get/public/accusation")
@@ -152,6 +183,15 @@ public class MatchingController {
         if(matchingType.equals("class")){
             List<ClassAccusation> list = matchingService.getClassDeclaration(matchingType);
             return new ResponseEntity<List<ClassAccusation>>(list,HttpStatus.OK);
+        }
+        else{ return null;}
+    }
+
+    @GetMapping("get/hobby/accusation")
+    public ResponseEntity<List<HobbyAccusation>> getHobbyAccusationList(@RequestParam (value = "matchingType")String matchingType){
+        if(matchingType.equals("hobby")){
+            List<HobbyAccusation> list = matchingService.getHobbyDeclaration(matchingType);
+            return new ResponseEntity<List<HobbyAccusation>>(list,HttpStatus.OK);
         }
         else{ return null;}
     }
@@ -179,6 +219,18 @@ public class MatchingController {
         }
     }
 
+    //특정 수업 매칭 신고조회
+    @GetMapping("get/hobbymatch/accusation")
+    public ResponseEntity<List<HobbyAccusation>> getHobbyAccusation(@RequestParam(value = "matchingId")int id , @RequestParam(value = "matchingType")String matchingType){
+        if(matchingType.equals("hobby")){
+            List<HobbyAccusation> list = matchingService.getHobbyDeclarationList(id, matchingType);
+            return  new ResponseEntity<List<HobbyAccusation>>(list,HttpStatus.OK);
+        }
+        else{
+            return  new ResponseEntity<List<HobbyAccusation>>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // 노쇼 발생 시 하트 반환
     @PutMapping("rollback/heart")
     public ResponseEntity<User> rollbackHeart(@RequestParam (value = "email")String id){
@@ -198,6 +250,12 @@ public class MatchingController {
     public ResponseEntity<ClassMatchedList> findClassMatchedListByEmail(@RequestParam (value = "matchingId")int id){
         ClassMatchedList matchList =  matchingService.findClassMatchingByMatchId(id);
         return  new ResponseEntity<ClassMatchedList>(matchList , HttpStatus.OK);
+    }
+
+    @GetMapping("admin/hobbyMatchedList")
+    public ResponseEntity<HobbyMatchedList> findHobbyMatchedListByEmail(@RequestParam (value = "matchingId")int id){
+        HobbyMatchedList matchList =  matchingService.findHobbyMatchingByMatchId(id);
+        return  new ResponseEntity<HobbyMatchedList>(matchList , HttpStatus.OK);
     }
 
     @GetMapping("admin/free/matchingWait")
@@ -224,6 +282,17 @@ public class MatchingController {
         return  new ResponseEntity<ClassMatchingWait>(list, HttpStatus.OK);
     }
 
+    @GetMapping("admin/hobby/matchingWait")
+    public ResponseEntity<List<HobbyMatchingWait>> getAllHobbyMatchingWait(){
+        List<HobbyMatchingWait> list = matchingService.findAllHobbyMatchingWait();
+        return  new ResponseEntity<List<HobbyMatchingWait>>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("get/hobby/matchingWait")
+    public ResponseEntity<HobbyMatchingWait> getHobbyMatchingWaitById(@RequestParam (value = "email")String id){
+        HobbyMatchingWait list = matchingService.findHobbyMatchingWaitByEmail(id);
+        return  new ResponseEntity<HobbyMatchingWait>(list, HttpStatus.OK);
+    }
 
     @GetMapping("delete/free/matchingWait")
     public ResponseEntity<PublicMatchingWait> deletePublicMatchingWait(@RequestParam (value = "waitId")int id){
@@ -237,6 +306,12 @@ public class MatchingController {
         return new ResponseEntity<ClassMatchingWait>(deletedUser, HttpStatus.OK);
     }
 
+    @GetMapping("delete/hobby/matchingWait")
+    public ResponseEntity<HobbyMatchingWait> deleteHobbyMatchingWait(@RequestParam (value = "waitId")int id){
+        HobbyMatchingWait deletedUser = matchingService.deleteHobbyMatchingWaitById(id);
+        return new ResponseEntity<HobbyMatchingWait>(deletedUser, HttpStatus.OK);
+    }
+
     @GetMapping("change/class/noshow")
     public  ResponseEntity<User> changeStatusClassNoShowUser(@RequestParam (value = "email")String email){
         User user  = matchingService.changeClassNoShowUserStatus(email);
@@ -246,6 +321,12 @@ public class MatchingController {
     @GetMapping("change/free/noshow")
     public  ResponseEntity<User> changeStatusPublicNoShowUser(@RequestParam (value = "email")String email){
         User user  = matchingService.changePublicNoShowUserStatus(email);
+        return  new ResponseEntity<User>(user , HttpStatus.OK);
+    }
+
+    @GetMapping("change/hobby/noshow")
+    public  ResponseEntity<User> changeStatusHobbyNoShowUser(@RequestParam (value = "email")String email){
+        User user  = matchingService.changeHobbyNoShowUserStatus(email);
         return  new ResponseEntity<User>(user , HttpStatus.OK);
     }
 }
