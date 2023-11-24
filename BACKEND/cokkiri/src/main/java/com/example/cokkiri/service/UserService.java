@@ -78,9 +78,6 @@ public class UserService {
             e.get().setMajor(user.getMajor());
             e.get().setNumber(user.getNumber());
             e.get().setCourse(user.getCourse());
-//            e.get().setHobby1(user.getHobby1());
-//            e.get().setHobby2(user.getHobby2());
-//            e.get().setHobby3(user.getHobby3());
 
             userRepository.save(e.get());
         }
@@ -115,28 +112,5 @@ public class UserService {
 
             userRepository.save(e.get());
         }
-    }
-
-    // 사용자의 취미 정보를 저장하는 메소드
-    public User setUserInterests(User user) {
-        Optional<User> userOptional = userRepository.findById(user.getId());
-        if (userOptional.isPresent()) {
-            User existingUser = userOptional.get();
-            // 취미 정보를 기존 사용자 정보에 복사
-            copyUserInterests(existingUser, user);
-            userRepository.save(existingUser);
-            return existingUser;
-        } else {
-            return null;
-        }
-    }
-
-    private void copyUserInterests(User existingUser, User newUser) {
-        existingUser.setSetInterests(true);
-    }
-
-    // 사용자의 취미 정보를 조회하는 메소드
-    public User getUserInterests(String userId) {
-        return userRepository.findById(userId).orElse(null);
     }
 }

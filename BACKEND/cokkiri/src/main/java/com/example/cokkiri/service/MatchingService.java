@@ -31,12 +31,19 @@ public class MatchingService {
     // 공강 레포지토리
     @Autowired
     private PublicMatchedListRepository publicMatchedListRepository;
+
+    //취미 레포지토리
+    @Autowired
+    private HobbyMatchedListRepository hobbyMatchedListRepository;
+
     @Autowired
     private MatchingAgreeRepository matchingAgreeRepository;
     @Autowired
     private NoShowPublicMatchListRepository noShowPublicMatchListRepository;
     @Autowired
     private NoShowClassMatchListRepository noShowClassMatchRepository;
+    @Autowired
+    private NoShowHobbyMatchListRepository noShowHobbyMatchListRepository;
     @Autowired
     private AccusationRepository accusationRepository;
     @Autowired
