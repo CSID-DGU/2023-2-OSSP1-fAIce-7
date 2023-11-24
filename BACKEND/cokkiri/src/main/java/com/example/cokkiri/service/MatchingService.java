@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -242,6 +243,7 @@ public class MatchingService {
         }
     }
 
+    // 매칭 대기중 유저 모두 반환
     public List<ClassMatchingWait> findAllClassMatchingWait(){
         return classMatchingWaitRepository.findAll();
     }
@@ -256,7 +258,20 @@ public class MatchingService {
         }
     }
 
+    // 매칭 대기중 유저 모두 반환
+    public List<HobbyMatchingWait> findAllHobbyMatchingWait() {
+        return hobbyMatchingWaitRepository.findAll();
+    }
 
+    // 이메일로 매칭 대기중 반환
+    public HobbyMatchingWait findHobbyMatchingWaitByEmail(String id) {
+        Optional<HobbyMatchingWait> hobbyMatchingWait = hobbyMatchingWaitRepository.findByEmail(id);
+        if (hobbyMatchingWait.isEmpty()){
+            return null;
+        }else{
+            return hobbyMatchingWait.get();
+        }
+    }
 
     public PublicMatchedList findPublicMatch(List<PublicMatching>userList , int count ) {
         // 객체 생성
@@ -482,7 +497,6 @@ public class MatchingService {
         }
     }
 
-
     public PublicMatchedList publicMatch(PublicMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
@@ -528,8 +542,6 @@ public class MatchingService {
 
         return publicMatchedList;
     }
-
-
 
     public ClassMatchedList classMatch(ClassMatching user){
         // 매칭된 사람 수 = 희망인원
@@ -603,6 +615,21 @@ public class MatchingService {
         return publicMatchedListRepository.findByEmailListContains(id);
     }
 
+    //취미 매칭 전부 반환
+    public List<HobbyMatchedList> findAllHobbyMatching() {
+        LocalDate nowDate = LocalDate.now();
+
+        List<HobbyMatchedList> matchedlist = new ArrayList<>();
+        hobbyMatchedListRepository.findAll().forEach(e->matchedlist.add(e));
+
+        return matchedlist;
+    }
+
+    //취미 매칭 Id로 찾아서 반환
+    public List<HobbyMatchedList> findHobbyMatchingById(String id){
+        return hobbyMatchedListRepository.findByEmailListContains(id);
+    }
+
     public ClassMatchedList findClassMatchingByMatchId(int id){
         return classMatchedListRepository.findByMatchingId(id);
     }
@@ -621,7 +648,7 @@ public class MatchingService {
             String email = matchedList.getEmailList().get(i);
             Optional<User> user = userRepository.findById(email);
             user.get().setClassMatching(false); // 안정성 코드
-            user.get().setHeart((user.get().getHeart())-10); //하트 10개 차감
+            user.get().setHeart((user.get().getHeart())-0); //하트 10개 차감
             userRepository.save(user.get());
             Optional<ClassMatchingWait> waitUser = classMatchingWaitRepository.findByEmail(email);
             if(waitUser.isEmpty()){
@@ -640,7 +667,7 @@ public class MatchingService {
             String email = matchedList.getEmailList().get(i);
             Optional<User> user = userRepository.findById(email);
             user.get().setPublicMatching(false);
-            user.get().setHeart((user.get().getHeart())-10); //하트 10개 차감
+            user.get().setHeart((user.get().getHeart())-0); //하트 10개 차감
             userRepository.save(user.get());
 
             Optional<PublicMatchingWait> waitUser = publicMatchingWaitRepository.findByEmail(email);
@@ -660,14 +687,14 @@ public class MatchingService {
             String email = matchedList.getEmailList().get(i);
             Optional<User> user = userRepository.findById(email);
             user.get().setPublicMatching(false);
-            user.get().setHeart((user.get().getHeart())-10); //하트 10개 차감
+            user.get().setHeart((user.get().getHeart())-0); //하트 10개 차감
             userRepository.save(user.get());
 
             Optional<HobbyMatchingWait> waitUser = hobbyMatchingWaitRepository.findByEmail(email);
             if(waitUser.isEmpty()){
                 continue;
             }else{
-                if(waitUser.get().getMatchingType().equals("free")){
+                if(waitUser.get().getMatchingType().equals("hobby")){
                     hobbyMatchingWaitRepository.delete(waitUser.get());
                 }
             }
