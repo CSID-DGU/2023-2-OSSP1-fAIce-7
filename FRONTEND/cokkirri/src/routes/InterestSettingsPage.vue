@@ -4,117 +4,111 @@
       <h2>관심분야 설정</h2>
       <div v-for="(interest, index) in interests" :key="index" class="interest-section">
         <!-- 사용자 입력 필드 -->
-        <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력">
+        <div class="input-wrapper">
+          <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력">
+          <!-- 삭제 버튼 -->
+          <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
+            <div class="circle-button">-</div>
+          </div>
+        </div>
         <!-- 필터링된 항목 리스트 -->
-        <ul v-if="interest.filteredItems.length">
+        <ul v-if="interest.inputText && interest.filteredItems.length">
           <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
-            {{ item }}
+            {{ formatItem(item) }}
           </li>
         </ul>
-        <!-- 관심도 설정 -->
-        <div>
-          <label :for="'interest' + index">관심도 {{ index + 1 }}</label>
-          <input type="range" v-model.number="interest.score" min="1" max="10">
-          <span>{{ interest.score }}</span>
-        </div>
-        <!-- 삭제 버튼 -->
-        <button @click="removeInterest(index)">-</button>
       </div>
       <!-- 항목 추가 버튼 -->
-      <button @click="addInterest">+</button>
+      <button @click="addInterest" :disabled="interests.length >= 10">+</button>
       <!-- 항목 완료 버튼 -->
-      <button :disabled="!isComplete" @click="submitInterests">완료</button>
+      <button @click="submitInterests" :disabled="!isComplete">완료</button>
     </div>
   </div>
 </template>
 
 <script>
-import axios from '../api/index.js';
-import { mapMutations } from 'vuex';
-
+import axios from 'axios';
 export default {
   data() {
     return {
-      // categories: {}, // 카테고리 데이터
       categories: {
-        '스포츠': ['축구', '농구', '야구', '당구'],
-        '게임': ['컴퓨터', '스위치', '보드게임', '오락실'],
-        '관람/감상': ['영화', '드라마', '뮤지컬', '전시회'],
-        '미용/패션': ['의류', '악세사리', '화장품', '네일'],
-        '애완동물': ['강아지', '고양이', '조류', '식물'],
-        '창작': ['그림', '음악', '사진', '글쓰기'],
+        // 카테고리 데이터
+        '문화예술관람활동': ['전시회 관람 (미술, 사진, 건축, 디자인 등)', '박물관 관람', '음악연주회 관람(클래식, 오페라 등)', '전통예술공연 관람(국악, 민속놀이 등)', '연극공연 관람(뮤지컬 포함)', '무용공연 관람', '영화관람', '연예공연 관람(쇼, 콘서트, 마술 쇼 등)'],
+        '문화예술참여활동': ['문학행사참여', '글짓기/독서토론', '미술활동(그림, 서예, 조각, 디자인, 도예, 만화 등)', '악기연주/노래교실', '전통예술 배우기(사물놀이, 줄타기 등)', '사진촬영(디지털카메라 포함)', '춤/무용(발레, 한국무용, 현대무용, 방송댄스, 스트릿댄스, 비보잉 등)'],
+        '스포츠관람활동': ['스포츠 경기 직접관람- 경기장방문관람(축구, 야구, 농구, 배구 등)', '스포츠 경기 간접관람- TV, DMB를 통한 관람(축구, 야구, 농구, 배구 등)', '격투기 스포츠 경기관람(태권도, 유도, 합기도, 검도, 권투 등)', '온라인게임 경기 현장관람 (e-스포츠 경기 포함)'],
+        '스포츠참여활동': ['농구', '배구', '야구', '축구', '족구', '테니스', '스쿼시', '당구', '포켓볼', '볼링', '탁구', '골프', '수영', '윈드서핑', '수상스키', '스킨스쿠버다이빙', '래프팅', '요트', '스노보드', '스키', '아이스 스케이트', '아이스 하키', '헬스', '에어로빅', '요가', '필라테스', '태보', '배드민턴', '줄넘기', '체조', '훌라후프', '마라톤', '태권도', '유도', '합기도', '검도', '권투', '탱고', '왈츠', '자이보', '맘보', '폴카', '차차차', '사이클링', '산악자전거', '인라인 스케이트', '승마', '클라이밍'],
+        '관광활동': ['문화유적방문(고궁, 절, 유적지 등)', '자연명승 및 풍경 관람', '삼림욕', '국내캠핑', '해외여행', '소풍/야유회', '온천/해수욕', '유람선 타기', '테마파크/놀이공원/동물원/식물원 가기', '지역축제 참가', '자동차 드라이브'],
+        '취미오락활동': ['수집활동(스크랩 포함)', '생활공예(십자수, 비즈공예, DIY, 꽃꽂이 등)', '요리', '다도', '반려동물 돌보기', '노래방 가기', '인테리어(집. 자동차 등)', '등산', '낚시', '홈페이지/블로그 관리', 'SNS', '미디어 제작', '인터넷 서핑', '컴퓨터게임', '모바일게임', '콘솔게임', '보드게임', '퍼즐/큐브', '바둑', '체스', '장기', '쇼핑', '외식', '독서(웹소설 포함)', '만화(애니, 웹툰)', '피부관리', '헤어관리', '네일아트', '마사지', '공부', '이색/테마카페 체험(방탈출, VR, 낚시카페 등)', '원예(화분, 화단가꾸기 등)'],
+        '휴식활동': ['산책', '목욕/사우나/찜질방', '낮잠', 'TV시청', '영상시청(VOD, 유튜브, 넷플릭스, 웨이브, 티빙, 디즈니플러스 등)', '라디오/팟캐스트 청취', '음악 감상', '신문/잡지 보기'],
+        '사회 및 기타활동': ['사회봉사활동', '종교활동', '클럽/나이트/디스코/캬바레 가기', '잡담/통화하기/문자보내기(카카오톡, 라인, 디엠 등)', '계모임/동창회/사교(파티)모임', '동호회 모임', '기타']
       },
-      interests: [{ category: '', item: '', score: 10 }], // 초기 관심분야 데이터
+      interests: [{ inputText: '', filteredItems: [] }],
     };
   },
   computed: {
     isComplete() {
-      // 관심분야 설정이 완료되었는지 확인
-      return this.interests.every(interest => interest.inputText && interest.score) &&
-             this.interests.reduce((total, interest) => total + interest.score, 0) === 10;
+      return this.interests.every(interest => interest.inputText && this.isValidItem(interest.inputText));
     },
-    
-    remainingScore() {
-      let totalScore = this.interests.reduce((sum, interest) => sum + Number(interest.score), 0);
-      return 10 - totalScore;
-      }
-    },
-
+  },
   methods: {
-    ...mapMutations(['setUserInterests']),
     filterItems(index) {
-      // 입력된 텍스트에 기반하여 관련 항목 필터링
       const inputText = this.interests[index].inputText.toLowerCase();
-      const allItems = [].concat(...Object.values(this.categories));
-      this.interests[index].filteredItems = allItems.filter(item =>
-        item.toLowerCase().includes(inputText)
-      );
+      this.interests[index].filteredItems = Object.entries(this.categories)
+        .flatMap(([category, items]) => {
+          // 카테고리명과 일치할 경우 해당 카테고리의 모든 항목 표시
+          if (category.toLowerCase().includes(inputText)) {
+            return items.map(item => ({ category, item }));
+          }
+          // 카테고리명과 일치하지 않을 경우, 항목 중에서 필터링
+          return items.filter(item => item.toLowerCase().includes(inputText))
+                    .map(item => ({ category, item }));
+        });
     },
-    selectItem(index, item) {
-      // 사용자가 선택한 항목 설정
-      this.interests[index].inputText = item;
+    selectItem(index, { category, item }) {
+      this.interests[index].inputText = `${category} >> ${item}`;
       this.interests[index].filteredItems = [];
     },
-
+    formatItem({ category, item }) {
+      return `${category} >> ${item}`;
+    },
+    isValidItem(inputText) {
+      return Object.entries(this.categories).some(([category, items]) =>
+        items.some(item => `${category} >> ${item}` === inputText)
+      );
+    },
     addInterest() {
-      // 남은 관심도 점수를 계산
-      const remainingScore = this.remainingScore;
-
-      if (remainingScore > 0) {
-        // 남은 관심도 점수가 있으면 새 관심분야 추가
-        this.interests.push({ category: '', item: '', score: Math.min(1, remainingScore) });
-      } else {
-        // 남은 관심도 점수가 없으면 경고 표시
-        alert("더 이상 관심도 점수를 할당할 수 없습니다.");
+      if (this.interests.length < 10) {
+        this.interests.push({ inputText: '', filteredItems: [] });
       }
     },
-
     removeInterest(index) {
       this.interests.splice(index, 1);
     },
-
     submitInterests() {
-      // 관심분야 데이터를 백엔드 서버로 전송하는 로직
-      axios.post('/api/submit-interests', {
-        interests: this.interests.map(interest => ({
-          text: interest.inputText, // 입력된 텍스트
-          score: interest.score // 관심도 점수
+      // 관심 분야 데이터를 서버로 전송
+      const newInterests = this.interests.filter(interest => !this.isExistingInterest(interest.inputText));
+      axios.post('/api/interests', {
+        interests: newInterests.map(interest => ({
+          category: interest.inputText.split(' >> ')[0], // 카테고리 추출
+          item: interest.inputText.split(' >> ')[1], // 항목 추출
         }))
       })
       .then(response => {
-        // 성공적으로 전송된 경우 처리
-        console.log('관심분야가 성공적으로 제출되었습니다:', response.data);
-        // 추가적인 성공 처리 로직 (예: 사용자에게 성공 메시지 표시, 다른 페이지로 리디렉션 등)
+        // 성공적으로 데이터를 전송했을 때의 처리
+        console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
+        // 추가적인 성공 처리 (예: 성공 메시지 표시, 다른 페이지로 리디렉션 등)
       })
       .catch(error => {
-        // 전송 중 오류 발생 시 처리
-        console.error('관심분야 제출 중 오류 발생:', error);
-        // 추가적인 오류 처리 로직 (예: 사용자에게 오류 메시지 표시)
+        // 오류 발생 시의 처리
+        console.error('관심 분야 제출 중 오류 발생:', error);
+        // 추가적인 오류 처리 (예: 사용자에게 오류 메시지 표시)
       });
     },
-  }
+    isExistingInterest(inputText) {
+      return this.interests.some(interest => interest.inputText === inputText);
+    },
+  },
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -145,7 +139,7 @@ export default {
 }
 
 .interest-settings {
-  width: 66%; /* 전체 너비의 66% */
+  width: 100%; /* 전체 너비의 100% */
   background-color: #FFF;
   border-radius: 10px;
   padding: 20px;
@@ -190,68 +184,31 @@ button:disabled {
   margin-bottom: 15px; /* 버튼 하단 마진 추가 */
 }
 
-.remaining-score-display {
-  width: 34%; /* 전체 너비의 34% */
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+/* 삭제 버튼 스타일 */
+.input-wrapper {
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
-  align-items: center; /* 세로 방향으로 가운데 정렬 */
-  font-size: 24px;
-  font-weight: bold;
+  align-items: center; /* 세로 중앙 정렬 */
 }
 
-/* 슬라이드의 높이를 크게 조절 */
-input[type="range"] {
-  width: 90%;
-  height: 30px; /* 슬라이드 높이 */
-  -webkit-appearance: none;
-  appearance: none;
-  background: #ccc;
-  border-radius: 5px;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-/* 슬라이드의 크기를 슬라이드 높이에 맞게 조절 */
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 30px; /* 슬라이더 막대의 너비 */
-  height: 30px; /* 슬라이더 막대의 높이와 동일하게 조절 */
-  background: #4CAF50;
+.remove-button {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
   cursor: pointer;
-  border-radius: 50%;
-  margin-left: -15px; /* 슬라이더 막대의 가운데 정렬을 위해 왼쪽으로 이동 */
 }
 
-input[type="range"]::-moz-range-thumb {
-  width: 30px; /* 슬라이더 막대의 너비 */
-  height: 30px; /* 슬라이더 막대의 높이와 동일하게 조절 */
-  background: #4CAF50;
+.circle-button {
+  width: 20px;
+  height: 20px;
+  background-color: #4CAF50; /* 초록색 배경 */
+  color: white; /* 흰색 글자 색상 */
+  border-radius: 50%; /* 원 모양의 버튼을 만듭니다. */
+  text-align: center;
+  line-height: 20px;
   cursor: pointer;
-  border-radius: 50%;
-  margin-left: -15px; /* 슬라이더 막대의 가운데 정렬을 위해 왼쪽으로 이동 */
+  margin-left: 5px; /* 텍스트 필드와 간격 조절 */
 }
 
-input[type="range"]::-ms-thumb {
-  width: 30px; /* 슬라이더 막대의 너비 */
-  height: 30px; /* 슬라이더 막대의 높이와 동일하게 조절 */
-  background: #4CAF50;
-  cursor: pointer;
-  border-radius: 50%;
-  margin-left: -15px; /* 슬라이더 막대의 가운데 정렬을 위해 왼쪽으로 이동 */
-}
-
-select + div {
-  margin-top: 10px; /* 간격 크기 조절 */
-}
-
-div + div {
-  margin-top: 10px; /* 간격 크기 조절 */
+.circle-button:hover {
+  background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
 }
 </style>
