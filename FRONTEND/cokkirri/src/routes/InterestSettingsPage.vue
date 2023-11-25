@@ -8,13 +8,13 @@
           <!-- 인덱스 표시 -->
           <div class="index-number">{{ index + 1 }}.</div>
           <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력">
-          <!-- 삭제 버튼 -->
-          <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-            <div class="circle-button">-</div>
-          </div>
           <!-- 휴지통 버튼 -->
           <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
             <div class="trash-icon">🗑️</div>
+          </div>
+          <!-- 삭제 버튼 -->
+          <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
+            <div class="circle-button">-</div>
           </div>
         </div>
         <!-- 필터링된 항목 리스트 -->
@@ -266,7 +266,7 @@ button:disabled {
   align-items: center; /* 내부 요소 수직 정렬을 위해 필요한 설정 */
   font-size: 18px; /* 아이콘 크기 설정 */
   margin-left: 80px;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   &:disabled {
     background-color: #ccc !important; /* 배경 색상 변경 */
     cursor: not-allowed !important; /* 비활성화된 상태에서는 색상 변경 금지 */
