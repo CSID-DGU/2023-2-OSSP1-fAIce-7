@@ -69,7 +69,9 @@ public class MatchingService {
     //반환 배열
     List<PublicMatching> publicUsersList = new ArrayList<>();
     List<ClassMatching> classUserList =new ArrayList<>();
-    List<HobbyMatching> hobbyUserList = new ArrayList<>();
+
+
+
 
     @PostConstruct
     public void init() {

@@ -11,7 +11,7 @@
           <select v-model="interest.category">
             <option disabled value="">카테고리</option>
             <!-- 카테고리 옵션 반복 -->
-            <option v-for="(category, categoryIndex) in Object.keys(categories)" :key="categoryIndex" :value="category">
+            <option v-for="category in categories" :key="category" :value="category">
               {{ category }}
             </option>
           </select>
@@ -21,8 +21,8 @@
           <label :for="'item' + index">항목 {{ index + 1 }}</label>
           <select v-model="interest.item">
             <option disabled value="">항목</option>
-            <!-- 선택한 카테고리에 따른 항목 옵션 반복 -->
-            <option v-for="(item, itemIndex) in availableItems(index)" :key="itemIndex" :value="item">
+            <!-- 항목 옵션 반복 -->
+            <option v-for="item in availableItems(index)" :key="item" :value="item">
               {{ item }}
             </option>
           </select>
@@ -61,15 +61,7 @@ import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
-      // categories: {}, // 카테고리 데이터
-      categories: {
-        '스포츠': ['축구', '농구', '야구', '당구'],
-        '게임': ['컴퓨터', '스위치', '보드게임', '오락실'],
-        '관람/감상': ['영화', '드라마', '뮤지컬', '전시회'],
-        '미용/패션': ['의류', '악세사리', '화장품', '네일'],
-        '애완동물': ['강아지', '고양이', '조류', '식물'],
-        '창작': ['그림', '음악', '사진', '글쓰기'],
-      },
+      categories: {}, // 카테고리 데이터
       interests: [{ category: '', item: '', score: 10 }], // 초기 관심분야 데이터
     };
   },
@@ -92,7 +84,6 @@ export default {
       // 백엔드에서 카테고리 데이터 불러오기
       axios.get('/api/interest-categories')
         .then(response => {
-          console.log(response.data);
           this.categories = response.data;
         })
         .catch(error => {
@@ -127,7 +118,7 @@ export default {
 
     submitInterests() {
       // 관심분야 데이터 백엔드로 전송
-      axios.post('/hobby/interests', {
+      axios.post('/user/interests', {
           id: this.$store.state.id,
           interests: this.interests.map(interest => ({
             category: interest.category,
@@ -144,16 +135,11 @@ export default {
         .catch(error => {
           console.error('오류:', error);
           alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-          this.$router.push('/InterestSettingsPage');
+          this.$router.push('/');
         });
-    },
-    
-    created() {
-      this.fetchCategories(); // 컴포넌트 생성 시 fetchCategories 호출
     },
   }
 };
-
 </script>
 
 <style lang="scss" scoped>
