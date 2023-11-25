@@ -510,7 +510,7 @@ public class MatchingService {
         }
         if(userInfo.get().isPublicMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
-                if(userInfo.get().getHeart() < 10){
+                if(userInfo.get().getHeart() < 0){
                     return null;
                 }
                 publicLectureUsers.add(user);
@@ -557,7 +557,7 @@ public class MatchingService {
         if(userInfo.get().isClassMatching()==false){
             // 유저의 제한날짜가 없거나 제한 날짜가 현재 날짜 보다 전에 있으면
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
-                if(userInfo.get().getHeart() < 10){
+                if(userInfo.get().getHeart() < 0){
                     return null;
                 }
                 classLectureUsers.add(user);
@@ -601,7 +601,7 @@ public class MatchingService {
         }
         if(userInfo.get().isPublicMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
-                if(userInfo.get().getHeart() < 10){
+                if(userInfo.get().getHeart() < 0){
                     return null;
                 }
                 hobbyLectureUsers.add(user);
