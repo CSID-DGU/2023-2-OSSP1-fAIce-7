@@ -102,6 +102,10 @@ public class User {
     @ColumnDefault("false")
     private boolean isPublicMatching;
 
+    @Column
+    @ColumnDefault("false")
+    private boolean isHobbyMatching;
+
     // 카테고리 3개 설정 확인 변수
     @Column
     @ColumnDefault("false")

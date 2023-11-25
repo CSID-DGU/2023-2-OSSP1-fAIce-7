@@ -78,9 +78,6 @@ public class UserService {
             e.get().setMajor(user.getMajor());
             e.get().setNumber(user.getNumber());
             e.get().setCourse(user.getCourse());
-//            e.get().setHobby1(user.getHobby1());
-//            e.get().setHobby2(user.getHobby2());
-//            e.get().setHobby3(user.getHobby3());
 
             userRepository.save(e.get());
         }
