@@ -2,6 +2,7 @@ package com.example.cokkiri.service;
 
 import com.example.cokkiri.model.*;
 import com.example.cokkiri.repository.*;
+import com.example.cokkiri.utils.pairIdScore;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -269,7 +271,7 @@ public class MatchingService {
         }
     }
 
-    public PublicMatchedList findPublicMatch(List<PublicMatching>userList , int count ) {
+    public PublicMatchedList findPublicMatch(List<PublicMatching>userList , int count) {
         // 객체 생성
         PublicMatchedList matched = new PublicMatchedList();
         if (userList.size() < 2) {
@@ -391,7 +393,7 @@ public class MatchingService {
     };
 
     //수업매칭
-    public ClassMatchedList findClassMatch(List<ClassMatching>userList , int count ){
+    public ClassMatchedList findClassMatch(List<ClassMatching>userList , int count){
         // 객체 생성
         ClassMatchedList matched = new ClassMatchedList();
         if(userList.size()<2){
@@ -492,7 +494,7 @@ public class MatchingService {
             return null;
         }
     }
-
+    
     public PublicMatchedList publicMatch(PublicMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
