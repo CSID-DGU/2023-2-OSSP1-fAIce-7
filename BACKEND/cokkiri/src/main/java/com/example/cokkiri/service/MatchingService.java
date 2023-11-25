@@ -707,7 +707,7 @@ public class MatchingService {
                     return null;
                 }
                 hobbyLectureUsers.add(user);
-//                hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
+                hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
                 if(hobbyMatchedList!=null){
                     for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
                         String email = hobbyMatchedList.getEmailList().get(i);
