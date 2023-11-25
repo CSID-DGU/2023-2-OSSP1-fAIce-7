@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -13,8 +14,8 @@ public class HobbyMatching {
 
     private int headCount;
 
-    // 매칭된 사람들 1순위 취미 목록
-    private String hobby;
+    // 취미 목록
+    private List<String> hobby;
 
     //매칭된 사람들 학번
     private String email;

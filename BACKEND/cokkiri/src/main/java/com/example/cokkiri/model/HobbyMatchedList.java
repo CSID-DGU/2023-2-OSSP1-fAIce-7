@@ -22,6 +22,11 @@ public class HobbyMatchedList {
     @Column
     private int matchingId;
 
+    //학수번호
+    @Column
+    @ElementCollection
+    private List<String> hobby;
+
     //희망인원
     @Column
     private int headCount;

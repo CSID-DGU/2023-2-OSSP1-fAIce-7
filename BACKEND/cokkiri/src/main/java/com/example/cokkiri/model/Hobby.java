@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,6 +47,12 @@ public class Hobby {
             case 10 -> this.hobby10 = name;
             default -> throw new IllegalArgumentException("Invalid hobby number");
         }
+    }
+
+    public List<String> getHobby() {
+        ArrayList<String> hobbies = new ArrayList<>(List.of(hobby1, hobby2, hobby3, hobby4, hobby5, hobby6, hobby7, hobby8, hobby9, hobby10));
+
+        return hobbies;
     }
 }
 
