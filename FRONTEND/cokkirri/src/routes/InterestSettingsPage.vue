@@ -5,10 +5,16 @@
       <div v-for="(interest, index) in interests" :key="index" class="interest-section">
         <!-- 사용자 입력 필드 -->
         <div class="input-wrapper">
+          <!-- 인덱스 표시 -->
+          <div class="index-number">{{ index + 1 }}.</div>
           <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력">
           <!-- 삭제 버튼 -->
           <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
             <div class="circle-button">-</div>
+          </div>
+          <!-- 휴지통 버튼 -->
+          <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
+            <div class="trash-icon">🗑️</div>
           </div>
         </div>
         <!-- 필터링된 항목 리스트 -->
@@ -19,9 +25,9 @@
         </ul>
       </div>
       <!-- 항목 추가 버튼 -->
-      <button @click="addInterest" :disabled="interests.length >= 10">+</button>
+      <button @click="addInterest" :disabled="interests.length >= 10" class="add-button">+</button>
       <!-- 항목 완료 버튼 -->
-      <button @click="submitInterests" :disabled="!isComplete">완료</button>
+      <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
     </div>
   </div>
 </template>
@@ -84,6 +90,12 @@ export default {
     removeInterest(index) {
       this.interests.splice(index, 1);
     },
+    isExistingInterest(inputText) {
+      return this.interests.slice(1).some(interest => interest.inputText === inputText);
+    },
+    clearInputText(index) {
+      this.interests[index].inputText = ''; // 입력한 텍스트 지우기
+    },
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
       const newInterests = this.interests.filter(interest => !this.isExistingInterest(interest.inputText));
@@ -103,9 +115,6 @@ export default {
         console.error('관심 분야 제출 중 오류 발생:', error);
         // 추가적인 오류 처리 (예: 사용자에게 오류 메시지 표시)
       });
-    },
-    isExistingInterest(inputText) {
-      return this.interests.some(interest => interest.inputText === inputText);
     },
   },
 };
@@ -209,6 +218,81 @@ button:disabled {
 }
 
 .circle-button:hover {
+  background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
+}
+
+/* 번호 표시 스타일 */
+.index-number {
+  margin-right: 10px; /* 숫자와 텍스트 필드 사이의 공간 조정 */
+}
+
+/* 휴지통 모양의 아이콘 스타일 */
+.trash-button {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  cursor: pointer;
+}
+
+.trash-icon {
+  width: 20px;
+  height: 20px;
+  /* 원하는 아이콘 배경 스타일을 설정하세요 */
+  background-color: #4CAF50; /* 배경 색상 */
+  border-radius: 50%; /* 원 모양의 배경 */
+  text-align: center;
+  line-height: 20px;
+  cursor: pointer;
+  margin-left: 5px; /* 텍스트 필드와 간격 조절 */
+  color: white; /* 아이콘 색상 */
+  font-size: 12px; /* 아이콘 크기 설정 */
+}
+
+/* 휴지통 아이콘 마우스 오버 시 스타일 */
+.trash-icon:hover {
+  background-color: #45a049; /* 마우스 오버 시 배경 색상 변경 */
+}
+
+/* 추가 버튼 스타일 */
+.add-button {
+  width: 30px; /* 버튼 너비 */
+  height: 30px; /* 버튼 높이 */
+  background-color: #4CAF50; /* 버튼 배경 색상 */
+  color: white; /* 버튼 글자 색상 */
+  border: none; /* 테두리 없음 */
+  border-radius: 50%; /* 원 모양의 버튼을 만듭니다. */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+  display: flex; /* 내부 요소 수평 정렬을 위해 필요한 설정 */
+  justify-content: center; /* 내부 요소 수평 정렬을 위해 필요한 설정 */
+  align-items: center; /* 내부 요소 수직 정렬을 위해 필요한 설정 */
+  font-size: 18px; /* 아이콘 크기 설정 */
+  margin-left: 80px;
+  margin-bottom: 5px;
+  &:disabled {
+    background-color: #ccc !important; /* 배경 색상 변경 */
+    cursor: not-allowed !important; /* 비활성화된 상태에서는 색상 변경 금지 */
+  }
+}
+
+.add-button:hover {
+  background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
+}
+
+/* 완료 버튼 스타일 */
+.complete-button {
+  width: 100%; /* 버튼 너비 */
+  padding: 10px; /* 버튼 내부 패딩 */
+  background-color: #4CAF50; /* 버튼 배경 색상 */
+  color: white; /* 버튼 글자 색상 */
+  border: none; /* 테두리 없음 */
+  border-radius: 4px; /* 테두리 둥근 정도 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+  &:disabled {
+    background-color: #ccc !important; /* 배경 색상 변경 */
+    cursor: not-allowed !important; /* 비활성화된 상태에서는 색상 변경 금지 */
+  }
+}
+
+.complete-button:hover {
   background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
 }
 </style>
