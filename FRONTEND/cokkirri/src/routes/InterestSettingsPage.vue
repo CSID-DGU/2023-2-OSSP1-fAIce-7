@@ -1,55 +1,29 @@
 <template>
   <div class="layout">
     <div class="interest-settings">
-      <!-- 관심분야 설정 제목 -->
       <h2>관심분야 설정</h2>
-      <!-- 각 관심분야 항목 설정 -->
       <div v-for="(interest, index) in interests" :key="index" class="interest-section">
-        <!-- 카테고리 선택 -->
-        <div>
-          <label :for="'category' + index">카테고리 {{ index + 1 }}</label>
-          <select v-model="interest.category">
-            <option disabled value="">카테고리</option>
-            <!-- 카테고리 옵션 반복 -->
-            <option v-for="(category, categoryIndex) in Object.keys(categories)" :key="categoryIndex" :value="category">
-              {{ category }}
-            </option>
-          </select>
-        </div>
-        <!-- 항목 선택 -->
-        <div>
-          <label :for="'item' + index">항목 {{ index + 1 }}</label>
-          <select v-model="interest.item">
-            <option disabled value="">항목</option>
-            <!-- 선택한 카테고리에 따른 항목 옵션 반복 -->
-            <option v-for="(item, itemIndex) in availableItems(index)" :key="itemIndex" :value="item">
-              {{ item }}
-            </option>
-          </select>
-        </div>
-        <!-- 관심도 설정 슬라이더 및 점수 표시 -->
+        <!-- 사용자 입력 필드 -->
+        <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력">
+        <!-- 필터링된 항목 리스트 -->
+        <ul v-if="interest.filteredItems.length">
+          <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
+            {{ item }}
+          </li>
+        </ul>
+        <!-- 관심도 설정 -->
         <div>
           <label :for="'interest' + index">관심도 {{ index + 1 }}</label>
           <input type="range" v-model.number="interest.score" min="1" max="10">
           <span>{{ interest.score }}</span>
         </div>
         <!-- 삭제 버튼 -->
-        <div class="button-container">
         <button @click="removeInterest(index)">-</button>
-        </div>
       </div>
       <!-- 항목 추가 버튼 -->
-      <div class="button-container">
-        <button @click="addInterest">+</button>
-      </div>
+      <button @click="addInterest">+</button>
       <!-- 항목 완료 버튼 -->
-      <div class="button-container">
-        <button :disabled="!isComplete" @click="submitInterests">완료</button>
-      </div>
-    </div>
-    <!-- 남은 관심도 점수 표시 영역 -->
-    <div class="remaining-score-display">
-      남은 관심도 점수: {{ 10 - interests.reduce((total, interest) => total + interest.score, 0) }}
+      <button :disabled="!isComplete" @click="submitInterests">완료</button>
     </div>
   </div>
 </template>
@@ -75,8 +49,8 @@ export default {
   },
   computed: {
     isComplete() {
-      // 모든 관심분야가 설정되었는지 확인하고, 관심도 점수의 총합이 10점인지 확인
-      return this.interests.every(interest => interest.category && interest.item && interest.score) &&
+      // 관심분야 설정이 완료되었는지 확인
+      return this.interests.every(interest => interest.inputText && interest.score) &&
              this.interests.reduce((total, interest) => total + interest.score, 0) === 10;
     },
     
@@ -88,24 +62,18 @@ export default {
 
   methods: {
     ...mapMutations(['setUserInterests']),
-    fetchCategories() {
-      // 백엔드에서 카테고리 데이터 불러오기
-      axios.get('/api/interest-categories')
-        .then(response => {
-          console.log(response.data);
-          this.categories = response.data;
-        })
-        .catch(error => {
-          console.error('카테고리 불러오기 실패:', error);
-        });
+    filterItems(index) {
+      // 입력된 텍스트에 기반하여 관련 항목 필터링
+      const inputText = this.interests[index].inputText.toLowerCase();
+      const allItems = [].concat(...Object.values(this.categories));
+      this.interests[index].filteredItems = allItems.filter(item =>
+        item.toLowerCase().includes(inputText)
+      );
     },
-
-    availableItems(index) {
-      // 선택 가능한 항목 필터링
-      const selectedItems = this.interests
-        .filter((_, i) => i !== index)
-        .map(interest => interest.item);
-      return this.categories[this.interests[index].category]?.filter(item => !selectedItems.includes(item)) || [];
+    selectItem(index, item) {
+      // 사용자가 선택한 항목 설정
+      this.interests[index].inputText = item;
+      this.interests[index].filteredItems = [];
     },
 
     addInterest() {
@@ -126,30 +94,23 @@ export default {
     },
 
     submitInterests() {
-      // 관심분야 데이터 백엔드로 전송
-      axios.post('/hobby/interests', {
-          id: this.$store.state.id,
-          interests: this.interests.map(interest => ({
-            category: interest.category,
-            item: interest.item,
-            score: interest.score
-          }))
-        })
-        .then(response => {
-          console.log("서버 응답:", response.data);
-          this.$store.commit('setUserInterests', true);
-          alert("관심분야 설정이 완료되었습니다.")
-          this.$router.push('/Starting');
-        })
-        .catch(error => {
-          console.error('오류:', error);
-          alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-          this.$router.push('/InterestSettingsPage');
-        });
-    },
-    
-    created() {
-      this.fetchCategories(); // 컴포넌트 생성 시 fetchCategories 호출
+      // 관심분야 데이터를 백엔드 서버로 전송하는 로직
+      axios.post('/api/submit-interests', {
+        interests: this.interests.map(interest => ({
+          text: interest.inputText, // 입력된 텍스트
+          score: interest.score // 관심도 점수
+        }))
+      })
+      .then(response => {
+        // 성공적으로 전송된 경우 처리
+        console.log('관심분야가 성공적으로 제출되었습니다:', response.data);
+        // 추가적인 성공 처리 로직 (예: 사용자에게 성공 메시지 표시, 다른 페이지로 리디렉션 등)
+      })
+      .catch(error => {
+        // 전송 중 오류 발생 시 처리
+        console.error('관심분야 제출 중 오류 발생:', error);
+        // 추가적인 오류 처리 로직 (예: 사용자에게 오류 메시지 표시)
+      });
     },
   }
 };
@@ -226,7 +187,7 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   margin-top: 15px; /* 버튼 상단 마진 추가 */
-  margin-down: 15px; /* 버튼 하단 마진 추가 */
+  margin-bottom: 15px; /* 버튼 하단 마진 추가 */
 }
 
 .remaining-score-display {
