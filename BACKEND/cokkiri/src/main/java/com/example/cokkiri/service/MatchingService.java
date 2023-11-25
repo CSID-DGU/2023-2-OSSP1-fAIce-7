@@ -494,7 +494,7 @@ public class MatchingService {
             return null;
         }
     }
-    
+
     public PublicMatchedList publicMatch(PublicMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
@@ -584,6 +584,52 @@ public class MatchingService {
         }
 
         return classMatchedList;
+    }
+
+    public HobbyMatchedList hobbyMatch(HobbyMatching user){
+        // 매칭된 사람 수 = 희망인원
+        int count = user.getHeadCount();
+        if(hobbyLectureUsers.contains(user.getEmail())==true){
+            return null;
+        }
+        HobbyMatchedList hobbyMatchedList = new HobbyMatchedList();
+        String id = user.getEmail();
+        Optional<User> userInfo = userRepository.findById(id);
+        if(userInfo.isEmpty()){
+            System.out.println("회원가입 된 사용자가 아닙니다");
+            return null;
+        }
+        if(userInfo.get().isPublicMatching()==false){
+            if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
+                if(userInfo.get().getHeart() < 10){
+                    return null;
+                }
+                hobbyLectureUsers.add(user);
+//                hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
+                if(hobbyMatchedList!=null){
+                    for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
+                        String email = hobbyMatchedList.getEmailList().get(i);
+                        Optional<User> userMatched = userRepository.findById(email);
+                        userMatched.get().setPublicMatching(false);
+                        userRepository.save(userMatched.get());
+                    }
+
+                    sendSSEtoHobbyUser(hobbyMatchedList);
+                    saveHobbyUser(hobbyMatchedList);
+                }
+            }else{
+                LocalDateTime restrictionDate = userInfo.get().getRestrctionDate();
+                String string = " : 매칭이 해당일자 까지 제한됩니다.";
+                StringBuffer buffer = new StringBuffer(string);
+                buffer.insert(0,restrictionDate);
+                String str = buffer.toString();
+                hobbyMatchedList.setMatchingRes(str);
+            }
+        }else{
+            hobbyMatchedList.setMatchingRes("중복 매칭은 불가합니다.");
+        }
+
+        return hobbyMatchedList;
     }
 
     //수업 매칭 전부 반환
