@@ -499,14 +499,31 @@ public class MatchingService {
     public HobbyMatchedList findHobbyMatch(List<HobbyMatching>userList, int count){
         // 객체 생성
         HobbyMatchedList matched = new HobbyMatchedList();
+        List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
+
+
+
         if(userList.size()<2){
             saveHobbyMatchingWaitUser(userList);
             return null;
         }
         else{
-            for(int i =0; i <= userList.size()-2; i++){
-                List<String>firstUserCourseNum = userList.get(i).getHobby();
-                List<String>lastUserCourseNum = userList.get(userList.size()-1).getHobby();
+            for(int i = 0; i < userList.size(); i++) {
+
+                Optional<Hobby> userHobby = hobbyRepository.findById(userList.get(i).getEmail());
+                if (userHobby.isEmpty()) {
+                    continue;
+                }
+                hobbyOfUsers.add(userHobby);
+            }
+
+            for(int i = 0; i < hobbyOfUsers.size(); i++) {
+                for(int j = 0; j < hobbyOfUsers.size(); j++) {
+
+
+            }
+
+                List<String>lastUserHobby = userList.get(userList.size()-1).getHobby();
                 List<String>courseNumList = new ArrayList<>();
                 courseNumList.addAll(firstUserCourseNum);
                 courseNumList.addAll(lastUserCourseNum);

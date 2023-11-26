@@ -1,7 +1,10 @@
 package com.example.cokkiri.utils;
 
+import com.example.cokkiri.model.Hobby;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class HobbyUtils {
     public static final List<String> HOBBIES = Arrays.asList(
@@ -12,4 +15,8 @@ public class HobbyUtils {
             "강아지", "고양이", "조류", "식물",
             "그림", "음악", "사진", "글쓰기"
     );
+
+    public List<List<Double>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
+                
+    }
 }
