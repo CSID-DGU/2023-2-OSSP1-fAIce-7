@@ -158,10 +158,10 @@ export default {
         .forEach((interest, index) => {
           // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
           if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
-            interestData[`item${index + 1}`] = interest.additionalInput;
+            interestData[`item${index + 1}`] = `기타 >> ${interest.additionalInput}`;
           } else {
-            // 그 외의 경우는 일반적인 항목을 설정
-            interestData[`item${index + 1}`] = interest.inputText.split(' >> ')[1];
+            // 그 외의 경우는 카테고리와 항목을 결합하여 설정
+            interestData[`item${index + 1}`] = interest.inputText;
           }
         });
 
