@@ -163,8 +163,10 @@ export default {
         height: 100vh;
         width: 100vw;
         margin:0;
-
-        background-color: #FFFEF9;
+        background-image: url("../../assets/mypage/background.png"); // 배경 이미지 적용
+        background-size: cover; // 이미지가 배경 전체를 커버하도록 설정
+        background-repeat: no-repeat; // 이미지가 반복되지 않도록 설정
+        background-position: center center; // 이미지가 배경 중앙에 위치하도록 설정
         display: grid;
         grid-template-rows: auto;
         justify-items: center;
@@ -175,6 +177,8 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        background: #FFFFFF;
+        border-radius: 20px;
     }
     .frame-first-step-body{
         width: 996px;
