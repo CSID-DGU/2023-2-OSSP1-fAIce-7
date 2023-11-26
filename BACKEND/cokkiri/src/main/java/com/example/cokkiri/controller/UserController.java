@@ -61,7 +61,7 @@ public class UserController {
     // 사용자의 취미 정보를 저장하는 엔드포인트
     @PostMapping("/user/interests")
     public ResponseEntity<?> setUserInterests(@RequestBody User user) {
-        User updatedUser = userService.setUserInterests(user);
+        User updatedUser = userService.setUserInterests(user.getId());
         if (updatedUser != null) {
             return ResponseEntity.ok(updatedUser);
         } else {
