@@ -5,6 +5,7 @@ import com.example.cokkiri.model.Hobby;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 public class HobbyUtils {
     public static final List<String> HOBBIES = Arrays.asList(
@@ -17,6 +18,35 @@ public class HobbyUtils {
     );
 
     public List<List<Double>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
-                return null;
+
+        List<List<Double>> score = new ArrayList<>();
+        Optional<Hobby> other;
+
+        for (int i = 0; i < hobbyOfUsers.size(); i++) {
+            Optional<Hobby> user = hobbyOfUsers.get(i);
+
+            List<Double> scoreOfUser = new ArrayList<>();
+
+
+            for (int j = 0; j < hobbyOfUsers.size(); j++) {
+                if (i == j) {
+                    scoreOfUser.add(-1.0);
+                    continue;
+                }
+                other = hobbyOfUsers.get(j);
+
+                List<String> unions = user.get().getHobby();
+                List<String> retain = user.get().getHobby();
+                List<String> otherHobby = other.get().getHobby();
+
+                unions.addAll(otherHobby);
+                retain.retainAll(otherHobby);
+
+                scoreOfUser.add((double) (retain.size() / unions.size()));
+            }
+            score.add(scoreOfUser);
+        }
+
+        return score;
     }
 }
