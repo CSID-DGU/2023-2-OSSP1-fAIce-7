@@ -23,14 +23,23 @@ public class Hobby {
     // 취미 1 - 20
     @ColumnDefault("null")
     private String hobby1;
+    @ColumnDefault("null")
     private String hobby2;
+    @ColumnDefault("null")
     private String hobby3;
+    @ColumnDefault("null")
     private String hobby4;
+    @ColumnDefault("null")
     private String hobby5;
+    @ColumnDefault("null")
     private String hobby6;
+    @ColumnDefault("null")
     private String hobby7;
+    @ColumnDefault("null")
     private String hobby8;
+    @ColumnDefault("null")
     private String hobby9;
+    @ColumnDefault("null")
     private String hobby10;
 
     public void setHobby(int hobbyNumber, String name) {

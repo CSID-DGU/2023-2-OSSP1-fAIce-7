@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HobbyService {
@@ -13,9 +14,9 @@ public class HobbyService {
     @Autowired
     private HobbyRepository hobbyRepository;
 
-    public List<Hobby> getUserHobbies(String userId) {
+    public Optional<Hobby> getUserHobbies(String userId) {
         // userId를 기반으로 사용자의 취미 목록을 조회
-        return hobbyRepository.findByUser_Id(userId);
+        return hobbyRepository.findById(userId);
     }
 
     public Hobby saveHobby(Hobby hobby) {
