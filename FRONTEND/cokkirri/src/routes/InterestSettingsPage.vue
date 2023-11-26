@@ -49,11 +49,19 @@ export default {
         '사회 및 기타활동': ['사회봉사활동', '종교활동', '클럽/나이트/디스코/캬바레 가기', '잡담/통화하기/문자보내기(카카오톡, 라인, 디엠 등)', '계모임/동창회/사교(파티)모임', '동호회 모임', '기타']
       },
       interests: [{ inputText: '', filteredItems: [] }],
+      // 이미 입력된 관심분야 목록을 저장할 배열 추가
+      existingInterests: [],
     };
   },
   computed: {
     isComplete() {
-      return this.interests.every(interest => interest.inputText && this.isValidItem(interest.inputText));
+      // 중복 입력 여부를 체크하기 위해 중복된 항목이 있는지 확인
+      const hasDuplicate = this.interests.some((interest, index) =>
+        interest.inputText &&
+        (this.isExistingInterest(interest.inputText) || this.isDuplicateInterest(index))
+      );
+      // 중복된 항목이 있거나 10개 이상 입력되지 않았을 때 완료 버튼 비활성화
+      return !hasDuplicate && this.interests.length <= 10 && this.interests.every(interest => interest.inputText && this.isValidItem(interest.inputText));
     },
   },
   methods: {
@@ -61,13 +69,19 @@ export default {
       const inputText = this.interests[index].inputText.toLowerCase();
       this.interests[index].filteredItems = Object.entries(this.categories)
         .flatMap(([category, items]) => {
-          // 카테고리명과 일치할 경우 해당 카테고리의 모든 항목 표시
-          if (category.toLowerCase().includes(inputText)) {
-            return items.map(item => ({ category, item }));
+          // 현재 입력 중인 텍스트 필드를 제외하고 이미 입력된 항목 필터링
+          const filteredItems = items
+            .filter(item => item.toLowerCase().includes(inputText))
+            .map(item => ({ category, item }));
+          if (index > 0) {
+            const existingInterests = this.interests
+              .slice(0, index)
+              .map(interest => interest.inputText.toLowerCase());
+            return filteredItems.filter(item =>
+              !existingInterests.includes(`${category} >> ${item.item.toLowerCase()}`)
+            );
           }
-          // 카테고리명과 일치하지 않을 경우, 항목 중에서 필터링
-          return items.filter(item => item.toLowerCase().includes(inputText))
-                    .map(item => ({ category, item }));
+          return filteredItems;
         });
     },
     selectItem(index, { category, item }) {
@@ -90,11 +104,22 @@ export default {
     removeInterest(index) {
       this.interests.splice(index, 1);
     },
-    isExistingInterest(inputText) {
-      return this.interests.slice(1).some(interest => interest.inputText === inputText);
-    },
     clearInputText(index) {
       this.interests[index].inputText = ''; // 입력한 텍스트 지우기
+    },
+    isDuplicateInterest(index) {
+      if (index > 0) {
+        const currentInputText = this.interests[index].inputText.toLowerCase();
+        const existingInterests = this.interests
+          .slice(0, index)
+          .map(interest => interest.inputText.toLowerCase());
+        return existingInterests.includes(currentInputText);
+      }
+      return false;
+    },
+    isExistingInterest(inputText) {
+      // 이미 입력된 관심분야 목록에 해당 항목이 있는지 확인
+      return this.existingInterests.includes(inputText.toLowerCase());
     },
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
