@@ -525,8 +525,8 @@ public class MatchingService {
 
                 List<String>lastUserHobby = userList.get(userList.size()-1).getHobby();
                 List<String>courseNumList = new ArrayList<>();
-                courseNumList.addAll(firstUserCourseNum);
-                courseNumList.addAll(lastUserCourseNum);
+//                courseNumList.addAll(firstUserCourseNum);
+//                courseNumList.addAll(lastUserCourseNum);
                 //시간표가 겹치는 유저 찾아
                 List<String> Hobby = new ArrayList<>(findDuplicatesCourse(courseNumList));
                 System.out.println("겹치는 수업은 : " + Hobby + " 입니다");
@@ -541,24 +541,24 @@ public class MatchingService {
                         // 반환 배열에 넣음
                         hobbyUserList.add(userLast);
 
-                        for(int j = 0; j < userList.size()-1 ; j++){
-                            List<String>firstUserHobby = userList.get(j).getHobby();
-                            List<String>lastUserHobby = userList.get(userList.size()-1).getHobby();
-                            List<String>hobbyList = new ArrayList<>();
-                            hobbyList.addAll(firstUserHobby);
-                            hobbyList.addAll(lastUserHobby);
-                            //시간표가 겹치는 유저 찾아
-                            List<String> hobby = new ArrayList<>(findDuplicatesCourse(hobbyList));
-                            boolean heads = (userList.get(j).getHeadCount())==(userList.get(userList.size()-1).getHeadCount());
-                            if (heads&&Hobby!=null) {
-
-                                // 겹치는 시간 확인
-                                matched.setHobby(hobby);
-                                hobbyUserList.add(userList.get(j));
-                                usermatched.add(j);
-
-                            }
-                        }
+//                        for(int j = 0; j < userList.size()-1 ; j++){
+//                            List<String>firstUserHobby = userList.get(j).getHobby();
+//                            List<String>lastUserHobby = userList.get(userList.size()-1).getHobby();
+//                            List<String>hobbyList = new ArrayList<>();
+//                            hobbyList.addAll(firstUserHobby);
+//                            hobbyList.addAll(lastUserHobby);
+//                            //시간표가 겹치는 유저 찾아
+//                            List<String> hobby = new ArrayList<>(findDuplicatesCourse(hobbyList));
+//                            boolean heads = (userList.get(j).getHeadCount())==(userList.get(userList.size()-1).getHeadCount());
+//                            if (heads&&Hobby!=null) {
+//
+//                                // 겹치는 시간 확인
+//                                matched.setHobby(hobby);
+//                                hobbyUserList.add(userList.get(j));
+//                                usermatched.add(j);
+//
+//                            }
+//                        }
                         //마지막 요소 제거
                         userList.remove(userLast);
                         System.out.println(userList);

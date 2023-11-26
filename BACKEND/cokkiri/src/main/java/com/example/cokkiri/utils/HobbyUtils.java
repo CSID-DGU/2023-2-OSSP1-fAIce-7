@@ -17,6 +17,6 @@ public class HobbyUtils {
     );
 
     public List<List<Double>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
-                
+                return null;
     }
 }
