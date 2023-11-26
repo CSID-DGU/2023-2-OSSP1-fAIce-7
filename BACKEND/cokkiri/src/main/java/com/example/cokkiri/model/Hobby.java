@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +28,7 @@ public class Hobby {
 
 
     // 취미 1 - 20
+    @ColumnDefault("null")
     private String hobby1;
     private String hobby2;
     private String hobby3;
@@ -51,5 +56,21 @@ public class Hobby {
         }
     }
 
+    public List<String> getHobby() {
+        ArrayList<String> hobbies = new ArrayList<>();
+
+        if (hobby1 != null) hobbies.add(hobby1);
+        if (hobby2 != null) hobbies.add(hobby2);
+        if (hobby3 != null) hobbies.add(hobby3);
+        if (hobby4 != null) hobbies.add(hobby4);
+        if (hobby5 != null) hobbies.add(hobby5);
+        if (hobby6 != null) hobbies.add(hobby6);
+        if (hobby7 != null) hobbies.add(hobby7);
+        if (hobby8 != null) hobbies.add(hobby8);
+        if (hobby9 != null) hobbies.add(hobby9);
+        if (hobby10 != null) hobbies.add(hobby10);
+
+        return hobbies;
+    }
 }
 
