@@ -121,4 +121,12 @@ public class UserService {
             userRepository.save(e.get());
         }
     }
+
+    public User setUserInterests(String id) {
+        return null;
+    }
+
+    public User getUserInterests(String userId) {
+        return null;
+    }
 }
