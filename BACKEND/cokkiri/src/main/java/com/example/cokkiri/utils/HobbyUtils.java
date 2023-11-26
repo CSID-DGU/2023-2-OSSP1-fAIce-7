@@ -1,8 +1,8 @@
 package com.example.cokkiri.utils;
 
 import com.example.cokkiri.model.Hobby;
-
 import java.util.*;
+
 
 public class HobbyUtils {
     public static final List<String> HOBBIES = Arrays.asList(
@@ -43,6 +43,7 @@ public class HobbyUtils {
         }
 
         return preferenceScores;
+
     }
 }
 
