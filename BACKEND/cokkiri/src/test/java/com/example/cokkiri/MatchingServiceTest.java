@@ -1,30 +1,20 @@
-package com.example.cokkiri;
-
-import com.example.cokkiri.model.HobbyMatching;
-import com.example.cokkiri.repository.HobbyRepository;
 import com.example.cokkiri.service.MatchingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+
 @SpringBootTest
-@ActiveProfiles("test") // 테스트 프로파일 사용
+@ActiveProfiles("test")
 public class MatchingServiceTest {
 
-    @Autowired
-    private MatchingService matchingService;
+    private static final Logger logger = LoggerFactory.getLogger(MatchingServiceTest.class);
 
-    @Autowired
-    private HobbyRepository hobbyRepository;
-
-    @Test
-    public void testFindHobbyMatch() {
-        // 테스트 데이터 준비
-
-    }
 }
