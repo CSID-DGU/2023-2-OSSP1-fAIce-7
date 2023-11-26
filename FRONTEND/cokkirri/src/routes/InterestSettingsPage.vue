@@ -62,18 +62,29 @@ export default {
         (this.isExistingInterest(interest.inputText) || this.isDuplicateInterest(index))
       );
 
-      const isAdditionalInputComplete = this.interests.every(interest =>
-        !interest.additionalInput || interest.additionalInput.trim() !== ''
-      );
+      const isAdditionalInputComplete = this.interests.every(interest => {
+        if (interest.inputText === '사회 및 기타활동 >> 기타') {
+          return interest.additionalInput && interest.additionalInput.trim() !== '';
+        }
+        return true;
+      });
 
-      // '사회 및 기타활동 >> 기타'가 선택되었을 때 추가 입력란이 비어 있지 않은지 확인
-      const isAdditionalInputNotEmpty = this.interests.every(interest =>
-        interest.inputText !== '사회 및 기타활동 >> 기타' || interest.additionalInput.trim() !== ''
-      );
+      const isAdditionalInputUnique = this.interests.every((interest, index) => {
+        if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
+          const additionalInputLower = interest.additionalInput.toLowerCase();
+          return !this.interests.some((otherInterest, otherIndex) => 
+            otherIndex !== index &&
+            otherInterest.inputText.split(' >> ')[1].toLowerCase() === additionalInputLower
+          );
+        }
+        return true;
+      });
 
-      return !hasDuplicate && this.interests.length <= 10 && this.interests.every(interest =>
+      const areAllInterestsValid = this.interests.every(interest =>
         interest.inputText && this.isValidItem(interest.inputText)
-      ) && isAdditionalInputComplete && isAdditionalInputNotEmpty;
+      );
+
+      return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
   },
   methods: {
@@ -142,18 +153,19 @@ export default {
     },
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
-      const newInterests = this.interests.filter(interest => !this.isExistingInterest(interest.inputText))
-        .map(interest => {
-          // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용만 item으로 설정
+      const interestData = {};
+      this.interests.filter(interest => !this.isExistingInterest(interest.inputText))
+        .forEach((interest, index) => {
+          // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
           if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
-            return { item: interest.additionalInput };
+            interestData[`item${index + 1}`] = interest.additionalInput;
           } else {
-            // 그 외의 경우는 카테고리를 제외한 항목 이름만 item으로 설정
-            return { item: interest.inputText.split(' >> ')[1] };
+            // 그 외의 경우는 일반적인 항목을 설정
+            interestData[`item${index + 1}`] = interest.inputText.split(' >> ')[1];
           }
         });
 
-      axios.post('/api/interests', { interests: newInterests })
+      axios.post('/api/interests', { interests: interestData })
         .then(response => {
           // 성공적으로 데이터를 전송했을 때의 처리
           console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
