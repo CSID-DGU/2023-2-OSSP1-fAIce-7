@@ -18,14 +18,7 @@ import java.util.List;
 public class Hobby {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // User에 있는 id와 join
-    @ManyToOne
-    @JoinColumn(name = "user_email", referencedColumnName = "id")
-    private User user;
-
+    private String Id;
 
     // 취미 1 - 20
     @ColumnDefault("null")
