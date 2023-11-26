@@ -16,6 +16,8 @@
           <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
             <div class="circle-button">-</div>
           </div>
+          <!-- '기타 입력란' 활성화 -->
+          <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
         </div>
         <!-- 필터링된 항목 리스트 -->
         <ul v-if="interest.inputText && interest.filteredItems.length">
@@ -55,13 +57,23 @@ export default {
   },
   computed: {
     isComplete() {
-      // 중복 입력 여부를 체크하기 위해 중복된 항목이 있는지 확인
       const hasDuplicate = this.interests.some((interest, index) =>
         interest.inputText &&
         (this.isExistingInterest(interest.inputText) || this.isDuplicateInterest(index))
       );
-      // 중복된 항목이 있거나 10개 이상 입력되지 않았을 때 완료 버튼 비활성화
-      return !hasDuplicate && this.interests.length <= 10 && this.interests.every(interest => interest.inputText && this.isValidItem(interest.inputText));
+
+      const isAdditionalInputComplete = this.interests.every(interest =>
+        !interest.additionalInput || interest.additionalInput.trim() !== ''
+      );
+
+      // '사회 및 기타활동 >> 기타'가 선택되었을 때 추가 입력란이 비어 있지 않은지 확인
+      const isAdditionalInputNotEmpty = this.interests.every(interest =>
+        interest.inputText !== '사회 및 기타활동 >> 기타' || interest.additionalInput.trim() !== ''
+      );
+
+      return !hasDuplicate && this.interests.length <= 10 && this.interests.every(interest =>
+        interest.inputText && this.isValidItem(interest.inputText)
+      ) && isAdditionalInputComplete && isAdditionalInputNotEmpty;
     },
   },
   methods: {
@@ -85,7 +97,14 @@ export default {
         });
     },
     selectItem(index, { category, item }) {
-      this.interests[index].inputText = `${category} >> ${item}`;
+      // '기타' 항목 선택 시 추가 입력란 활성화
+      if (item === '기타') {
+        this.interests[index].inputText = `${category} >> 기타`;
+        this.interests[index].additionalInput = '';
+      } else {
+        this.interests[index].inputText = `${category} >> ${item}`;
+        this.interests[index].additionalInput = undefined;
+      }
       this.interests[index].filteredItems = [];
     },
     formatItem({ category, item }) {
@@ -123,23 +142,28 @@ export default {
     },
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
-      const newInterests = this.interests.filter(interest => !this.isExistingInterest(interest.inputText));
-      axios.post('/api/interests', {
-        interests: newInterests.map(interest => ({
-          category: interest.inputText.split(' >> ')[0], // 카테고리 추출
-          item: interest.inputText.split(' >> ')[1], // 항목 추출
-        }))
-      })
-      .then(response => {
-        // 성공적으로 데이터를 전송했을 때의 처리
-        console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
-        // 추가적인 성공 처리 (예: 성공 메시지 표시, 다른 페이지로 리디렉션 등)
-      })
-      .catch(error => {
-        // 오류 발생 시의 처리
-        console.error('관심 분야 제출 중 오류 발생:', error);
-        // 추가적인 오류 처리 (예: 사용자에게 오류 메시지 표시)
-      });
+      const newInterests = this.interests.filter(interest => !this.isExistingInterest(interest.inputText))
+        .map(interest => {
+          // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용만 item으로 설정
+          if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
+            return { item: interest.additionalInput };
+          } else {
+            // 그 외의 경우는 카테고리를 제외한 항목 이름만 item으로 설정
+            return { item: interest.inputText.split(' >> ')[1] };
+          }
+        });
+
+      axios.post('/api/interests', { interests: newInterests })
+        .then(response => {
+          // 성공적으로 데이터를 전송했을 때의 처리
+          console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
+          // 추가적인 성공 처리 (예: 성공 메시지 표시, 다른 페이지로 리디렉션 등)
+        })
+        .catch(error => {
+          // 오류 발생 시의 처리
+          console.error('관심 분야 제출 중 오류 발생:', error);
+          // 추가적인 오류 처리 (예: 사용자에게 오류 메시지 표시)
+        });
     },
   },
 };
@@ -319,5 +343,9 @@ button:disabled {
 
 .complete-button:hover {
   background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
+}
+
+.additional-input {
+  margin-left: 10px;
 }
 </style>
