@@ -2,8 +2,11 @@ package com.example.cokkiri.service;
 
 import com.example.cokkiri.model.*;
 import com.example.cokkiri.repository.*;
+import com.example.cokkiri.utils.HobbyUtils;
+import com.example.cokkiri.utils.Pair;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.apache.xpath.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -498,123 +501,86 @@ public class MatchingService {
         }
     }
 
-    public HobbyMatchedList findHobbyMatch(List<HobbyMatching>userList, int count){
+    public HobbyMatchedList findHobbyMatch(List<HobbyMatching>userList, int count) {
         // 객체 생성
         HobbyMatchedList matched = new HobbyMatchedList();
         List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
+        List<Boolean> isFree = new ArrayList<>(Collections.nCopies(userList.size(), false));
+        int countFalse = isFree.size();
 
+        List<String> userId = new ArrayList<>();
 
-
-        if(userList.size()<2){
+        if (userList.size() < 2) {
             saveHobbyMatchingWaitUser(userList);
             return null;
-        }
-        else{
-            for(int i = 0; i < userList.size(); i++) {
+        } else {
+            for (int i = 0; i < userList.size(); i++) {
 
                 Optional<Hobby> userHobby = hobbyRepository.findById(userList.get(i).getEmail());
                 if (userHobby.isEmpty()) {
                     continue;
                 }
+                userId.add(userList.get(i).getEmail());
                 hobbyOfUsers.add(userHobby);
             }
 
-            for(int i = 0; i < hobbyOfUsers.size(); i++) {
-                for(int j = 0; j < hobbyOfUsers.size(); j++) {
+            Map<String, List<Pair>> score = HobbyUtils.hobbyScoreOfUsers(hobbyOfUsers);
+            List<Pair> wantTo = new ArrayList<>(Collections.nCopies(userList.size(), null));
+            List<Pair> maxScore = new ArrayList<>(Collections.nCopies(userList.size(), new Pair("", 0.0)));
+            Map<String, String> currentMatch = new HashMap<>(); // 현재 매칭 상태를 저장하는 맵
 
+            while (countFalse > 0) {
+                // 제안 하기
+                for (int t = 0; t < hobbyOfUsers.size(); t++) {
+                    String proposer = userId.get(t);
+                    if (wantTo.get(t) == null && !currentMatch.containsKey(proposer)) {
+                        List<Pair> proposerPreferences = score.get(proposer);
+                        if (proposerPreferences != null && !proposerPreferences.isEmpty()) {
+                            Pair topChoice = proposerPreferences.remove(0); // 가장 선호하는 선택
+                            wantTo.set(t, topChoice);
+                            String proposeTo = topChoice.getId();
+                            Pair currentBest = maxScore.get(userId.indexOf(proposeTo));
 
-            }
-
-                List<String>lastUserHobby = userList.get(userList.size()-1).getHobby();
-                List<String>courseNumList = new ArrayList<>();
-//                courseNumList.addAll(firstUserCourseNum);
-//                courseNumList.addAll(lastUserCourseNum);
-                //시간표가 겹치는 유저 찾아
-                List<String> Hobby = new ArrayList<>(findDuplicatesCourse(courseNumList));
-                System.out.println("겹치는 수업은 : " + Hobby + " 입니다");
-                // 마지막 요소와 시간요일,희망인원이 같은 요소있으면 배열 다 돌아
-                boolean head = (userList.get(i).getHeadCount())==(userList.get(userList.size()-1).getHeadCount());
-                if (head&&Hobby!=null) {
-
-                    userCount+=1;
-                    // 요소를 찾았지만 희망인원이 채워 졌는지 묻는 조건문
-                    if(userCount+1==count){
-                        HobbyMatching userLast = userList.get(userList.size() - 1);
-                        // 반환 배열에 넣음
-                        hobbyUserList.add(userLast);
-
-//                        for(int j = 0; j < userList.size()-1 ; j++){
-//                            List<String>firstUserHobby = userList.get(j).getHobby();
-//                            List<String>lastUserHobby = userList.get(userList.size()-1).getHobby();
-//                            List<String>hobbyList = new ArrayList<>();
-//                            hobbyList.addAll(firstUserHobby);
-//                            hobbyList.addAll(lastUserHobby);
-//                            //시간표가 겹치는 유저 찾아
-//                            List<String> hobby = new ArrayList<>(findDuplicatesCourse(hobbyList));
-//                            boolean heads = (userList.get(j).getHeadCount())==(userList.get(userList.size()-1).getHeadCount());
-//                            if (heads&&Hobby!=null) {
-//
-//                                // 겹치는 시간 확인
-//                                matched.setHobby(hobby);
-//                                hobbyUserList.add(userList.get(j));
-//                                usermatched.add(j);
-//
-//                            }
-//                        }
-                        //마지막 요소 제거
-                        userList.remove(userLast);
-                        System.out.println(userList);
-
-                        //userList 내의 매치된 유저값 삭제
-                        for (int k = 0 ; k  <usermatched.size() ; k ++ ){
-                            int num = usermatched.get(k);
-                            System.out.println(usermatched.get(k));
-                            userList.remove(num);
+                            // 제안 받기
+                            if (currentBest.getScore() < topChoice.getScore()) {
+                                // 새로운 매칭이 더 좋은 경우
+                                currentMatch.put(proposeTo, proposer); // 매칭 업데이트
+                                maxScore.set(userId.indexOf(proposeTo), topChoice);
+                                countFalse--;
+                            }
                         }
-                        usermatched.clear();
-                        userCount =0;
-
-                        // 학번 배열 생성, set
-                        List<String> emailList = new ArrayList<>();
-                        for (int k = 0; k <= hobbyUserList.size() - 1; k++) {
-                            String email = hobbyUserList.get(k).getEmail();
-                            emailList.add(email);
-                        }
-                        // 매칭된 학생들 학번 리스트
-                        matched.setEmailList(emailList);
-                        // 매칭 타입
-                        matched.setMatchingType(userLast.getMatchingType());
-
-                        // 매칭 희망인원
-                        matched.setHeadCount(userLast.getHeadCount());
-                        matched.setMatchingRes("매칭중");
-
-                        //매칭 시간 현재 날짜로 세팅
-                        LocalDate date = LocalDate.now();
-
-                        // 매칭 시간
-                        matched.setMatchingTime(date);
-
-                        hobbyUserList.clear();
-
-                        // entity 반환.
-                        return matched;
                     }
-                    //희망인원이 다 안채워 졌으면 continue
-                    else{
-                        continue;
-                    }
-                    // 배열 내 요소가 다를 시,
-                }else{
-                    continue;
                 }
             }
-            //끝까지 돌았는데 못찾았을 시
-            userCount=0;
-            saveHobbyMatchingWaitUser(userList);
-            return null;
+
+            // 매칭된 사용자 정보 추출 및 저장
+            List<String> matchedEmails = new ArrayList<>(currentMatch.values());
+            List<String> unmatchedEmails = new ArrayList<>(currentMatch.keySet());
+
+            // 매칭된 사용자의 이메일 리스트 설정
+            matched.setEmailList(matchedEmails);
+
+            // userList 내의 매치된 사용자 삭제 및 매칭되지 않은 사용자 처리
+            userList.removeIf(user -> matchedEmails.contains(user.getEmail()) || unmatchedEmails.contains(user.getEmail()));
+
+            // 매칭 타입, 희망 인원, 매칭 결과 상태, 매칭 시간 설정
+            HobbyMatching userLast = userList.get(userList.size() - 1); // 마지막 사용자의 정보 사용
+            matched.setMatchingType(userLast.getMatchingType());
+            matched.setHeadCount(userLast.getHeadCount());
+            matched.setMatchingRes("매칭중");
+            LocalDate date = LocalDate.now();
+            matched.setMatchingTime(date);
+
+            // 매칭되지 않은 사용자 처리
+            if (!userList.isEmpty()) {
+                saveHobbyMatchingWaitUser(userList);
+            }
+
+            // 매칭 결과 반환
+            return matched;
         }
     }
+
 
     public PublicMatchedList publicMatch(PublicMatching user){
         // 매칭된 사람 수 = 희망인원

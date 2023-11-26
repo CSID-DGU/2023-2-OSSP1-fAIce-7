@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface HobbyRepository extends JpaRepository<Hobby, Long> {
-    List<Hobby> findByUser_Id(Long userId);
+public interface HobbyRepository extends JpaRepository<Hobby, String> {
+    List<Hobby> findByUser_Id(String userId);
 }

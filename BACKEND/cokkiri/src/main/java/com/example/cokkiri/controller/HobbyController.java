@@ -16,7 +16,7 @@ public class HobbyController {
     private HobbyService hobbyService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Hobby>> getUserHobbies(@PathVariable Long userId) {
+    public ResponseEntity<List<Hobby>> getUserHobbies(@PathVariable String userId) {
         List<Hobby> hobbies = hobbyService.getUserHobbies(userId);
         return ResponseEntity.ok(hobbies);
     }
