@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/interests")
@@ -16,8 +17,8 @@ public class HobbyController {
     private HobbyService hobbyService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Hobby>> getUserHobbies(@PathVariable String userId) {
-        List<Hobby> hobbies = hobbyService.getUserHobbies(userId);
+    public ResponseEntity<Optional<Hobby>> getUserHobbies(@PathVariable String userId) {
+        Optional<Hobby> hobbies = hobbyService.getUserHobbies(userId);
         return ResponseEntity.ok(hobbies);
     }
 
