@@ -206,7 +206,10 @@ export default {
         width: 100vw;
         margin:0;
 
-        background-color: #ECBC76; 
+        background-image: url("../../assets/mypage/background.png"); // 배경 이미지 적용
+        background-size: cover; // 이미지가 배경 전체를 커버하도록 설정
+        background-repeat: no-repeat; // 이미지가 반복되지 않도록 설정
+        background-position: center center; // 이미지가 배경 중앙에 위치하도록 설정
         display: grid;
         grid-template-rows: auto;
         justify-items: center;
@@ -214,7 +217,12 @@ export default {
     }
     // container 클래스 위치 조정
     .container{
+        width: 996px;
+        height: 667px;
+        background-color: #FFFFFF; 
         display: flex;
+        border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+        border-radius: 20px;
         align-items: center;
         justify-content: center;
     }
@@ -224,6 +232,8 @@ export default {
         background-color: #FFFEF9;
         border-radius: 20px;
         display: flex;
+        border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+        border-radius: 20px;
         align-items: center;
         .user-img{
             width: 92px;
@@ -241,6 +251,8 @@ export default {
 
             font-size: 35px; 
             display: flex;
+            border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+            border-radius: 20px;
             justify-content: center;
             align-items: center;
             float: left;
@@ -257,6 +269,8 @@ export default {
             background-color: #ECBC76;
 
             display: flex;
+            border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+            border-radius: 20px;
             justify-content: center;
             align-items: center;
 
@@ -294,6 +308,7 @@ export default {
         height: 397px;
         margin-top: 47px;
         background-color: #FFFEF9;
+        border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
         border-radius: 20px;
 
         .my-link{

@@ -66,9 +66,13 @@
         height: 100vh;
         width: 100vw;
         margin:0;
-
-        background-color: #ECBC76; 
-        display: flex;
+        background-image: url("../../assets/mypage/background.png"); // 배경 이미지 적용
+        background-size: cover; // 이미지가 배경 전체를 커버하도록 설정
+        background-repeat: no-repeat; // 이미지가 반복되지 않도록 설정
+        background-position: center center; // 이미지가 배경 중앙에 위치하도록 설정
+        //background-color: #ECBC76; 
+        //display: flex;
+        //display: grid;
         align-items: center;
         justify-content: center;
     }
@@ -76,8 +80,10 @@
     .container{
         width: 996px;
         height: 667px;
-
+        background-color: #FFFFFF; 
         display: flex;
+        border: 3px solid #ECBC76; // 여기에 검은색 테두리를 추가합니다.
+        border-radius: 20px;
         justify-content: center;
     }
     .link-box{
@@ -114,6 +120,7 @@
         margin-top: 28px;
 
         background-color: #FFFEF9;
+        border: 3px solid #ECBC76; // 여기에 검은색 테두리를 추가합니다.
         border-radius: 20px;
         display: flex;
         align-items: center;
@@ -164,7 +171,8 @@
         width: 996px;
         height: 397px;
         margin-top: 47px;
-        background-color: #FFFEF9;
+        background-color: #FFFFFF;
+        border: 3px solid #ECBC76; // 여기에 검은색 테두리를 추가합니다.
         border-radius: 20px;
         display: flex;
 

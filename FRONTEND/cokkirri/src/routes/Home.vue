@@ -102,7 +102,7 @@ export default {
     .form-frame {
         width: 539px;
         height: 741px;
-        background: #FFFEF9;
+        background: #FFFFFF;
         box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
         border-radius: 40px;
 

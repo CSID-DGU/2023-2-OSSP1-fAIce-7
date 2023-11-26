@@ -251,7 +251,9 @@
     .frame-body{
         width: 996px;
         height: 569px;
-        background-color: #FFFEF9;
+        background-color: #FFFFFF;
+       
+        border: 5px solid #ECBC76;
         border-radius: 20px;
         
         .my-link{
@@ -371,12 +373,12 @@
         }
     }
     .frame-sub-body{
-        width: 996px;
-        height: 432px;
+        width: 950px;
+        height: 400px;
         margin-top: 5px;
         margin-left: 0px;
 
-        background: #FFFEF9;
+        background: #FFFFFF;
         border-radius: 20px;
         overflow-y: auto;
         .matching-frame{
