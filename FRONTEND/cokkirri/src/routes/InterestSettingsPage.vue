@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import axios from 'axios';
 export default {
   data() {
@@ -169,14 +170,17 @@ export default {
         .then(response => {
           // 성공적으로 데이터를 전송했을 때의 처리
           console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
-          // 추가적인 성공 처리 (예: 성공 메시지 표시, 다른 페이지로 리디렉션 등)
+          alert("관심분야 설정이 완료되었습니다.")
+          this.$router.push('/Starting');
         })
         .catch(error => {
           // 오류 발생 시의 처리
           console.error('관심 분야 제출 중 오류 발생:', error);
-          // 추가적인 오류 처리 (예: 사용자에게 오류 메시지 표시)
+          alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
+          this.$router.push('/');
         });
     },
+    ...mapMutations(['setUserInterests']) // Vuex 뮤테이션 매핑
   },
 };
 </script>
@@ -189,10 +193,6 @@ export default {
     width: 100vw;
     margin: 0;
     background-color: #ECBC76; 
-    background-image: url("../assets/mypage/background.png"); // 배경 이미지 적용
-    background-size: cover; // 이미지가 배경 전체를 커버하도록 설정
-    background-repeat: no-repeat; // 이미지가 반복되지 않도록 설정
-    background-position: center center; // 이미지가 배경 중앙에 위치하도록 설정
     display: grid;
     grid-template-rows: auto;
     justify-items: center;
