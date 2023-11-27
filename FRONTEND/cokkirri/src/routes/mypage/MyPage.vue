@@ -95,6 +95,7 @@
             width: 23px;
             height: 21px;
 
+            margin-left: 20px;
             float: left;
             
             background-image: url("../../assets/mypage/home.png");
@@ -105,7 +106,7 @@
             width: 100px;
             height: 21px;
 
-            margin-left: 2px;
+            margin-left: 5px;
             float: left;
 
             font-weight: 600;
