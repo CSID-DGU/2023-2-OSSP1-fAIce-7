@@ -252,11 +252,12 @@ export default {
     }
     // form 틀 만들기
     .form-frame {
-        width: 539px;
+        width: 570px;
         height: 741px;
-        background: #FFFEF9;
+        background: #FFFFFF;
         box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
-        border-radius: 40px;
+        border: 7px solid #ECBC76; 
+        border-radius: 20px;
         overflow-y: scroll;
 
         .describe-link-to-login{
