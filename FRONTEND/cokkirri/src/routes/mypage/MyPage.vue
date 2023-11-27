@@ -20,7 +20,7 @@
                 <div class="frame-body">
                     <div>
                         <div class="heart-img"></div>
-                            <div class="heart-txt">관심분야 재설정</div>
+                            <div class="heart-txt">관심분야</div>
                             <router-link to="/InterestSettingsPage" class="heart-btn">재설정 &gt;</router-link>
                             <div style="clear:both;"></div>
                         <div class="line-for-division"></div>
