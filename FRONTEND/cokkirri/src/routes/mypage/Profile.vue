@@ -221,7 +221,7 @@ export default {
         height: 667px;
         background-color: #FFFFFF; 
         display: flex;
-        border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+        border: 7px solid #ECBC76;
         border-radius: 20px;
         align-items: center;
         justify-content: center;
@@ -232,7 +232,7 @@ export default {
         background-color: #FFFEF9;
         border-radius: 20px;
         display: flex;
-        border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+        border: 7px solid #ECBC76;
         border-radius: 20px;
         align-items: center;
         .user-img{
@@ -250,8 +250,7 @@ export default {
             margin-left: 0px;
 
             font-size: 35px; 
-            display: flex;
-            border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+            display: flex; 
             border-radius: 20px;
             justify-content: center;
             align-items: center;
@@ -260,7 +259,6 @@ export default {
         .user-btn-edit{
             width: 163px;
             height: 55px;
-
             float: left;
 
             cursor: pointer;
@@ -269,12 +267,10 @@ export default {
             background-color: #ECBC76;
 
             display: flex;
-            border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
             border-radius: 20px;
             justify-content: center;
             align-items: center;
 
-            
             font-style: normal;
             font-weight: 400;
             font-size: 23px;
@@ -296,7 +292,6 @@ export default {
             justify-content: center;
             align-items: center;
 
-            
             font-style: normal;
             font-weight: 400;
             font-size: 23px;
@@ -308,7 +303,7 @@ export default {
         height: 397px;
         margin-top: 47px;
         background-color: #FFFEF9;
-        border: 3px solid #000; // 여기에 검은색 테두리를 추가합니다.
+        border: 7px solid #ECBC76;
         border-radius: 20px;
 
         .my-link{
