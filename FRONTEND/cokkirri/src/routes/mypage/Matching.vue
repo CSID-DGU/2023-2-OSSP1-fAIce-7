@@ -253,7 +253,7 @@
         height: 569px;
         background-color: #FFFFFF;
        
-        border: 5px solid #ECBC76;
+        border: 7px solid #ECBC76;
         border-radius: 20px;
         
         .my-link{

@@ -214,9 +214,9 @@ export default {
     }
     .frame-body{
         width: 996px;
-        height: 569px;
+        height: 600px;
         background-color: #FFFFFF;
-        border: 5px solid #ECBC76;
+        border: 7px solid #ECBC76;
         border-radius: 20px;
         
         .my-link{

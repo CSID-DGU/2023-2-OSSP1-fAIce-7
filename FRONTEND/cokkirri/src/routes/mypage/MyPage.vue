@@ -82,9 +82,10 @@
         height: 667px;
         background-color: #FFFFFF; 
         display: flex;
-        border: 3px solid #ECBC76; // 여기에 검은색 테두리를 추가합니다.
+        border: 7px solid #ECBC76; 
         border-radius: 20px;
         justify-content: center;
+        align-items:center;
     }
     .link-box{
         width: 125px;
@@ -120,7 +121,7 @@
         margin-top: 28px;
 
         background-color: #FFFEF9;
-        border: 3px solid #ECBC76; // 여기에 검은색 테두리를 추가합니다.
+        border: 7px solid #ECBC76;
         border-radius: 20px;
         display: flex;
         align-items: center;
@@ -172,7 +173,7 @@
         height: 397px;
         margin-top: 47px;
         background-color: #FFFFFF;
-        border: 3px solid #ECBC76; // 여기에 검은색 테두리를 추가합니다.
+        border: 7px solid #ECBC76;
         border-radius: 20px;
         display: flex;
 

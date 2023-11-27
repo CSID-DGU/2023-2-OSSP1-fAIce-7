@@ -104,7 +104,8 @@ export default {
         height: 741px;
         background: #FFFFFF;
         box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
-        border-radius: 40px;
+        border: 7px solid #ECBC76; 
+        border-radius: 20px;
 
         .link-describe{
             margin-left: 346px;

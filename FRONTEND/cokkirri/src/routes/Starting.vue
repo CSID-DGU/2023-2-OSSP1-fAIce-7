@@ -12,13 +12,13 @@
           <div class = "question">
             <div class="img-box">
               <div class="text-1">
-                <p>심각한<br><br><br>'Co-끼리' 중독입니다.</p>
+                <!-- <p>심각한<br><br><br>'Co-끼리' 중독입니다.</p>  -->
               </div>
             </div>
             <div style="clear:both;"></div>
             <div class="img-box-2">
               <div class="text-2">
-                <p>흥, 중독인지 아닌지<br><br><br>매칭된 사람한테 물어봐요.</p>
+                <!-- <p>흥, 중독인지 아닌지<br><br><br>매칭된 사람한테 물어봐요.</p>  -->
               </div>
             </div>
             <router-link class="mybutton" to="/my/matching">매칭 페이지</router-link>
@@ -173,7 +173,7 @@ export default {
   flex-direction: column;
   
   .img-box{
-    background-image: url('../assets/startmainpage/user_question.png');
+    //background-image: url('../assets/startmainpage/user_question.png');
     background-size: cover;
     background-repeat: no-repeat;
 
@@ -193,7 +193,7 @@ export default {
     color: #FFFFFF;
   }
   .img-box-2{
-    background-image: url('../assets/startmainpage/user_answer.png');
+    //background-image: url('../assets/startmainpage/user_answer.png');
     background-size: cover;
     background-repeat: no-repeat;
 
