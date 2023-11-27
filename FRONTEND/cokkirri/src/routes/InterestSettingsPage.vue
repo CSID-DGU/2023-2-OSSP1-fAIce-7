@@ -36,6 +36,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 import axios from 'axios';
 export default {
   data() {
@@ -87,6 +88,9 @@ export default {
 
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
+  },
+  mounted() {
+    this.fetchUserInterests(); // 마운트 시 사용자의 현재 관심분야를 로드
   },
   methods: {
     filterItems(index) {
@@ -179,7 +183,9 @@ export default {
           alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
           this.$router.push('/');
         });
+      this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
+    ...mapActions(['fetchUserInterests', 'updateUserInterests']), // Vuex 액션 매핑
     ...mapMutations(['setUserInterests']) // Vuex 뮤테이션 매핑
   },
 };
