@@ -286,7 +286,7 @@ export default {
             cursor: pointer;
 
             border-radius: 20px;
-            background-color: #D9D9D9;
+            background-color: #ECBC76;
 
             display: flex;
             justify-content: center;
