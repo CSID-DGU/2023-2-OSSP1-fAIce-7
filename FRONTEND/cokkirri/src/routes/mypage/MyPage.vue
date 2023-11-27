@@ -19,22 +19,22 @@
                 </div>
                 <div class="frame-body">
                     <div>
-                            <div class="heart-img"></div>
-                            <div class="heart-txt">내 하트</div>
-                            <router-link to="/Payments" class="heart-btn">{{this.$store.state.heart}} &gt;</router-link>
+                        <div class="heart-img"></div>
+                            <div class="heart-txt">관심분야 재설정</div>
+                            <router-link to="/InterestSettingsPage" class="heart-btn">재설정 &gt;</router-link>
                             <div style="clear:both;"></div>
-                            <div class="line-for-division"></div>
+                        <div class="line-for-division"></div>
 
-                            <div class="timetable-img"></div>
+                        <div class="timetable-img"></div>
                             <div class="timetable-txt">내 시간표</div>
                             <router-link to="/my/timetable" class="timetable-btn">등록 및 수정 &gt;</router-link>
                             <div style="clear:both;"></div>
-                            <div class="line-for-division"></div>
+                        <div class="line-for-division"></div>
 
-                            <div class="matching-img"></div>
+                        <div class="matching-img"></div>
                             <div class="matching-txt">매칭 결과</div>
                             <router-link to="/my/matching" class="matching-btn">확인하기 &gt;</router-link>
-                            <div style="clear:both;"></div>
+                        <div style="clear:both;"></div>
                     </div>
                 </div>
             </div>
@@ -50,9 +50,8 @@
             }
         },
         mounted(){
-            if(this.$store.state.isLogin){
-                this.$store.dispatch('userInfoUpdate')
-                this.heart = this.$store.state.heart
+            if (this.$store.state.isLogin) {
+            this.$store.dispatch('fetchUserInterests');
             }
         }
     }

@@ -35,6 +35,7 @@ export default createStore({
         // 관심분야 설정 여부
         isSetInterests: false, // 관심분야 설정 여부 변경
         categories: [],  // 기존 카테고리 상태
+        userInterests: [], // 사용자의 관심분야 저장
 
         // 매칭 대기 정보 불러오기
         classMatchingWait: null,
@@ -51,8 +52,8 @@ export default createStore({
     mutations: {
 
         // 사용자 관심분야 설정
-        setUserInterests(state, status) {
-            state.isSetInterests = status;
+        setUserInterests(state, interests) {
+            state.userInterests = interests;
         },
 
         // 매칭 대기 저장
@@ -168,9 +169,17 @@ export default createStore({
         }
     },
     actions: {
-        // 관심분야 설정 업데이트
-        updateInterests({ commit }, status) {
-            commit('SET_INTERESTS', status);
+        fetchUserInterests({ commit }) {
+            // 서버에서 사용자의 관심분야를 가져오는 코드
+            axios.get('/api/user/interests').then(response => {
+                commit('setUserInterests', response.data.interests);
+            });
+        },
+        updateUserInterests({ commit }, interests) {
+            // 서버에 사용자의 새로운 관심분야를 업데이트하는 코드
+            axios.post('/api/user/interests', { interests }).then(() => {
+                commit('setUserInterests', interests);
+            });
         },
         // 매칭 대기 존재하는지 반환
         async checkMatchingSubmitState({dispatch,state}){
