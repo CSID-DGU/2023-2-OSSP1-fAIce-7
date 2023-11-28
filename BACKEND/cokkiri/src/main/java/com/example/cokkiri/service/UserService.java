@@ -1,6 +1,8 @@
 package com.example.cokkiri.service;
 
+import com.example.cokkiri.model.Hobby;
 import com.example.cokkiri.model.User;
+import com.example.cokkiri.repository.HobbyRepository;
 import com.example.cokkiri.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private HobbyRepository hobbyRepository;
 
     //모든 user반환
     public List<User> findAll(){
@@ -123,6 +128,9 @@ public class UserService {
     }
 
     public User setUserInterests(String id) {
+
+        Optional<Hobby> user = hobbyRepository.findById(id);
+
         return null;
     }
 
