@@ -78,7 +78,7 @@ export default {
     let stompClient = null;
     
     const connectToWebSocket = () => {
-      const socket = new SockJS('http://3.37.37.164:8080/ws');
+      const socket = new SockJS('http://localhost:8081/ws');
       stompClient = Stomp.over(socket);
       stompClient.connect({}, () => {
         stompClient.subscribe(`/room/${matchingId.value}/${matchingType.value}`, (message) => {

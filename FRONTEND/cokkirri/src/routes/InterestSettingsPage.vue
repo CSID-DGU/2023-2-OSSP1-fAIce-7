@@ -37,7 +37,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import { mapActions } from 'vuex';
-import axios from 'axios';
+import axios from '../api/index.js';
 export default {
   data() {
     return {
@@ -171,7 +171,7 @@ export default {
           }
         });
 
-      axios.post('/api/interests/save/userId', { userId, interests: interestData })
+      axios.post('/api/interests/save', { userId, interests: interestData })
         .then(response => {
           // 성공적으로 데이터를 전송했을 때의 처리
           console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
