@@ -90,7 +90,9 @@ export default {
     },
   },
   mounted() {
-    this.fetchUserInterests(); // 마운트 시 사용자의 현재 관심분야를 로드
+    if (this.$store.state.isSetInterests) {
+    this.fetchUserInterests(); // 첫 로그인을 제외하고 관심분야 데이터 로드
+    }
   },
   methods: {
     filterItems(index) {
@@ -171,7 +173,7 @@ export default {
           }
         });
 
-      axios.post('/api/interests/save', { userId, interests: interestData })
+      axios.post('/api/interests/save/' + userId, interestData)
         .then(response => {
           // 성공적으로 데이터를 전송했을 때의 처리
           console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);

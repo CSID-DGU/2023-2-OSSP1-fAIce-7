@@ -169,16 +169,20 @@ export default createStore({
         }
     },
     actions: {
-        fetchUserInterests({ commit }) {
+        fetchUserInterests({ commit, state }) {
             // 서버에서 사용자의 관심분야를 가져오는 코드
-            axios.get('/api/user/interests').then(response => {
+            axios.get('/api/interests/' + state.id).then(response => {
                 commit('setUserInterests', response.data.interests);
+            }).catch(error => {
+                console.error('관심 분야 불러오기 실패:', error);
             });
         },
-        updateUserInterests({ commit }, interests) {
+        updateUserInterests({ commit, state }, interests) {
             // 서버에 사용자의 새로운 관심분야를 업데이트하는 코드
-            axios.post('/api/user/interests', { interests }).then(() => {
+            axios.post('/api/interests/save', { userId: state.id, interests }).then(() => {
                 commit('setUserInterests', interests);
+            }).catch(error => {
+                console.error('관심 분야 업데이트 실패:', error);
             });
         },
         // 매칭 대기 존재하는지 반환
