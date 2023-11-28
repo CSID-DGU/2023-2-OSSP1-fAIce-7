@@ -41,6 +41,8 @@ public class Hobby {
     private String hobby9;
     @ColumnDefault("null")
     private String hobby10;
+    @ColumnDefault("false")
+    private Boolean isSetInterests;
 
     public void setHobby(int hobbyNumber, String name) {
         switch (hobbyNumber) {
