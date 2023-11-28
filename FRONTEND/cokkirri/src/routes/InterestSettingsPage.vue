@@ -159,6 +159,7 @@ export default {
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
       const interestData = {};
+      const userId = this.$store.state.id; // Vuex 스토어에서 사용자 ID 로드
       this.interests.filter(interest => !this.isExistingInterest(interest.inputText))
         .forEach((interest, index) => {
           // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
@@ -170,7 +171,7 @@ export default {
           }
         });
 
-      axios.post('/api/interests', { interests: interestData })
+      axios.post('/api/interests/save/userId', { userId, interests: interestData })
         .then(response => {
           // 성공적으로 데이터를 전송했을 때의 처리
           console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
