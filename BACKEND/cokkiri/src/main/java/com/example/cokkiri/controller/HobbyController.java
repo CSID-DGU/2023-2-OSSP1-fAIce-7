@@ -22,9 +22,9 @@ public class HobbyController {
         return ResponseEntity.ok(hobbies);
     }
 
-    @PostMapping
-    public ResponseEntity<Hobby> saveHobby(@RequestBody Hobby hobby) {
-        Hobby savedHobby = hobbyService.saveHobby(hobby);
+    @PostMapping("/save/{userId}")
+    public ResponseEntity<Hobby> saveHobby(@PathVariable String userId, @RequestBody Hobby hobby) {
+        Hobby savedHobby = hobbyService.saveHobby(userId, hobby);
         return ResponseEntity.ok(savedHobby);
     }
 }

@@ -58,28 +58,6 @@ public class UserController {
         return new ResponseEntity<User>(userService.save(user),HttpStatus.OK);
     }
 
-    // 사용자의 취미 정보를 저장하는 엔드포인트
-    @PostMapping("/user/interests")
-    public ResponseEntity<?> setUserInterests(@RequestBody User user) {
-        User updatedUser = userService.setUserInterests(user.getId());
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error saving user interests");
-        }
-    }
-
-    // 사용자의 취미 정보를 조회하는 엔드포인트
-    @GetMapping("/user/interests/{userId}")
-    public ResponseEntity<?> getUserInterests(@PathVariable String userId) {
-        User user = userService.getUserInterests(userId);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-    }
-
     //user가 인증메일을 눌렀을 떄 처리
     @GetMapping("/signUpConfirm")
     public RedirectView signUpConfirm(@RequestParam(value = "id") String id,
