@@ -3,6 +3,7 @@ package com.example.cokkiri.controller;
 import com.example.cokkiri.model.Hobby;
 import com.example.cokkiri.model.User;
 import com.example.cokkiri.repository.HobbyRepository;
+import com.example.cokkiri.repository.UserRepository;
 import com.example.cokkiri.service.HobbyService;
 import com.example.cokkiri.utils.HobbyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class HobbyController {
     @Autowired
     private HobbyService hobbyService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping("/api/interests/{userId}")
     public ResponseEntity<Optional<Hobby>> getUserHobbies(@PathVariable String userId) {
         Optional<Hobby> hobbies = hobbyService.getUserHobbies(userId);
@@ -33,11 +37,15 @@ public class HobbyController {
         String userId = hobbyRequest.getUserId();
         Map<String, String> interests = hobbyRequest.getInterests();
 
+
         Hobby savedHobby = hobbyService.saveHobby(userId, interests);
 
         Map<String, Object> response = new HashMap<>();
         response.put("userId", userId);
         response.put("interests", interests);
+
+
+
 
         return ResponseEntity.ok(response);
     }

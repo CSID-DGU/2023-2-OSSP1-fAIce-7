@@ -37,8 +37,8 @@ public class HobbyService {
     public Hobby saveHobby(String userId, Map<String, String> hobbies) {
 
         // 사용자 존재 여부 확인
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent()) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
             // 사용자가 존재하지 않으면, 처리하지 않고 null 또는 예외 반환
             return null; // 또는 적절한 예외 처리
         }
@@ -68,6 +68,7 @@ public class HobbyService {
             }
         }
 
+        user.get().setSetInterests(true);
         // 취미 저장
         return hobbyRepository.save(hobby);
     }
