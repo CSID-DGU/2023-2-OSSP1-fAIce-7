@@ -25,37 +25,36 @@ public class HobbyController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/api/interests/{userId}")
-    public ResponseEntity<Optional<Hobby>> getUserHobbies(@PathVariable String userId) {
-        Optional<Hobby> hobbies = hobbyService.getUserHobbies(userId);
-        return ResponseEntity.ok(hobbies);
-    }
-
-    @PostMapping("/api/interests/save")
+    @PostMapping("/api/interests/save/")
     public ResponseEntity<Map<String, Object>> saveHobby(@RequestBody HobbyRequest hobbyRequest) {
-
+        // 요청 받은 데이터 로그
+        System.out.println("Received hobbyRequest: " + hobbyRequest);
         String userId = hobbyRequest.getUserId();
         Map<String, String> interests = hobbyRequest.getInterests();
 
-
+        // 처리 전 userId와 interests 로그
+        System.out.println("Processing hobbyRequest with userId: " + userId + " and interests: " + interests);
         Hobby savedHobby = hobbyService.saveHobby(userId, interests);
+
+        // 저장된 Hobby 객체 로그
+        System.out.println("Saved Hobby: " + savedHobby);
 
         Map<String, Object> response = new HashMap<>();
         response.put("userId", userId);
         response.put("interests", interests);
 
-
-
-
+        // 응답 데이터 로그
+        System.out.println("Response data: " + response);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(value = {"api/user/interests"})
-    public ResponseEntity<Hobby> getUserHobby(@RequestParam(value="userId")String id){
-
-        //관리자페이지에서 이메일으로 유저의 취미 조회 (마이페이지에서도 이걸 사용할 것)
-        Optional<Hobby> hobby = hobbyService.getUserHobbies(id);
-        return hobby.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+    @GetMapping("/api/user/interests")
+    public ResponseEntity<Hobby> getUserHobby(@RequestParam(value="userId") String userId) {
+        System.out.println("받은 요청: 사용자 ID - " + userId);
+        Optional<Hobby> hobby = hobbyService.getUserHobbies(userId);
+        System.out.println("보내는 응답: " + hobby);
+        return hobby.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 }
 

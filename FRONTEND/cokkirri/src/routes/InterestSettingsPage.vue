@@ -91,7 +91,8 @@ export default {
   },
   mounted() {
     if (this.$store.state.isSetInterests) {
-    this.fetchUserInterests(); // 첫 로그인을 제외하고 관심분야 데이터 로드
+      this.loadUserInterests(); // 첫 로그인을 제외하고 관심분야 데이터 로드
+      console.log("loadUserInterests 실행");
     }
   },
   methods: {
@@ -158,6 +159,21 @@ export default {
       // 이미 입력된 관심분야 목록에 해당 항목이 있는지 확인
       return this.existingInterests.includes(inputText.toLowerCase());
     },
+    loadUserInterests() {
+      // Vuex 스토어에서 관심분야 객체를 배열로 변환
+      console.log("loadUserInterests() 메소드 실행 시작")
+      this.$store.dispatch('fetchUserInterests').then(() => {
+        // 이메일 주소와 배열을 제외한 관심분야 데이터만 필터링
+        const filteredInterests = this.$store.state.userInterests.filter(interest =>
+          typeof interest === 'string' && !interest.includes('@')
+        );
+        console.log("필터링된 관심분야: ", filteredInterests);
+        this.interests = filteredInterests.map(interest => ({
+          inputText: interest,
+          filteredItems: []
+        }));
+      });
+    },
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
       const interestData = {};
@@ -173,18 +189,16 @@ export default {
           }
         });
 
-      axios.post('/api/interests/save/' + userId, interestData)
+      axios.post('/api/interests/save/', { userId, interests: interestData })
         .then(response => {
-          // 성공적으로 데이터를 전송했을 때의 처리
-          console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
-          alert("관심분야 설정이 완료되었습니다.")
-          this.$router.push('/Starting');
+            console.log('제출 성공:', response.data); // 성공 로그
+            alert("관심분야 설정이 완료되었습니다.");
+            this.$router.push('/Starting');
         })
         .catch(error => {
-          // 오류 발생 시의 처리
-          console.error('관심 분야 제출 중 오류 발생:', error);
-          alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-          this.$router.push('/');
+            console.error('제출 실패:', error); // 오류 로그
+            alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
+            this.$router.push('/');
         });
       this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
