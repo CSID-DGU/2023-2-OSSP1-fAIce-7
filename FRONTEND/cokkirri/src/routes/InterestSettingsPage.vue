@@ -160,18 +160,33 @@ export default {
       return this.existingInterests.includes(inputText.toLowerCase());
     },
     loadUserInterests() {
-      // Vuex 스토어에서 관심분야 객체를 배열로 변환
-      console.log("loadUserInterests() 메소드 실행 시작")
+      console.log("loadUserInterests() 메소드 실행 시작");
       this.$store.dispatch('fetchUserInterests').then(() => {
         // 이메일 주소와 배열을 제외한 관심분야 데이터만 필터링
         const filteredInterests = this.$store.state.userInterests.filter(interest =>
           typeof interest === 'string' && !interest.includes('@')
         );
         console.log("필터링된 관심분야: ", filteredInterests);
-        this.interests = filteredInterests.map(interest => ({
-          inputText: interest,
-          filteredItems: []
-        }));
+
+        // '기타' 관심분야 처리
+        this.interests = filteredInterests.map(interest => {
+          if (interest.startsWith('기타 >>')) {
+            // '기타' 항목 처리
+            const additionalText = interest.split('>>')[1].trim(); // 추가 텍스트 추출
+            return {
+              inputText: '사회 및 기타활동 >> 기타',
+              additionalInput: additionalText,
+              filteredItems: []
+            };
+          } else {
+            // 일반 항목 처리
+            return {
+              inputText: interest,
+              additionalInput: '',
+              filteredItems: []
+            };
+          }
+        });
       });
     },
     submitInterests() {
