@@ -49,6 +49,11 @@
                 heart: ''
             }
         },
+        mounted(){
+            if (this.$store.state.isLogin) {
+                this.$store.dispatch('fetchUserInterests');
+            }
+        },
     }
 </script>
 
