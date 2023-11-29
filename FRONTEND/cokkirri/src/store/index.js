@@ -170,14 +170,14 @@ export default createStore({
     },
     actions: {
         fetchUserInterests({ commit }) {
-            // 서버에서 사용자의 관심분야를 가져오는 코드
+            // 서버에서 사용자의 관심분야를 가져 오는 코드
             axios.get('/api/user/interests').then(response => {
                 commit('setUserInterests', response.data.interests);
             });
         },
         updateUserInterests({ commit }, interests) {
             // 서버에 사용자의 새로운 관심분야를 업데이트하는 코드
-            axios.post('/api/user/interests', { interests }).then(() => {
+            axios.post('/api/interests/save', { id, interests }).then(() => {
                 commit('setUserInterests', interests);
             });
         },
