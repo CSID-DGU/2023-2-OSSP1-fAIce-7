@@ -53,7 +53,15 @@ export default createStore({
 
         // 사용자 관심분야 설정
         setUserInterests(state, interests) {
-            state.userInterests = interests;
+            if (typeof interests === 'object' && interests !== null) {
+                const interestArray = Object.values(interests).filter(item => item != null);
+                console.log('userInterests 상태 업데이트:', interestArray);
+                state.userInterests = interestArray;
+            } else {
+                console.log('잘못된 데이터 형식:', interests);
+                state.userInterests = []; // 잘못된 데이터 형식일 경우 기본값 설정
+            }
+            console.log('업데이트된 userInterests:', state.userInterests);
         },
 
         // 매칭 대기 저장
@@ -169,17 +177,30 @@ export default createStore({
         }
     },
     actions: {
-        fetchUserInterests({ commit }) {
-            // 서버에서 사용자의 관심분야를 가져 오는 코드
-            axios.get('/api/user/interests').then(response => {
-                commit('setUserInterests', response.data.interests);
-            });
+        fetchUserInterests({ commit, state }) {
+            // 서버에서 사용자의 관심분야를 가져오는 코드
+            console.log("관심분야를 불러오는 요청 전송: 사용자 ID - " + state.id);
+            axios.get('/api/user/interests', { params: { userId: state.id } })
+                .then(response => {
+                    const interests = Object.values(response.data).filter(item => item != null);
+                    console.log("받은 응답: ", interests);
+                    commit('setUserInterests', interests);
+                })
+                .catch(error => {
+                    console.error('관심분야 불러오기 실패:', error);
+                });
         },
-        updateUserInterests({ commit }, id, interests) {
-            // 서버에 사용자의 새로운 관심분야를 업데이트하는 코드
-            axios.post('/api/interests/save', { id, interests }).then(() => {
-                commit('setUserInterests', id, interests);
-            });
+        updateUserInterests({ state, commit }, interests) {
+            const userId = state.id;
+            console.log('관심분야 전송:', interests); // 요청 전 데이터 로그
+            axios.post('/api/interests/save/', { userId, interests })
+                .then(response => {
+                    console.log('응답 데이터:', response.data); // 응답 로그
+                    commit('setUserInterests', interests);
+                })
+                .catch(error => {
+                    console.error('관심분야 업데이트 실패:', error); // 오류 로그
+                });
         },
         // 매칭 대기 존재하는지 반환
         async checkMatchingSubmitState({dispatch,state}){
