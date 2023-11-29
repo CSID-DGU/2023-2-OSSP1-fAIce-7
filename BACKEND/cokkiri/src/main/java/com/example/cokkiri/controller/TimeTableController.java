@@ -1,7 +1,6 @@
 package com.example.cokkiri.controller;
 
 import com.example.cokkiri.model.TimeTable;
-import com.example.cokkiri.model.User;
 import com.example.cokkiri.service.TimeTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

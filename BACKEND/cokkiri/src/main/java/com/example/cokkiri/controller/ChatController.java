@@ -1,7 +1,6 @@
 package com.example.cokkiri.controller;
 
 import com.example.cokkiri.model.Chat;
-import com.example.cokkiri.model.PublicMatchedList;
 import com.example.cokkiri.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

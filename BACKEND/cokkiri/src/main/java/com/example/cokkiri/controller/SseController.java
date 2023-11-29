@@ -1,15 +1,9 @@
 package com.example.cokkiri.controller;
 
 import com.example.cokkiri.service.SseService;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
-
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
