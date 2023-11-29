@@ -175,10 +175,10 @@ export default createStore({
                 commit('setUserInterests', response.data.interests);
             });
         },
-        updateUserInterests({ commit }, interests) {
+        updateUserInterests({ commit }, id, interests) {
             // 서버에 사용자의 새로운 관심분야를 업데이트하는 코드
             axios.post('/api/interests/save', { id, interests }).then(() => {
-                commit('setUserInterests', interests);
+                commit('setUserInterests', id, interests);
             });
         },
         // 매칭 대기 존재하는지 반환
