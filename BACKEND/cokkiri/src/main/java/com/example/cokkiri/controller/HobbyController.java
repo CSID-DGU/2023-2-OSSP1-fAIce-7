@@ -25,6 +25,9 @@ public class HobbyController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    HobbyRepository hobbyRepository;
+
     @GetMapping("/api/interests/{userId}")
     public ResponseEntity<Optional<Hobby>> getUserHobbies(@PathVariable String userId) {
         Optional<Hobby> hobbies = hobbyService.getUserHobbies(userId);
@@ -44,18 +47,30 @@ public class HobbyController {
         response.put("userId", userId);
         response.put("interests", interests);
 
-
-
-
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = {"api/user/interests"})
-    public ResponseEntity<Hobby> getUserHobby(@RequestParam(value="userId")String id){
+    public ResponseEntity<List<String>> getUserHobby(@RequestParam(value="userId")String id){
 
-        //관리자페이지에서 이메일으로 유저의 취미 조회 (마이페이지에서도 이걸 사용할 것)
-        Optional<Hobby> hobby = hobbyService.getUserHobbies(id);
-        return hobby.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        // 존재하는 유저?
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        else {
+            // 유저가 적어도 한번 설정했는지 확인
+            Optional<Hobby> hobbies = hobbyService.getUserHobbies(id);
+
+            if (hobbies.isPresent()) {
+
+                List<String> hobby = hobbies.get().getHobby();
+
+                return new ResponseEntity<>(hobby, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        }
     }
 }
 

@@ -1,8 +1,6 @@
 package com.example.cokkiri.model;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
 import java.util.List;
 
 @Data
