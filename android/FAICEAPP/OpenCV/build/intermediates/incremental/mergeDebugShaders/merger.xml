@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\flinter\Desktop\ossproj\2023-2-OSSP1-fAIce-7\android\FAICEAPP\OpenCV\src\main\shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\flinter\Desktop\ossproj\2023-2-OSSP1-fAIce-7\android\FAICEAPP\OpenCV\src\debug\shaders"/></dataSet></merger>
