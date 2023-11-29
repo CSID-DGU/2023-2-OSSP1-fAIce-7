@@ -1,14 +1,11 @@
 package com.example.cokkiri.service;
 
 import com.example.cokkiri.model.Chat;
-import com.example.cokkiri.model.User;
 import com.example.cokkiri.repository.ChatRepository;
-import com.example.cokkiri.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 @Service
 public class ChatService {
     @Autowired

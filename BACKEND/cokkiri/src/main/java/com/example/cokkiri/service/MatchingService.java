@@ -6,7 +6,6 @@ import com.example.cokkiri.utils.HobbyUtils;
 import com.example.cokkiri.utils.Pair;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.apache.xpath.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
