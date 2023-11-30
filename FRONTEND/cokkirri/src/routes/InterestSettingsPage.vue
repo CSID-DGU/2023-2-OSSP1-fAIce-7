@@ -229,11 +229,11 @@ export default {
         .catch(error => {
             console.error('제출 실패:', error); // 오류 로그
             alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-            this.$router.push('/');
+            this.$router.push('/login');
         });
       this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
-    ...mapActions(['fetchUserInterests', 'updateUserInterests']), // Vuex 액션 매핑
+    ...mapActions(['fetchUserInterests', 'updateUserInterests', 'logout']), // Vuex 액션 매핑
     ...mapMutations(['setUserInterests']) // Vuex 뮤테이션 매핑
   },
 };

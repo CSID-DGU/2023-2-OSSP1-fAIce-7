@@ -263,7 +263,7 @@ export default createStore({
                         alert("관심분야를 설정하지 않으셨습니다. 설정 페이지로 넘어갑니다.");
                         router.replace('/InterestSettingsPage');
                     } else {
-                        router.replace('/Starting');
+                        router.replace('/Starting/');
                     }
                 } else {
                     alert(response.data.password + '아이디 및 비밀번호에 대응되는 회원 정보가 없습니다.');
