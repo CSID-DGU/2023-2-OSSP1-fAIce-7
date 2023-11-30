@@ -59,10 +59,11 @@ export default {
   },
   computed: {
     isComplete() {
-      const hasDuplicate = this.interests.some((interest, index) =>
-        interest.inputText &&
-        (this.isExistingInterest(interest.inputText) || this.isDuplicateInterest(index))
-      );
+      const hasDuplicate = this.interests.some((interest, index) => {
+        const inputText = interest.inputText || ''; // undefined 방지
+        return inputText &&
+          (this.isExistingInterest(inputText) || this.isDuplicateInterest(index));
+      });
 
       const isAdditionalInputComplete = this.interests.every(interest => {
         if (interest.inputText === '사회 및 기타활동 >> 기타') {
@@ -74,17 +75,20 @@ export default {
       const isAdditionalInputUnique = this.interests.every((interest, index) => {
         if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
           const additionalInputLower = interest.additionalInput.toLowerCase();
-          return !this.interests.some((otherInterest, otherIndex) => 
-            otherIndex !== index &&
-            otherInterest.inputText.split(' >> ')[1].toLowerCase() === additionalInputLower
-          );
+          return !this.interests.some((otherInterest, otherIndex) => {
+            if (otherIndex !== index && otherInterest.inputText === '사회 및 기타활동 >> 기타') {
+              return otherInterest.additionalInput.toLowerCase() === additionalInputLower;
+            }
+            return false;
+          });
         }
         return true;
       });
 
-      const areAllInterestsValid = this.interests.every(interest =>
-        interest.inputText && this.isValidItem(interest.inputText)
-      );
+      const areAllInterestsValid = this.interests.every(interest => {
+        const inputText = interest.inputText || ''; // undefined 방지
+        return inputText && this.isValidItem(inputText);
+      });
 
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
@@ -135,15 +139,27 @@ export default {
       );
     },
     addInterest() {
+      const lastInterest = this.interests[this.interests.length - 1];
+      // 마지막 항목이 '기타' 항목인 경우
+      if (lastInterest && lastInterest.inputText === '사회 및 기타활동 >> 기타' && !lastInterest.additionalInput) {
+        alert('기타 항목의 추가 정보를 입력해주세요.');
+        return; // 추가 입력을 유도하고 메소드 종료
+      }
       if (this.interests.length < 10) {
         this.interests.push({ inputText: '', filteredItems: [] });
       }
     },
     removeInterest(index) {
-      this.interests.splice(index, 1);
+      if (index > -1 && index < this.interests.length) {
+        this.interests.splice(index, 1);
+      }
     },
     clearInputText(index) {
-      this.interests[index].inputText = ''; // 입력한 텍스트 지우기
+      this.interests[index].inputText = '';
+      // '사회 및 기타활동 >> 기타'인 경우에만 additionalInput을 초기화
+      if (this.interests[index].inputText === '사회 및 기타활동 >> 기타') {
+        this.interests[index].additionalInput = '';
+      }
     },
     isDuplicateInterest(index) {
       if (index > 0) {
