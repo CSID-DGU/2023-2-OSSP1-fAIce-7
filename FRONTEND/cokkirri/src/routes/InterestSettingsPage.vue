@@ -60,6 +60,10 @@ export default {
   computed: {
     isComplete() {
       const hasDuplicate = this.interests.some((interest, index) => {
+        // '사회 및 기타활동 >> 기타'는 중복 검증에서 제외
+        if (interest.inputText === '사회 및 기타활동 >> 기타') {
+          return false;
+        }
         const inputText = interest.inputText || ''; // undefined 방지
         return inputText &&
           (this.isExistingInterest(inputText) || this.isDuplicateInterest(index));
@@ -104,20 +108,29 @@ export default {
       const inputText = this.interests[index].inputText.toLowerCase();
       this.interests[index].filteredItems = Object.entries(this.categories)
         .flatMap(([category, items]) => {
-          // 카테고리 이름도 검사
+          // 카테고리 이름 검사
           const isCategoryMatched = category.toLowerCase().includes(inputText);
 
           const filteredItems = items
             .filter(item => item.toLowerCase().includes(inputText) || isCategoryMatched)
             .map(item => ({ category, item }));
-          
+
+          // 중복 검증 적용
           if (index > 0) {
             const existingInterests = this.interests
               .slice(0, index)
-              .map(interest => interest.inputText.toLowerCase());
-            return filteredItems.filter(item =>
-              !existingInterests.includes(`${category} >> ${item.item.toLowerCase()}`)
-            );
+              .map(interest => {
+                // '사회 및 기타활동 >> 기타'의 경우 추가 입력값을 포함하여 중복 여부 판단
+                if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
+                  return `${interest.inputText} >> ${interest.additionalInput}`.toLowerCase();
+                }
+                return interest.inputText.toLowerCase();
+              });
+
+            return filteredItems.filter(item => {
+              const fullItemText = `${category} >> ${item.item}`.toLowerCase();
+              return !existingInterests.includes(fullItemText);
+            });
           }
           return filteredItems;
         });
@@ -212,8 +225,8 @@ export default {
       // 관심 분야 데이터를 서버로 전송
       const userId = this.$store.state.id; // Vuex 스토어에서 사용자 ID 로드
       const interestData = this.interests
-      .filter(interest => !this.isExistingInterest(interest.inputText))
-      .reduce((acc, interest, index) => {
+        .filter(interest => !this.isExistingInterest(interest.inputText))
+        .reduce((acc, interest, index) => {
         // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
         const key = `item${index + 1}`;
         acc[key] = interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput
