@@ -1,8 +1,6 @@
 package com.example.cokkiri.controller;
 
 import com.example.cokkiri.model.Hobby;
-import com.example.cokkiri.model.User;
-import com.example.cokkiri.repository.HobbyRepository;
 import com.example.cokkiri.repository.UserRepository;
 import com.example.cokkiri.service.HobbyService;
 import com.example.cokkiri.utils.HobbyRequest;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
