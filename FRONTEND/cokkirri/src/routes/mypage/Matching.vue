@@ -48,6 +48,20 @@
                                     <div class="record-ing-btn">#매칭 대기</div>
                                 </div>
                             </div>
+                            <div v-if="this.$store.state.hobbyMatchingWait!==null" class="matching-frame">
+                                <div class="matching-describe">
+                                    # 신청 날짜 : {{this.$store.state.hobbyMatchingWait.matchingTime}}
+                                    <div class="btn-report" @click="cancelClassWait(this.$store.state.hobbyMatchingWait.id)">매칭 신청 취소</div>
+                                    <div>&nbsp;# 매칭 완료 후 하트 10개 차감 예정~!</div>
+                                </div>
+                                <div class="matching-box">
+                                    <div class="record-img"></div>
+                                    <div class="record-type">관심분야 매칭</div>
+                                    <div class="record-head-count"></div>
+                                    <div class="record-timetable"></div>
+                                    <div class="record-ing-btn">#매칭 대기</div>
+                                </div>
+                            </div>
                             <div v-for="(record, index) in matchingListClass" :key="index" class="matching-frame">
                                 <div class="matching-describe">
                                     # 신청 날짜 : {{record.matchingTime}} # 매칭 식별 번호 : {{record.matchingId}}
@@ -85,6 +99,23 @@
                                     <div v-else class="record-ing-btn">#매칭 완료</div>
                                 </div>
                             </div>
+                            <div v-for="(record, index) in matchingListHobby" :key="index" class="matching-frame">
+                                <div class="matching-describe">
+                                    # 신청 날짜 : {{record.matchingTime}} # 매칭 식별 번호 : {{record.matchingId}}
+                                    <div v-if="record.matchingRes==='매칭중'" class="btn-report" @click="openReportWindow('hobby',record.matchingId)">노쇼 신고</div>
+                                    <div v-if="!record.agreeList.includes(this.$store.state.id) && record.matchingRes==='매칭중'" class="btn-report" @click="closeHobbyMatching(record.matchingId)">매칭 완료</div>
+                                    <div v-else-if="record.matchingRes==='매칭중'">&nbsp;# 매칭 종료 접수 됨</div>
+                                </div>
+                                <div  class="matching-box">
+                                    <div class="record-img"></div>
+                                    <div class="record-type">관심분야 매칭</div>
+                                    <div class="record-head-count">인원 {{record.headCount}}명</div>
+                                    <div class="record-timetable">
+                                    </div>
+                                    <div v-if="record.matchingRes==='매칭중'" class="record-btn-move" @click="moveToChatroom(record.matchingId,'hobby')">#채팅방</div>
+                                    <div v-else class="record-ing-btn">#매칭 완료</div>
+                                </div>
+                            </div>
                             <div class="matching-frame">
                                 <div class="matching-describe"># 매칭 기록이 더이상 없습니다.</div>
                                 <div class="matching-box-ex">
@@ -108,6 +139,7 @@
             return {
                 matchingListClass: [],
                 matchingListFree: [],
+                matchingListHobby: [],
             }
         },
         methods: {
@@ -129,6 +161,7 @@
                     await this.$store.dispatch('callMatchingRecord')
                     this.matchingListClass = [...this.$store.state.classMatchingRecord].reverse()
                     this.matchingListFree = [...this.$store.state.publicMatchingRecord].reverse()
+                    this.matchingListHobby= [...this.$store.state.hobbyMatchingRecord].reverse()
                 }
             },
             openReportWindow(matchingType,matchingId){
@@ -183,6 +216,24 @@
                     console.log(error)
                 }
             },
+            async closeHobbyMatching(matchingId){
+                try{
+                    await axios.put('matching/agree/hobby',null,{
+                        params:{
+                            matchingId: matchingId,
+                            userId: this.$store.state.id
+                        }
+                    }).then((result)=>{
+                        console.log("매칭 완료")
+                        alert(result.data)
+                        this.callMatchingRecord()
+                    }).catch(function(error){
+                        console.log(error)
+                    })
+                }catch(error){
+                    console.log(error)
+                }
+            },
             async cancelClassWait(waitId){
                 await axios.get('/matching/delete/class/matchingWait',{
                     params:{
@@ -208,6 +259,18 @@
                 })
                 this.callMatchingRecord()
             },
+            async cancelHobbyWait(waitId){
+                await axios.get('/matching/delete/hobby/matchingWait',{
+                    params:{
+                        waitId: waitId
+                    }
+                }).then(()=>{
+                    console.log("매칭대기 취소 완료")
+                }).catch(function(error){
+                    console.log(error)
+                })
+                this.callMatchingRecord()
+            },
             moveToChatroom(matchingId, matchingType){
                 this.$store.state.matchingIdForChatroom = matchingId
                 this.$store.state.matchingTypeForChatroom = matchingType
@@ -219,6 +282,7 @@
                 this.$store.dispatch('callMatchingRecord')
                 this.matchingListClass =  [...this.$store.state.classMatchingRecord].reverse();
                 this.matchingListFree = [...this.$store.state.publicMatchingRecord].reverse();
+                this.matchingListHobby = [...this.$store.state.hobbyMatchingRecord].reverse();
             }
         },
     }

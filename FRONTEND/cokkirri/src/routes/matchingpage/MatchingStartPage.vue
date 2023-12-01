@@ -44,7 +44,7 @@ export default {
                     interests: this.filteredInterests,
                     matchingType: 'hobby'
                 };
-                await axios.post('/api/matching', payload);
+                await axios.post('matching/hobby', payload);
                 this.$store.dispatch('callMatchingRecord');
                 this.$router.replace('/my/matching');
             } catch (error) {
