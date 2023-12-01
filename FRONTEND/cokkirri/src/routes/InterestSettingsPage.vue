@@ -45,8 +45,8 @@ export default {
         // 카테고리 데이터
         '문화예술관람활동': ['전시회 관람 (미술, 사진, 건축, 디자인 등)', '박물관 관람', '음악연주회 관람(클래식, 오페라 등)', '전통예술공연 관람(국악, 민속놀이 등)', '연극공연 관람(뮤지컬 포함)', '무용공연 관람', '영화관람', '연예공연 관람(쇼, 콘서트, 마술 쇼 등)'],
         '문화예술참여활동': ['문학행사참여', '글짓기/독서토론', '미술활동(그림, 서예, 조각, 디자인, 도예, 만화 등)', '악기연주/노래교실', '전통예술 배우기(사물놀이, 줄타기 등)', '사진촬영(디지털카메라 포함)', '연극', '춤/무용(발레, 한국무용, 현대무용, 방송댄스, 스트릿댄스, 비보잉 등)'],
-        '스포츠관람활동': ['농구', '배구', '야구', '축구', '족구', '테니스', '스쿼시', '당구', '포켓볼', '볼링', '탁구', '골프', '수영', '윈드서핑', '수상스키', '스노보드', '스키', '아이스 스케이트', '아이스 하키', '보디빌딩', '배드민턴', '줄넘기', '체조', '훌라후프', '마라톤', '태권도', '유도', '합기도', '검도', '권투', '탱고', '왈츠', '자이보', '맘보', '폴카', '차차차', '사이클링', '산악자전거', '인라인 스케이트', '승마', '클라이밍'],
-        '스포츠참여활동': ['농구', '배구', '야구', '축구', '족구', '테니스', '스쿼시', '당구', '포켓볼', '볼링', '탁구', '골프', '수영', '윈드서핑', '수상스키', '스킨스쿠버다이빙', '래프팅', '요트', '스노보드', '스키', '아이스 스케이트', '아이스 하키', '헬스', '에어로빅', '요가', '필라테스', '태보', '배드민턴', '줄넘기', '체조', '훌라후프', '마라톤', '태권도', '유도', '합기도', '검도', '권투', '탱고', '왈츠', '자이보', '맘보', '폴카', '차차차', '사이클링', '산악자전거', '인라인 스케이트', '승마', '클라이밍'],
+        '스포츠관람활동': ['농구관람', '배구관람', '야구관람', '축구관람', '족구관람', '테니스관람', '스쿼시관람', '당구관람', '포켓볼관람', '볼링관람', '탁구관람', '골프관람', '수영관람', '윈드서핑관람', '수상스키관람', '스노보드관람', '스키관람', '아이스 스케이트관람', '아이스 하키', '보디빌딩', '배드민턴관람', '줄넘기관람', '체조관람', '훌라후프관람', '마라톤관람', '태권도관람', '유도관람', '합기도관람', '검도관람', '권투관람', '사이클링관람', '산악자전거관람', '인라인 스케이트관람', '승마관람', '클라이밍관람'],
+        '스포츠참여활동': ['농구', '배구', '야구', '축구', '족구', '테니스', '스쿼시', '당구', '포켓볼', '볼링', '탁구', '골프', '수영', '윈드서핑', '수상스키', '스킨스쿠버다이빙', '래프팅', '요트', '스노보드', '스키', '아이스 스케이트', '아이스 하키', '헬스', '에어로빅', '요가', '필라테스', '배드민턴', '줄넘기', '체조', '훌라후프', '마라톤', '태권도', '유도', '합기도', '검도', '권투', '탱고', '왈츠', '자이보', '맘보', '폴카', '차차차', '사이클링', '산악자전거', '인라인 스케이트', '승마', '클라이밍'],
         '관광활동': ['문화유적방문(고궁, 절, 유적지 등)', '자연명승 및 풍경 관람', '삼림욕', '국내여행', '해외여행', '소풍/야유회', '온천/해수욕', '유람선 타기', '테마파크/놀이공원/동물원/식물원 가기', '지역축제 참가', '자동차 드라이브'],
         '취미오락활동': ['수집활동(스크랩 포함)', '생활공예(십자수, 비즈공예, DIY, 꽃꽂이 등)', '요리', '다도', '반려동물 돌보기', '노래방 가기', '인테리어(집. 자동차 등)', '등산', '낚시', '홈페이지/블로그 관리', 'SNS', '미디어 제작', '인터넷 서핑', '컴퓨터게임', '모바일게임', '콘솔게임', '보드게임', '퍼즐/큐브', '바둑', '체스', '장기', '쇼핑', '외식', '독서(웹소설 포함)', '만화(애니, 웹툰)', '피부관리', '헤어관리', '네일아트', '마사지', '공부', '이색/테마카페 체험(방탈출, VR, 낚시카페 등)', '원예(화분, 화단가꾸기 등)'],
         '휴식활동': ['산책', '목욕/사우나/찜질방', '낮잠', 'TV시청', '영상시청(VOD, 유튜브, 넷플릭스, 웨이브, 티빙, 디즈니플러스 등)', '라디오/팟캐스트 청취', '음악 감상', '신문/잡지 보기'],
@@ -59,10 +59,15 @@ export default {
   },
   computed: {
     isComplete() {
-      const hasDuplicate = this.interests.some((interest, index) =>
-        interest.inputText &&
-        (this.isExistingInterest(interest.inputText) || this.isDuplicateInterest(index))
-      );
+      const hasDuplicate = this.interests.some((interest, index) => {
+        // '사회 및 기타활동 >> 기타'는 중복 검증에서 제외
+        if (interest.inputText === '사회 및 기타활동 >> 기타') {
+          return false;
+        }
+        const inputText = interest.inputText || ''; // undefined 방지
+        return inputText &&
+          (this.isExistingInterest(inputText) || this.isDuplicateInterest(index));
+      });
 
       const isAdditionalInputComplete = this.interests.every(interest => {
         if (interest.inputText === '사회 및 기타활동 >> 기타') {
@@ -74,40 +79,58 @@ export default {
       const isAdditionalInputUnique = this.interests.every((interest, index) => {
         if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
           const additionalInputLower = interest.additionalInput.toLowerCase();
-          return !this.interests.some((otherInterest, otherIndex) => 
-            otherIndex !== index &&
-            otherInterest.inputText.split(' >> ')[1].toLowerCase() === additionalInputLower
-          );
+          return !this.interests.some((otherInterest, otherIndex) => {
+            if (otherIndex !== index && otherInterest.inputText === '사회 및 기타활동 >> 기타') {
+              return otherInterest.additionalInput.toLowerCase() === additionalInputLower;
+            }
+            return false;
+          });
         }
         return true;
       });
 
-      const areAllInterestsValid = this.interests.every(interest =>
-        interest.inputText && this.isValidItem(interest.inputText)
-      );
+      const areAllInterestsValid = this.interests.every(interest => {
+        const inputText = interest.inputText || ''; // undefined 방지
+        return inputText && this.isValidItem(inputText);
+      });
 
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
   },
   mounted() {
-    this.fetchUserInterests(); // 마운트 시 사용자의 현재 관심분야를 로드
+    if (this.$store.state.isSetInterests) {
+      this.loadUserInterests(); // 첫 로그인을 제외하고 관심분야 데이터 로드
+      console.log("loadUserInterests 실행");
+    }
   },
   methods: {
     filterItems(index) {
       const inputText = this.interests[index].inputText.toLowerCase();
       this.interests[index].filteredItems = Object.entries(this.categories)
         .flatMap(([category, items]) => {
-          // 현재 입력 중인 텍스트 필드를 제외하고 이미 입력된 항목 필터링
+          // 카테고리 이름 검사
+          const isCategoryMatched = category.toLowerCase().includes(inputText);
+
           const filteredItems = items
-            .filter(item => item.toLowerCase().includes(inputText))
+            .filter(item => item.toLowerCase().includes(inputText) || isCategoryMatched)
             .map(item => ({ category, item }));
+
+          // 중복 검증 적용
           if (index > 0) {
             const existingInterests = this.interests
               .slice(0, index)
-              .map(interest => interest.inputText.toLowerCase());
-            return filteredItems.filter(item =>
-              !existingInterests.includes(`${category} >> ${item.item.toLowerCase()}`)
-            );
+              .map(interest => {
+                // '사회 및 기타활동 >> 기타'의 경우 추가 입력값을 포함하여 중복 여부 판단
+                if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
+                  return `${interest.inputText} >> ${interest.additionalInput}`.toLowerCase();
+                }
+                return interest.inputText.toLowerCase();
+              });
+
+            return filteredItems.filter(item => {
+              const fullItemText = `${category} >> ${item.item}`.toLowerCase();
+              return !existingInterests.includes(fullItemText);
+            });
           }
           return filteredItems;
         });
@@ -132,15 +155,27 @@ export default {
       );
     },
     addInterest() {
+      const lastInterest = this.interests[this.interests.length - 1];
+      // 마지막 항목이 '기타' 항목인 경우
+      if (lastInterest && lastInterest.inputText === '사회 및 기타활동 >> 기타' && !lastInterest.additionalInput) {
+        alert('기타 항목의 추가 정보를 입력해주세요.');
+        return; // 추가 입력을 유도하고 메소드 종료
+      }
       if (this.interests.length < 10) {
         this.interests.push({ inputText: '', filteredItems: [] });
       }
     },
     removeInterest(index) {
-      this.interests.splice(index, 1);
+      if (index > -1 && index < this.interests.length) {
+        this.interests.splice(index, 1);
+      }
     },
     clearInputText(index) {
-      this.interests[index].inputText = ''; // 입력한 텍스트 지우기
+      this.interests[index].inputText = '';
+      // '사회 및 기타활동 >> 기타'인 경우에만 additionalInput을 초기화
+      if (this.interests[index].inputText === '사회 및 기타활동 >> 기타') {
+        this.interests[index].additionalInput = '';
+      }
     },
     isDuplicateInterest(index) {
       if (index > 0) {
@@ -156,37 +191,71 @@ export default {
       // 이미 입력된 관심분야 목록에 해당 항목이 있는지 확인
       return this.existingInterests.includes(inputText.toLowerCase());
     },
-    submitInterests() {
-      // 관심 분야 데이터를 서버로 전송
-      const interestData = {};
-      const userId = this.$store.state.id; // Vuex 스토어에서 사용자 ID 로드
-      this.interests.filter(interest => !this.isExistingInterest(interest.inputText))
-        .forEach((interest, index) => {
-          // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
-          if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
-            interestData[`item${index + 1}`] = `기타 >> ${interest.additionalInput}`;
+    loadUserInterests() {
+      console.log("loadUserInterests() 메소드 실행 시작");
+      this.$store.dispatch('fetchUserInterests').then(() => {
+        // 이메일 주소와 배열을 제외한 관심분야 데이터만 필터링
+        const filteredInterests = this.$store.state.userInterests.filter(interest =>
+          typeof interest === 'string' && !interest.includes('@')
+        );
+        console.log("필터링된 관심분야: ", filteredInterests);
+
+        // '기타' 관심분야 처리
+        this.interests = filteredInterests.map(interest => {
+          if (interest.startsWith('기타 >>')) {
+            // '기타' 항목 처리
+            const additionalText = interest.split('>>')[1].trim(); // 추가 텍스트 추출
+            return {
+              inputText: '사회 및 기타활동 >> 기타',
+              additionalInput: additionalText,
+              filteredItems: []
+            };
           } else {
-            // 그 외의 경우는 카테고리와 항목을 결합하여 설정
-            interestData[`item${index + 1}`] = interest.inputText;
+            // 일반 항목 처리
+            return {
+              inputText: interest,
+              additionalInput: '',
+              filteredItems: []
+            };
           }
         });
+      });
+    },
+    submitInterests() {
+      // 관심 분야 데이터를 서버로 전송
+      const userId = this.$store.state.id; // Vuex 스토어에서 사용자 ID 로드
+      const interestData = this.interests
+        .filter(interest => !this.isExistingInterest(interest.inputText))
+        .reduce((acc, interest, index) => {
+        // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
+        const key = `item${index + 1}`;
+        acc[key] = interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput
+          ? `기타 >> ${interest.additionalInput}`
+          : interest.inputText;
+        return acc;
+      }, {});
 
-      axios.post('/api/interests/save', { userId, interests: interestData })
+      const payload = { // JSON 객체로 구성
+        userId: userId, // Vuex 스토어에서 사용자 ID 로드
+        interests: interestData
+      };
+
+      console.log('Sending request with payload:', JSON.stringify(payload, null, 2));
+
+      axios.post('/api/interests/save/', payload)
         .then(response => {
-          // 성공적으로 데이터를 전송했을 때의 처리
-          console.log('관심 분야가 성공적으로 제출되었습니다:', response.data);
-          alert("관심분야 설정이 완료되었습니다.")
-          this.$router.push('/Starting');
+            console.log('제출 성공:', response.data); // 성공 로그
+            alert("관심분야 설정이 완료되었습니다.");
+            this.$router.push('/Starting');
         })
         .catch(error => {
-          // 오류 발생 시의 처리
-          console.error('관심 분야 제출 중 오류 발생:', error);
-          alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-          this.$router.push('/');
+            console.error('제출 실패:', error); // 오류 로그
+            alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
+            this.$router.push('/login');
         });
-      this.updateUserInterests(this.interests.map(interest => interest.inputText));
+      // this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
-    ...mapActions(['fetchUserInterests', 'updateUserInterests']), // Vuex 액션 매핑
+    ...mapActions(['fetchUserInterests', 'updateUserInterests', 'logout']), // Vuex 액션 매핑
     ...mapMutations(['setUserInterests']) // Vuex 뮤테이션 매핑
   },
 };

@@ -128,11 +128,15 @@ router.beforeEach((to,from,next)=>{
     const requiresadminAuth = to.matched.some(record => record.meta.requiresadminAuth);
     const isLoggedIn = store.state.isLogin;
     const adminAuth = store.state.admin;
+    const isSetInterests = store.state.isSetInterests;
     
     if(requiresAuth && !isLoggedIn){
         alert("로그인이 필요합니다.")
         next('/');
-    }else if(isLoginPage && isLoggedIn){
+    }else if(isLoginPage && isLoggedIn && !isSetInterests){
+        alert("관심분야를 설정하지 않아 서비스를 이용할 수 없습니다.")
+        next('/');
+    }else if(isLoginPage && isLoggedIn && isSetInterests){
         alert("이미 로그인 상태입니다.")
         next('/Starting');
     }else if(requiresadminAuth && !adminAuth){
