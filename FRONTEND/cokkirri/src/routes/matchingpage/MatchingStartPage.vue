@@ -23,6 +23,11 @@
 import axios from '../../api/index.js'
 
 export default {
+    mounted(){
+            if (this.$store.state.isLogin) {
+                this.$store.dispatch('fetchUserInterests');
+            }
+        },
     computed: {
         filteredInterests() {
             // 이메일 형식을 제외한 관심분야 목록만 필터링
