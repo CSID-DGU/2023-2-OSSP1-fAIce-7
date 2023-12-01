@@ -104,10 +104,13 @@ export default {
       const inputText = this.interests[index].inputText.toLowerCase();
       this.interests[index].filteredItems = Object.entries(this.categories)
         .flatMap(([category, items]) => {
-          // 현재 입력 중인 텍스트 필드를 제외하고 이미 입력된 항목 필터링
+          // 카테고리 이름도 검사
+          const isCategoryMatched = category.toLowerCase().includes(inputText);
+
           const filteredItems = items
-            .filter(item => item.toLowerCase().includes(inputText))
+            .filter(item => item.toLowerCase().includes(inputText) || isCategoryMatched)
             .map(item => ({ category, item }));
+          
           if (index > 0) {
             const existingInterests = this.interests
               .slice(0, index)
