@@ -4,7 +4,7 @@ import com.example.cokkiri.model.Hobby;
 import java.util.*;
 
 public class HobbyUtils {
-
+/*
     public static final List<String> HOBBIES = Arrays.asList(
             "축구", "농구", "야구", "당구",
             "컴퓨터", "스위치", "보드게임", "오락실",
@@ -13,7 +13,8 @@ public class HobbyUtils {
             "강아지", "고양이", "조류", "식물",
             "그림", "음악", "사진", "글쓰기"
     );
-    /*
+    */
+
     public static HashMap<String, String> hobbies = new HashMap<>();
     static{
         hobbies.put("전시회 관람 (미술, 사진, 건축, 디자인 등)", "000");
@@ -170,8 +171,35 @@ public class HobbyUtils {
         hobbies.put("클럽/나이트/디스코/캬바레 가기", "520");
         hobbies.put("기타", "530");
     }
-    */
 
+    /*
+    // 두 사용자의 취미를 비교하여 점수를 계산하는 메소드
+    public static int calculateHobbyScore(Hobby user, Hobby other) {
+        List<String> userHobbies = user.getHobby();
+        List<String> otherHobbies = other.getHobby();
+
+        int totalScore = 0;
+        for (String userHobby : userHobbies) {
+            for (String otherHobby : otherHobbies) {
+                String userHobbyBit = hobbies.getOrDefault(userHobby, "000");
+                String otherHobbyBit = hobbies.getOrDefault(otherHobby, "000");
+                totalScore += compareHobbyBits(userHobbyBit, otherHobbyBit);
+            }
+        }
+        return totalScore;
+    }
+
+    // 두 취미의 비트 값을 비교하여 점수 계산
+    private static int compareHobbyBits(String userHobbyBit, String otherHobbyBit) {
+        int score = 0;
+        for (int i = 0; i < userHobbyBit.length(); i++) {
+            if (userHobbyBit.charAt(i) == otherHobbyBit.charAt(i)) {
+                score++;
+            }
+        }
+        return score;
+    }
+    */
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
         Map<String, List<Pair>> preferenceScores = new HashMap<>();
 
@@ -187,9 +215,10 @@ public class HobbyUtils {
                 String otherEmail = other.getId();
 
                 Set<String> unions = new HashSet<>(user.getHobby());
+                unions.addAll(other.getHobby());
+
                 Set<String> intersection = new HashSet<>(user.getHobby());
                 intersection.retainAll(other.getHobby());
-                unions.addAll(other.getHobby());
 
                 double score = intersection.isEmpty() ? 0 : (double) intersection.size() / unions.size();
                 scoresForUser.add(new Pair(otherEmail, score));
@@ -204,4 +233,3 @@ public class HobbyUtils {
 
     }
 }
-
