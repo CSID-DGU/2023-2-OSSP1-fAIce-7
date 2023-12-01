@@ -1,15 +1,19 @@
 <template>
-    <!-- 매칭 신청 페이지 -->
     <div class="background-setting">
-        <div class="container" >
+        <div class="container">
             <div class="frame-first-step-body">
-                <div class="frame-sub">
-                    <div class="font-h1">매칭</div>
+                <div class="upper-area">
+                    <div class="interest-title">나의 관심 분야</div>
+                    <div class="interest-list">
+                        <ul>
+                            <!-- 관심 분야 목록만 출력 -->
+                            <li v-for="(interest, index) in filteredInterests" :key="index">
+                                {{ interest }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div style="clear:both;"></div>
-                <div class="font-h4">
-                    <br>* 매칭 완료 시 자동으로 채팅방이 생성되며, 생성된 채팅방은 24시간동안 유지됩니다.</div>
-                <div class="matching-submit-btn" @click="submitMatching()">매칭 신청</div>
+                <div class="matching-submit-btn" @click="submitMatching">매칭 신청</div>
             </div>
         </div>
     </div>
@@ -62,8 +66,6 @@ export default {
                 const dateTemp = new Date(this.$store.state.restrctionDate.thString())
                 alert("현재 사용자는 과거 노쇼를 한 기록으로 인해 " + dateTemp.getFullYear() + "년 " + dateTemp.getMonth() + "월 " + dateTemp.getDay() + "일 " + dateTemp.getHours() + "시 " + dateTemp.getMinutes() + "분까지 매칭이 금지된 상태입니다.")
             }
-
-
         },
         
         async resisterMatchingHobby(){
