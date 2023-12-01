@@ -4,7 +4,7 @@ import com.example.cokkiri.model.Hobby;
 import java.util.*;
 
 public class HobbyUtils {
-/*
+
     public static final List<String> HOBBIES = Arrays.asList(
             "축구", "농구", "야구", "당구",
             "컴퓨터", "스위치", "보드게임", "오락실",
@@ -13,8 +13,8 @@ public class HobbyUtils {
             "강아지", "고양이", "조류", "식물",
             "그림", "음악", "사진", "글쓰기"
     );
-    */
 
+    /*
     public static HashMap<String, String> hobbies = new HashMap<>();
     static{
         hobbies.put("전시회 관람 (미술, 사진, 건축, 디자인 등)", "000");
@@ -171,6 +171,7 @@ public class HobbyUtils {
         hobbies.put("클럽/나이트/디스코/캬바레 가기", "520");
         hobbies.put("기타", "530");
     }
+    */
 
     /*
     // 두 사용자의 취미를 비교하여 점수를 계산하는 메소드
