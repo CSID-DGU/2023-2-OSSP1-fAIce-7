@@ -1,19 +1,15 @@
 <template>
+    <!-- 매칭 신청 페이지 -->
     <div class="background-setting">
-        <div class="container">
+        <div class="container" >
             <div class="frame-first-step-body">
-                <div class="upper-area">
-                    <div class="interest-title">나의 관심 분야</div>
-                    <div class="interest-list">
-                        <ul>
-                            <!-- 관심 분야 목록만 출력 -->
-                            <li v-for="(interest, index) in filteredInterests" :key="index">
-                                {{ interest }}
-                            </li>
-                        </ul>
-                    </div>
+                <div class="frame-sub">
+                    <div class="font-h1">매칭</div>
                 </div>
-                <div class="matching-submit-btn" @click="submitMatching">매칭 신청</div>
+                <div style="clear:both;"></div>
+                <div class="font-h4">
+                    <br>* 매칭 완료 시 자동으로 채팅방이 생성되며, 생성된 채팅방은 24시간동안 유지됩니다.</div>
+                <div class="matching-submit-btn" @click="checkHeartCount()">매칭 신청</div>
             </div>
         </div>
     </div>
@@ -21,13 +17,29 @@
 
 <script>
 import axios from '../../api/index.js'
-
 export default {
     mounted(){
             if (this.$store.state.isLogin) {
                 this.$store.dispatch('fetchUserInterests');
             }
         },
+    data(){
+        return{
+            // 인원수
+            headCount: '2',
+            // 매칭 신청 ["이메일"]
+            email: this.$store.state.id,
+            // 희망 날짜 "2023-05-20"
+            availableDay: '',
+            //
+            startTime: '',
+            endTime: '',
+            // 매칭 타입: 공강 - "free", 수업: "class", 관심분야: "hobby"
+            matchingType: 'hobby',
+            // 매칭 학수번호
+            courseNumber: []
+        }
+    },
     computed: {
         filteredInterests() {
             // 이메일 형식을 제외한 관심분야 목록만 필터링
@@ -37,122 +49,338 @@ export default {
         }
     },
     methods: {
-        async submitMatching() {
-            try {
-                const payload = {
-                    email: this.$store.state.id,
+        checkHeartCount(){
+            this.$store.dispatch('userInfoUpdate')
+            console.log("하트개수: "+this.$store.state.heart+"개 확인 완료")
+            if(this.$store.state.heart >= 0){
+                this.submitMatching()
+                this.$store.dispatch('userInfoUpdate')
+                console.log("사용자 정보 자동 업데이트")
+            }else{
+                alert("하트 개수가 "+this.$store.state.heart+"개 입니다."+"10개 이상 소지하고 있어야 매칭 신청이 가능합니다")
+            }
+        },
+        clickedBtnHeadCountTwo(){
+            this.headCount = '2'
+        },
+        clickedBtnHeadCountFour(){
+            this.headCount = '4'
+        },
+        clickedBtnMatchingTypeFree(){
+            this.matchingType = 'free'
+        },
+        clickedBtnMatchingTypeClass(){
+            this.matchingType = 'class'
+        },
+        submitMatching(){
+            if(this.$store.state.restrctionDate === null){
+                    if(this.matchingType==='hobby'){
+                        
+                        this.resisterMatchingHobby()
+                        
+                        
+                    }else {
+                        alert("매칭 오류")
+                    }
+            }
+            else{
+                console.log("규제 기간 확인됨: "+this.$store.state.restrctionDate)
+                const dateTemp = new Date(this.$store.state.restrctionDate.thString())
+                alert("현재 사용자는 과거 노쇼를 한 기록으로 인해 " + dateTemp.getFullYear() + "년 " + dateTemp.getMonth() + "월 " + dateTemp.getDay() + "일 " + dateTemp.getHours() + "시 " + dateTemp.getMinutes() + "분까지 매칭이 금지된 상태입니다.")
+            }
+
+
+        },
+        async resisterMatchingFree(){
+            try{
+                await axios.post('/matching/free',{
+                        headCount: this.headCount,
+                        email: this.email,
+                        availableDay: this.availableDay,
+                        startTime:this.startTime,
+                        endTime:this.endTime,
+                        matchingType:"free"
+                }).then(()=>{
+                    this.$store.dispatch('callMatchingRecord')
+                    this.$router.replace('/my/matching');
+                    alert("공강 매칭 신청 완료")
+                }).catch(function(error){
+                    console.log(error)
+                })
+            } catch(error){
+                console.log(error)
+            }
+        },
+        async resisterMatchingClass(){
+            try{
+                await axios.post('/matching/class',{
+                    headCount: this.headCount,
+                    email: this.email,
+                    courseNumber: this.courseNumber,
+                    matchingType:"class"
+                }).then(()=>{
+                    this.$store.dispatch('callMatchingRecord')
+                    this.$router.replace('/my/matching');
+                    alert("수업 매칭 신청 완료")
+                }).catch(function(error){
+                    console.log(error)
+                })
+            } catch(error){
+                console.log(error)
+            }
+        },
+        async resisterMatchingHobby(){
+            try{
+                await axios.post('/matching/hobby',{
+                    headCount: this.headCount,
+                    email: this.email,
+                    courseNumber: this.courseNumber,
                     interests: this.filteredInterests,
-                    matchingType: 'hobby'
-                };
-                await axios.post('matching/hobby', payload);
-                this.$store.dispatch('callMatchingRecord');
-                this.$router.replace('/my/matching');
-            } catch (error) {
-                console.error('매칭 신청 오류:', error);
-                alert('매칭 신청에 실패했습니다.');
+                    matchingType:"hobby"
+                }).then(()=>{
+                    this.$store.dispatch('callMatchingRecord')
+                    this.$router.replace('/my/matching');
+                    alert("관심분야 매칭 신청 완료")
+                }).catch(function(error){
+                    console.log(error)
+                })
+            } catch(error){
+                console.log(error)
             }
         }
-    }
+    },
 }
 </script>
 
 <style lang="scss" scoped>
-.background-setting {
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    background-image: url("../../assets/mypage/background.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    display: grid;
-    grid-template-rows: auto;
-    justify-items: center;
-    align-items: center;
-}
+    // 배경화면 설정
+    .background-setting{
+        height: 100vh;
+        width: 100vw;
+        margin:0;
 
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #FFFFFF;
-    border-radius: 20px;
-}
-
-.frame-first-step-body {
-    width: 996px;
-    height: 625px;
-    border: 5px solid #ECBC76;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.upper-area {
-    display: flex;
-    height: 80%;
-}
-
-.interest-title {
-    width: 30%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2vw;
-    color: #B87514;
-    position: relative; /* 가상 요소의 위치 기준점 */
-    border: 1px solid #333; /* 테두리 색상 지정 */
-    border-radius: 10px; /* 둥근 꼭지점 */
-    padding: 10px; /* 내부 여백 */
-    box-sizing: border-box; /* 박스 크기 계산 방식 */
-}
-
-
-
-.interest-list {
-    width: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    ul {
-        list-style-type: none;
-        padding: 0;
+        background-color: #FFFEF9;
+        display: grid;
+        grid-template-rows: auto;
+        justify-items: center;
+        align-items: center;
     }
-    li {
-        position: relative; /* 가상 요소의 위치 기준점 */
-        margin-bottom: 20px; /* 목록 간 간격 */
-        font-size: 1.8vw;
-        color: #333;
-        border: 1px solid #333; /* 테두리 색상 지정 */
-        border-radius: 10px; /* 둥근 꼭지점 */
-        padding: 10px; /* 내부 여백 */
-        box-sizing: border-box; /* 박스 크기 계산 방식 */
-        background-color: white; /* 박스 내부 색상 */
+    // container 클래스 위치 조정
+    .container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-}
+    .frame-first-step-body{
+        width: 996px;
+        height: 625px;
 
+        border: 5px solid #ECBC76;
+        border-radius: 20px;
+        .shadow{
+            box-shadow: 0 5px #B87514;
+        }
 
+        .font-h4{
+            width: 986px;
+            height: 112px;
 
-.matching-submit-btn {
-    width: 400px;
-    height: 60px;
-    margin-top: 20px;
-    margin-left: 293px;
-    margin-bottom: 50px;
-    background: #B87514;
-    border-radius: 50px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    color: #FFFFFF;
-    line-height: 24px;
-    letter-spacing: 0.5px;
-}
+            margin-top: 0px;
 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+
+            
+            font-style: normal;
+            font-weight: 500;
+            line-height: 38px;
+            font-size: 25px;
+            color: #B87514;
+        }
+        .matching-submit-btn{
+            width: 400px;
+            height: 60px;
+            
+            margin-left: 293px;
+
+            background: #B87514;
+            border-radius: 50px;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+
+            
+            font-style: normal;
+            font-weight: 700;
+
+            font-size: 32px;
+            color: #FFFFFF;
+            line-height: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .frame-sub{
+            width: 301px;
+            height: 401px;
+
+            margin-top: 23px;
+            margin-left: 13px;
+
+            padding-left: 0px;
+            float: left;
+
+            .font-h1{
+                width: 130px;
+                height: 73px;
+
+                float: left;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                
+                font-style: normal;
+                font-weight: 700;
+                line-height: 75px;
+                font-size: 50px;
+                color: #B87514;
+            }
+            .font-h2{
+                width: 301px;
+                height: 34px;
+
+                margin-top: 14px;
+                float: left;
+
+                display: flex;
+                align-items: center;
+                justify-content: left;
+
+                
+                font-style: normal;
+                font-weight: 500;     
+                line-height: 38px;
+                font-size: 25px;
+                color: #B87514;
+            }
+            .font-h3{
+                width: 301px;
+                height: 34px;
+
+                margin-top: 14px;
+
+                display: flex;
+                align-items: center;
+                justify-content: left;
+
+                
+                font-style: normal;
+                font-weight: 500;
+                line-height: 38px;
+                font-size: 25px;
+                color: #B87514;
+            }
+            .matching-mode-btn-1{
+                width: 100px;
+                height: 100px;
+                
+                background: #ECBC76;
+                border-radius: 20px;
+
+                margin-top: 10px;
+                float: left;
+
+                cursor: pointer;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                
+                font-style: normal;
+                font-weight: 700;
+                line-height: 45px;
+                font-size: 30px;
+                color: #000000;
+            }
+            .matching-mode-btn-2{
+                width: 100px;
+                height: 100px;
+                
+                margin-left: 54px;
+                background: #ECBC76;
+                border-radius: 20px;
+
+                margin-top: 10px;
+                float: left;
+
+                cursor: pointer;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                
+                font-style: normal;
+                font-weight: 700;
+                line-height: 45px;
+                font-size: 30px;
+                color: #000000;
+            }
+            .matching-numset-btn-1{
+                width: 100px;
+                height: 100px;
+                
+                background: #ECBC76;
+                border-radius: 20px;
+
+                margin-top: 10px;
+                float: left;
+
+                cursor: pointer;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                
+                font-style: normal;
+                font-weight: 700;
+                line-height: 45px;
+                font-size: 30px;
+                color: #000000;
+            }
+            .matching-numset-btn-2{
+                width: 100px;
+                height: 100px;
+                
+                margin-left: 54px;
+                background: #ECBC76;
+                border-radius: 20px;
+
+                margin-top: 10px;
+                float: left;
+
+                cursor: pointer;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                
+                font-style: normal;
+                font-weight: 700;
+                line-height: 45px;
+                font-size: 30px;
+                color: #000000;
+            }
+        }
+    }
 </style>

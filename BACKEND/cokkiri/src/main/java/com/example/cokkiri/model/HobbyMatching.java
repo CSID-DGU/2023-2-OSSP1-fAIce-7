@@ -14,11 +14,11 @@ public class HobbyMatching {
 
     private int headCount;
 
-    // 취미 목록
-    private List<String> hobby;
-
     //매칭된 사람들 학번
     private String email;
+
+    // 매칭된 관심분야 리스트
+    private List<String> interests;
 
     //매칭 가능한 시작 시간
     private LocalTime startTime;

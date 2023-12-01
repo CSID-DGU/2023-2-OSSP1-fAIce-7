@@ -38,7 +38,6 @@
                                 <div class="matching-describe">
                                     # 신청 날짜 : {{this.$store.state.publicMatchingWait.matchingTime}}
                                     <div class="btn-report" @click="cancelPublicWait(this.$store.state.publicMatchingWait.id)">매칭 신청 취소</div>
-                                    <div>&nbsp;# 매칭 완료 후 하트 10개 차감 예정~!</div>
                                 </div>
                                 <div class="matching-box">
                                     <div class="record-img"></div>
@@ -51,8 +50,7 @@
                             <div v-if="this.$store.state.hobbyMatchingWait!==null" class="matching-frame">
                                 <div class="matching-describe">
                                     # 신청 날짜 : {{this.$store.state.hobbyMatchingWait.matchingTime}}
-                                    <div class="btn-report" @click="cancelClassWait(this.$store.state.hobbyMatchingWait.id)">매칭 신청 취소</div>
-                                    <div>&nbsp;# 매칭 완료 후 하트 10개 차감 예정~!</div>
+                                    <div class="btn-report" @click="cancelHobbyWait(this.$store.state.hobbyMatchingWait.id)">매칭 신청 취소</div>
                                 </div>
                                 <div class="matching-box">
                                     <div class="record-img"></div>

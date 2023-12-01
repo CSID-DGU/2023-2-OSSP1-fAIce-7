@@ -5,8 +5,11 @@ import java.util.*;
 
 
 public class HobbyUtils {
-    public static final HashMap<String, String> HOBBIES = new HashMap<>();
+    public static HashMap<String, String> HOBBIES = new HashMap<>();
 
+    static{
+        HOBBIES.put("축구", "100");
+    }
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
         Map<String, List<Pair>> preferenceScores = new HashMap<>();
 
