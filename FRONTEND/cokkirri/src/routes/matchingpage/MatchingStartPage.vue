@@ -93,233 +93,97 @@ export default {
 
 <style lang="scss" scoped>
     // 배경화면 설정
-    .background-setting{
+    .background-setting {
         height: 100vh;
         width: 100vw;
-        margin:0;
-
-        background-color: #FFFEF9;
+        margin: 0;
+        background-image: url("../../assets/mypage/background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
         display: grid;
         grid-template-rows: auto;
         justify-items: center;
         align-items: center;
     }
-    // container 클래스 위치 조정
-    .container{
+    
+    .container {
         display: flex;
         align-items: center;
         justify-content: center;
+        background: #FFFFFF;
+        border-radius: 20px;
     }
-    .frame-first-step-body{
+    
+    .frame-first-step-body {
         width: 996px;
         height: 625px;
-
         border: 5px solid #ECBC76;
         border-radius: 20px;
-        .shadow{
-            box-shadow: 0 5px #B87514;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .upper-area {
+        display: flex;
+        height: 80%;
+    }
+    
+    .interest-title {
+        width: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vw;
+        color: #B87514;
+        position: relative; /* 가상 요소의 위치 기준점 */
+        border: 1px solid #333; /* 테두리 색상 지정 */
+        border-radius: 10px; /* 둥근 꼭지점 */
+        padding: 10px; /* 내부 여백 */
+        box-sizing: border-box; /* 박스 크기 계산 방식 */
+    }
+    
+    .interest-list {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-
-        .font-h4{
-            width: 986px;
-            height: 112px;
-
-            margin-top: 0px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-
-            
-            font-style: normal;
-            font-weight: 500;
-            line-height: 38px;
-            font-size: 25px;
-            color: #B87514;
+        li {
+            position: relative; /* 가상 요소의 위치 기준점 */
+            margin-bottom: 20px; /* 목록 간 간격 */
+            font-size: 1.8vw;
+            color: #333;
+            border: 1px solid #333; /* 테두리 색상 지정 */
+            border-radius: 10px; /* 둥근 꼭지점 */
+            padding: 10px; /* 내부 여백 */
+            box-sizing: border-box; /* 박스 크기 계산 방식 */
+            background-color: white; /* 박스 내부 색상 */
         }
-        .matching-submit-btn{
-            width: 400px;
-            height: 60px;
-            
-            margin-left: 293px;
-
-            background: #B87514;
-            border-radius: 50px;
-
-            cursor: pointer;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-
-            
-            font-style: normal;
-            font-weight: 700;
-
-            font-size: 32px;
-            color: #FFFFFF;
-            line-height: 24px;
-            letter-spacing: 0.5px;
-        }
-
-        .frame-sub{
-            width: 301px;
-            height: 401px;
-
-            margin-top: 23px;
-            margin-left: 13px;
-
-            padding-left: 0px;
-            float: left;
-
-            .font-h1{
-                width: 130px;
-                height: 73px;
-
-                float: left;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                
-                font-style: normal;
-                font-weight: 700;
-                line-height: 75px;
-                font-size: 50px;
-                color: #B87514;
-            }
-            .font-h2{
-                width: 301px;
-                height: 34px;
-
-                margin-top: 14px;
-                float: left;
-
-                display: flex;
-                align-items: center;
-                justify-content: left;
-
-                
-                font-style: normal;
-                font-weight: 500;     
-                line-height: 38px;
-                font-size: 25px;
-                color: #B87514;
-            }
-            .font-h3{
-                width: 301px;
-                height: 34px;
-
-                margin-top: 14px;
-
-                display: flex;
-                align-items: center;
-                justify-content: left;
-
-                
-                font-style: normal;
-                font-weight: 500;
-                line-height: 38px;
-                font-size: 25px;
-                color: #B87514;
-            }
-            .matching-mode-btn-1{
-                width: 100px;
-                height: 100px;
-                
-                background: #ECBC76;
-                border-radius: 20px;
-
-                margin-top: 10px;
-                float: left;
-
-                cursor: pointer;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                
-                font-style: normal;
-                font-weight: 700;
-                line-height: 45px;
-                font-size: 30px;
-                color: #000000;
-            }
-            .matching-mode-btn-2{
-                width: 100px;
-                height: 100px;
-                
-                margin-left: 54px;
-                background: #ECBC76;
-                border-radius: 20px;
-
-                margin-top: 10px;
-                float: left;
-
-                cursor: pointer;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                
-                font-style: normal;
-                font-weight: 700;
-                line-height: 45px;
-                font-size: 30px;
-                color: #000000;
-            }
-            .matching-numset-btn-1{
-                width: 100px;
-                height: 100px;
-                
-                background: #ECBC76;
-                border-radius: 20px;
-
-                margin-top: 10px;
-                float: left;
-
-                cursor: pointer;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                
-                font-style: normal;
-                font-weight: 700;
-                line-height: 45px;
-                font-size: 30px;
-                color: #000000;
-            }
-            .matching-numset-btn-2{
-                width: 100px;
-                height: 100px;
-                
-                margin-left: 54px;
-                background: #ECBC76;
-                border-radius: 20px;
-
-                margin-top: 10px;
-                float: left;
-
-                cursor: pointer;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                
-                font-style: normal;
-                font-weight: 700;
-                line-height: 45px;
-                font-size: 30px;
-                color: #000000;
-            }
-        }
+    }
+    
+    .matching-submit-btn {
+        width: 400px;
+        height: 60px;
+        margin-top: 20px;
+        margin-left: 293px;
+        margin-bottom: 50px;
+        background: #B87514;
+        border-radius: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 32px;
+        color: #FFFFFF;
+        line-height: 24px;
+        letter-spacing: 0.5px;
     }
 </style>
