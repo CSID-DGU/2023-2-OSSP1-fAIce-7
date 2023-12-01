@@ -210,20 +210,26 @@ export default {
     },
     submitInterests() {
       // 관심 분야 데이터를 서버로 전송
-      const interestData = {};
       const userId = this.$store.state.id; // Vuex 스토어에서 사용자 ID 로드
-      this.interests.filter(interest => !this.isExistingInterest(interest.inputText))
-        .forEach((interest, index) => {
-          // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
-          if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
-            interestData[`item${index + 1}`] = `기타 >> ${interest.additionalInput}`;
-          } else {
-            // 그 외의 경우는 카테고리와 항목을 결합하여 설정
-            interestData[`item${index + 1}`] = interest.inputText;
-          }
-        });
+      const interestData = this.interests
+      .filter(interest => !this.isExistingInterest(interest.inputText))
+      .reduce((acc, interest, index) => {
+        // '사회 및 기타활동 >> 기타'가 선택되었을 경우 기타 입력란의 내용을 설정
+        const key = `item${index + 1}`;
+        acc[key] = interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput
+          ? `기타 >> ${interest.additionalInput}`
+          : interest.inputText;
+        return acc;
+      }, {});
 
-      axios.post('/api/interests/save/', { userId, interests: interestData })
+      const payload = { // JSON 객체로 구성
+        userId: userId, // Vuex 스토어에서 사용자 ID 로드
+        interests: interestData
+      };
+
+      console.log('Sending request with payload:', JSON.stringify(payload, null, 2));
+
+      axios.post('/api/interests/save/', payload)
         .then(response => {
             console.log('제출 성공:', response.data); // 성공 로그
             alert("관심분야 설정이 완료되었습니다.");
@@ -234,7 +240,7 @@ export default {
             alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
             this.$router.push('/login');
         });
-      this.updateUserInterests(this.interests.map(interest => interest.inputText));
+      // this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
     ...mapActions(['fetchUserInterests', 'updateUserInterests', 'logout']), // Vuex 액션 매핑
     ...mapMutations(['setUserInterests']) // Vuex 뮤테이션 매핑
