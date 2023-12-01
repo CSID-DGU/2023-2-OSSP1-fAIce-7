@@ -9,7 +9,7 @@
                 <div style="clear:both;"></div>
                 <div class="font-h4">
                     <br>* 매칭 완료 시 자동으로 채팅방이 생성되며, 생성된 채팅방은 24시간동안 유지됩니다.</div>
-                <div class="matching-submit-btn" @click="checkHeartCount()">매칭 신청</div>
+                <div class="matching-submit-btn" @click="submitMatching()">매칭 신청</div>
             </div>
         </div>
     </div>
@@ -49,36 +49,10 @@ export default {
         }
     },
     methods: {
-        checkHeartCount(){
-            this.$store.dispatch('userInfoUpdate')
-            console.log("하트개수: "+this.$store.state.heart+"개 확인 완료")
-            if(this.$store.state.heart >= 0){
-                this.submitMatching()
-                this.$store.dispatch('userInfoUpdate')
-                console.log("사용자 정보 자동 업데이트")
-            }else{
-                alert("하트 개수가 "+this.$store.state.heart+"개 입니다."+"10개 이상 소지하고 있어야 매칭 신청이 가능합니다")
-            }
-        },
-        clickedBtnHeadCountTwo(){
-            this.headCount = '2'
-        },
-        clickedBtnHeadCountFour(){
-            this.headCount = '4'
-        },
-        clickedBtnMatchingTypeFree(){
-            this.matchingType = 'free'
-        },
-        clickedBtnMatchingTypeClass(){
-            this.matchingType = 'class'
-        },
         submitMatching(){
             if(this.$store.state.restrctionDate === null){
                     if(this.matchingType==='hobby'){
-                        
                         this.resisterMatchingHobby()
-                        
-                        
                     }else {
                         alert("매칭 오류")
                     }
@@ -91,44 +65,7 @@ export default {
 
 
         },
-        async resisterMatchingFree(){
-            try{
-                await axios.post('/matching/free',{
-                        headCount: this.headCount,
-                        email: this.email,
-                        availableDay: this.availableDay,
-                        startTime:this.startTime,
-                        endTime:this.endTime,
-                        matchingType:"free"
-                }).then(()=>{
-                    this.$store.dispatch('callMatchingRecord')
-                    this.$router.replace('/my/matching');
-                    alert("공강 매칭 신청 완료")
-                }).catch(function(error){
-                    console.log(error)
-                })
-            } catch(error){
-                console.log(error)
-            }
-        },
-        async resisterMatchingClass(){
-            try{
-                await axios.post('/matching/class',{
-                    headCount: this.headCount,
-                    email: this.email,
-                    courseNumber: this.courseNumber,
-                    matchingType:"class"
-                }).then(()=>{
-                    this.$store.dispatch('callMatchingRecord')
-                    this.$router.replace('/my/matching');
-                    alert("수업 매칭 신청 완료")
-                }).catch(function(error){
-                    console.log(error)
-                })
-            } catch(error){
-                console.log(error)
-            }
-        },
+        
         async resisterMatchingHobby(){
             try{
                 await axios.post('/matching/hobby',{
