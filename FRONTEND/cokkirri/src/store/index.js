@@ -31,6 +31,7 @@ export default createStore({
 
         publicMatchingRecord: null,
         classMatchingRecord: null,
+        hobbyMatchingRecord: null,
 
         // 관심분야 설정 여부
         isSetInterests: false, // 관심분야 설정 여부 변경
@@ -40,6 +41,7 @@ export default createStore({
         // 매칭 대기 정보 불러오기
         classMatchingWait: null,
         publicMatchingWait: null,
+        hobbyMatchingWait: null,
 
         // 선택된 매칭 번호
         matchingIdForChatroom: null,
@@ -48,6 +50,7 @@ export default createStore({
         // 매칭 대기 상태
         isExistClassMatchingWait: false,
         isExistPublicMatchingWait: false,
+        isExistHobbyMatchingWait: false
     },
     mutations: {
 
@@ -87,6 +90,17 @@ export default createStore({
                 state.isExistPublicMatchingWait = false
             }
         },
+        SaveHobbyWait(state,record){
+            if(Object.keys(record).length > 0){
+                state.hobbyMatchingWait = record
+                state.isExistHobbyMatchingWait = true
+            }
+            else{
+                console.log("취미 대기 없다고 판단")
+                state.hobbyMatchingWait = record = null
+                state.isExistHobbyMatchingWait = false
+            }
+        },
 
         // 사용자 매칭 정보 불러오기
         publicSave(state, record){
@@ -94,6 +108,9 @@ export default createStore({
         },
         classSave(state, record){
             state.classMatchingRecord = record
+        },
+        hobbySave(state,record) {
+            state.hobbyMatchingRecord = record
         },
 
         //하트 사용내역 불러오기
@@ -151,10 +168,12 @@ export default createStore({
     
             state.publicMatchingRecord = null
             state.classMatchingRecord = null
+            state.hobbyMatchingRecord =null
     
             // 매칭 대기 정보 불러오기
             state.classMatchingWait = null
             state.publicMatchingWait = null
+            state.hobbyMatchingWait = null
     
             // 선택된 매칭 번호
             state.matchingIdForChatroom = null
@@ -163,6 +182,7 @@ export default createStore({
             // 매칭 대기 상태
             state.isExistClassMatchingWait = false
             state.isExistPublicMatchingWait = false
+            state.isExistHobbyMatchingWait = false
 
             router.replace('/')
         },
@@ -205,7 +225,7 @@ export default createStore({
         // 매칭 대기 존재하는지 반환
         async checkMatchingSubmitState({dispatch,state}){
             await dispatch('callMatchingWaitRecord')
-            return (state.isExistClassMatchingWait | state.isExistPublicMatchingWait)
+            return (state.isExistClassMatchingWait | state.isExistPublicMatchingWait | state.isExistHobbyMatchingWait)
         },
         // 매칭 정보 불러오기
         async callMatchingRecord({commit, dispatch, state}) {
@@ -230,6 +250,20 @@ export default createStore({
                 }}).then((result)=>{
                     commit('classSave',result.data)
                     console.log("수업 매칭 적용 완료")
+                    console.log(result.data)
+                }).catch(function(error){
+                    console.log(error)
+                })
+            } catch(error){
+                console.log(error)
+            }
+            try{
+                await axios.get('/userMypage/hobbyMatchedList',{
+                    params:{
+                        userId: state.id
+                }}).then((result)=>{
+                    commit('hobbySave',result.data)
+                    console.log("취미 매칭 적용 완료")
                     console.log(result.data)
                 }).catch(function(error){
                     console.log(error)
@@ -346,6 +380,8 @@ export default createStore({
                             alertMsg = alertMsg + "공강 매칭 인원이 모두 모였습니다. 매칭 내역에서 확인 가능합니다."
                         }else if(parsedData.notificationType==='class'){
                             alertMsg = alertMsg + "수업 매칭 인원이 모두 모였습니다. 매칭 내역에서 확인 가능합니다."
+                        }else if(parsedData.notificationType==='hobby'){
+                            alertMsg = alertMsg + "관심분야 매칭 인원이 모두 모였습니다. 매칭 내역에서 확인 가능합니다."
                         }else{
                             alertMsg = alertMsg + "매칭 타입 null에 대한 알림이 왔습니다."
                         }
@@ -451,6 +487,21 @@ export default createStore({
                 })
                 .then((result)=>{
                     commit('SavePublicWait',result.data)
+                })
+                .catch(function(error){
+                    console.log(error)
+                })
+            }catch(error){
+                console.log(error)
+            }
+            try{
+                await axios.get('/matching/get/hobby/matchingWait',{
+                    params:{
+                        email: state.id
+                    }
+                })
+                .then((result)=>{
+                    commit('SaveHobbyWait',result.data)
                 })
                 .catch(function(error){
                     console.log(error)

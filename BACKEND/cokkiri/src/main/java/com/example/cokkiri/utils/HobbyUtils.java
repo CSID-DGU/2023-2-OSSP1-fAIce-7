@@ -4,6 +4,9 @@ import com.example.cokkiri.model.Hobby;
 import java.util.*;
 
 public class HobbyUtils {
+<<<<<<< HEAD
+    public static HashMap<String, String> HOBBIES = new HashMap<>();
+=======
 
     public static final List<String> HOBBIES = Arrays.asList(
             "축구", "농구", "야구", "당구",
@@ -171,7 +174,11 @@ public class HobbyUtils {
         hobbies.put("기타", "530");
     }
     */
+>>>>>>> e464711f6e72d2f0323253a0ae4b18c30bf4a8ef
 
+    static{
+        HOBBIES.put("축구", "100");
+    }
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
         Map<String, List<Pair>> preferenceScores = new HashMap<>();
 
@@ -186,12 +193,18 @@ public class HobbyUtils {
                 Hobby other = otherOpt.get();
                 String otherEmail = other.getId();
 
-                Set<String> unions = new HashSet<>(user.getHobby());
-                Set<String> intersection = new HashSet<>(user.getHobby());
-                intersection.retainAll(other.getHobby());
-                unions.addAll(other.getHobby());
+                // 기본 자카드 유사도 계산
+                Set<String> unions = new HashSet<>(user.getHobby()); 
+                Set<String> intersection = new HashSet<>(user.getHobby()); 
+                intersection.retainAll(other.getHobby()); // 교집합
+                unions.addAll(other.getHobby()); // 합집합
 
+                //TODO 카테고리 유사도 계산 구현
+                
+                // 최종 점수
                 double score = intersection.isEmpty() ? 0 : (double) intersection.size() / unions.size();
+                
+                // 유저 id와 score를 Pair 객체를 새로 생성해서 특정 유저가 또 다른 유저와의 선호도를 저장해서 추가
                 scoresForUser.add(new Pair(otherEmail, score));
             }
 
