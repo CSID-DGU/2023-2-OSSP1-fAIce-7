@@ -20,7 +20,7 @@ public class Hobby {
     @Id
     private String Id;
 
-    // 취미 1 - 20
+    // 취미 1 - 10
     @ColumnDefault("null")
     private String hobby1;
     @ColumnDefault("null")
