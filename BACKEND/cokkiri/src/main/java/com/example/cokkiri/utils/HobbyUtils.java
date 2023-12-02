@@ -201,6 +201,8 @@ public class HobbyUtils {
             if (userHobbyBit.charAt(i) == otherHobbyBit.charAt(i)) {  //userHobbyBit와 otherHobbyBit의 i번째 문자가 같은지 비교
                 score++;
             }
+            else  //두 비트가 다를 경우 현재까지의 점수를 반환하고 뒤의 비트는 계산하지 않음 
+                return score;  
         }
         return score;
     }
