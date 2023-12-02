@@ -703,6 +703,9 @@ public class MatchingService {
 
 
 
+
+
+
     public HobbyMatchedList hobbyMatch(HobbyMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
@@ -718,16 +721,14 @@ public class MatchingService {
         }
         if(userInfo.get().isPublicMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
-                if(userInfo.get().getHeart() < 0){
-                    return null;
-                }
                 hobbyLectureUsers.add(user);
+                LOGGER.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
                 hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
                 if(hobbyMatchedList!=null){
                     for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
                         String email = hobbyMatchedList.getEmailList().get(i);
                         Optional<User> userMatched = userRepository.findById(email);
-                        userMatched.get().setPublicMatching(false);
+                        userMatched.get().setHobbyMatching(false);
                         userRepository.save(userMatched.get());
                     }
 
