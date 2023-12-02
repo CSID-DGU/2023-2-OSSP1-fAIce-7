@@ -671,6 +671,24 @@ public class MatchingService {
         return classMatchedList;
     }
 
+    //            List<String> propose = new ArrayList<>();
+//
+//            int idx = 0;
+//            List<Boolean> isMatched = new ArrayList<>();
+//
+//            while(idx < 10) {
+//                for (int i = 0; i < count; i++) {
+//                    String key = userId.get(i);
+//                    for (int j = 0; j < count; j++) {
+//                        String temp = score.get(userId.get(j)).get(idx).getId();
+//                        if(temp.equals(key)){
+//                            propose.add(temp);
+//                        }
+//                    }
+
+
+
+
     public HobbyMatchedList hobbyMatch(HobbyMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
