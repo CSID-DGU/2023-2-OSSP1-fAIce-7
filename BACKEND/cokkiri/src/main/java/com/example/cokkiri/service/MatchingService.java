@@ -526,7 +526,7 @@ public class MatchingService {
             Map<String, List<Pair>> score = HobbyUtils.hobbyScoreOfUsers(hobbyOfUsers);
             List<Pair> wantTo = new ArrayList<>(Collections.nCopies(userList.size(), null));
             List<Pair> maxScore = new ArrayList<>(Collections.nCopies(userList.size(), new Pair("", 0.0)));
-            Map<String, String> currentMatch = new HashMap<>(); // 현재 매칭 상태를 저장하는 맵
+            Map<String, String> currentMatch = new HashMap<>(); // 현재 매칭 상태를 저장
 
             while (countFalse > 0) {
                 // 제안 하기
