@@ -1,9 +1,6 @@
 package com.example.cokkiri.controller;
 
-import com.example.cokkiri.model.ClassMatchedList;
-import com.example.cokkiri.model.Payment;
-import com.example.cokkiri.model.PublicMatchedList;
-import com.example.cokkiri.model.User;
+import com.example.cokkiri.model.*;
 //import com.example.cokkiri.service.MailSendService;
 import com.example.cokkiri.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +94,13 @@ public class UserController {
         return new ResponseEntity<List<PublicMatchedList>>(matchedLists,HttpStatus.OK);
     }
 
+    @GetMapping ("/admin/hobbyMatching")
+    public ResponseEntity<List <HobbyMatchedList>> getAllHobbyMatching(){
+        //관리자페이지에서 모든 수업 매칭 확인
+        List<HobbyMatchedList> matchedLists = matchingService.findAllHobbyMatching();
+        return new ResponseEntity<List<HobbyMatchedList>>(matchedLists,HttpStatus.OK);
+    }
+
     @GetMapping ("/admin/user")
     public ResponseEntity<List <User>> getAllUser(){
         //관리자페이지에서 모든 유저 확인
@@ -146,6 +150,11 @@ public class UserController {
         return new ResponseEntity<List<PublicMatchedList>>(publicMatchedLists,HttpStatus.OK);
     }
 
+    @GetMapping("userMypage/hobbyMatchedList")
+    public ResponseEntity<List<HobbyMatchedList>> getUserHobbyMatchedList(@RequestParam(value = "userId")String id){
+        List<HobbyMatchedList> hobbyMatchedLists = matchingService.findHobbyMatchingById(id);
+        return new ResponseEntity<List<HobbyMatchedList>>(hobbyMatchedLists,HttpStatus.OK);
+    }
 
 
     //유저 삭제
