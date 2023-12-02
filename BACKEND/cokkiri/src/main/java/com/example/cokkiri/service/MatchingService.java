@@ -685,7 +685,21 @@ public class MatchingService {
 //                            propose.add(temp);
 //                        }
 //                    }
-
+//                    for (int j = 0; j < propose.size(); j++) {
+//                        for (int k = idx; k < count; k++) {
+//
+//                        }
+//                        if(score.get(key).get(idx).getId().equals(propose.get(j))) {
+//                            // 매칭된 쌍 빼주기
+//                            score.remove(score.get(key).get(idx).getId());
+//                            score.remove(propose.get(j));
+//
+//                        }
+//                    }
+//                    propose.clear();
+//                }
+//                idx++;
+//            }
 
 
 
