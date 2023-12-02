@@ -4,19 +4,6 @@ import com.example.cokkiri.model.Hobby;
 import java.util.*;
 
 public class HobbyUtils {
-<<<<<<< HEAD
-    public static HashMap<String, String> HOBBIES = new HashMap<>();
-=======
-
-    public static final List<String> HOBBIES = Arrays.asList(
-            "축구", "농구", "야구", "당구",
-            "컴퓨터", "스위치", "보드게임", "오락실",
-            "영화", "드라마", "뮤지컬", "전시회",
-            "의류", "악세사리", "화장품", "네일",
-            "강아지", "고양이", "조류", "식물",
-            "그림", "음악", "사진", "글쓰기"
-    );
-    /*
     public static HashMap<String, String> hobbies = new HashMap<>();
     static{
         hobbies.put("전시회 관람 (미술, 사진, 건축, 디자인 등)", "000");
@@ -173,12 +160,7 @@ public class HobbyUtils {
         hobbies.put("클럽/나이트/디스코/캬바레 가기", "520");
         hobbies.put("기타", "530");
     }
-    */
->>>>>>> e464711f6e72d2f0323253a0ae4b18c30bf4a8ef
 
-    static{
-        HOBBIES.put("축구", "100");
-    }
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
         Map<String, List<Pair>> preferenceScores = new HashMap<>();
 

@@ -687,16 +687,13 @@ public class MatchingService {
         }
         if(userInfo.get().isPublicMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
-                if(userInfo.get().getHeart() < 0){
-                    return null;
-                }
                 hobbyLectureUsers.add(user);
                 hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
                 if(hobbyMatchedList!=null){
                     for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
                         String email = hobbyMatchedList.getEmailList().get(i);
                         Optional<User> userMatched = userRepository.findById(email);
-                        userMatched.get().setPublicMatching(false);
+                        userMatched.get().setHobbyMatching(false);
                         userRepository.save(userMatched.get());
                     }
 
