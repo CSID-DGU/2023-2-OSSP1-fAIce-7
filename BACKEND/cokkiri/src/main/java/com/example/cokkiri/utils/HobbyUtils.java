@@ -5,18 +5,6 @@ import java.util.*;
 
 public class HobbyUtils {
 
-    /* 기존 코드
-    public static final List<String> HOBBIES = Arrays.asList(
-            "축구", "농구", "야구", "당구",
-            "컴퓨터", "스위치", "보드게임", "오락실",
-            "영화", "드라마", "뮤지컬", "전시회",
-            "의류", "악세사리", "화장품", "네일",
-            "강아지", "고양이", "조류", "식물",
-            "그림", "음악", "사진", "글쓰기"
-    );
-    */
-
-    //각 취미 항목에 대한 비트 값 할당(해시맵에 저장)
     public static HashMap<String, String> hobbies = new HashMap<>();
     static {
         hobbies.put("전시회 관람 (미술, 사진, 건축, 디자인 등)", "000");
@@ -174,6 +162,7 @@ public class HobbyUtils {
         hobbies.put("기타", "530");
     }
 
+
     //두 사용자의 취미를 비교하여 점수를 계산하는 메소드(카테고리 점수)
     public static double calculateCategoryScore(Hobby user, Hobby other) {
         List<String> userHobbies = user.getHobby();  //사용자의 취미 목록
@@ -206,7 +195,6 @@ public class HobbyUtils {
         }
         return score;
     }
-
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
         Map<String, List<Pair>> preferenceScores = new HashMap<>();
 
