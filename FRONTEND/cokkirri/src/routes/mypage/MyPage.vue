@@ -76,7 +76,7 @@
     // container 클래스 위치 조정
     .container{
         width: 996px;
-        height: 690px;
+        height: 650px;
         background-color: #FFFFFF; 
         display: grid;
         border: 7px solid #ECBC76; 
@@ -91,7 +91,7 @@
         .link-img{
             width: 23px;
             height: 21px;
-
+            
             margin-left: 20px;
             float: left;
             
@@ -169,7 +169,7 @@
     .frame-body{
         width: 996px;
         height: 397px;
-        margin-top: 47px;
+        margin-top: 30px;
         background-color: #FFFFFF;
         border: 7px solid #ECBC76;
         border-radius: 20px;
