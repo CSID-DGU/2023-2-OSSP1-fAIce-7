@@ -2,30 +2,22 @@
 
 <template>
   <div class="background-setting">
-      <div class = "Gotopage">
-        <div class="link-page1">유저 : {{this.$store.state.name}}</div>
-        <!-- 요소 두 개 추가 -->
-        <router-link class="link-page2" to = "/my">마이페이지</router-link>
-        <div class="link-page3" @click="logout()">로그아웃</div>
+    <div class="Gotopage">
+      <div class="link-page1">유저 : {{ this.$store.state.name }}</div>
+      <router-link class="link-page2" to="/my">마이페이지</router-link>
+      <div class="link-page3" @click="logout()">로그아웃</div>
+    </div>
+    <div class="whole">
+      <div class="question">
+        <div class="img-box"></div>
+        <div style="clear:both;"></div>
+        <div class="img-box-2"></div>
+        <router-link class="mybutton" to="/my/matching">매칭 페이지</router-link>
       </div>
-      <div class = "whole">
-          <div class = "question">
-            <div class="img-box">
-              <div class="text-1">
-                <!-- <p>심각한<br><br><br>'Co-끼리' 중독입니다.</p>  -->
-              </div>
-            </div>
-            <div style="clear:both;"></div>
-            <div class="img-box-2">
-              <div class="text-2">
-                <!-- <p>흥, 중독인지 아닌지<br><br><br>매칭된 사람한테 물어봐요.</p>  -->
-              </div>
-            </div>
-            <router-link class="mybutton" to="/my/matching">매칭 페이지</router-link>
-          </div>
-      </div>
+    </div>
   </div>
 </template>
+
 
 <script>
 export default {
