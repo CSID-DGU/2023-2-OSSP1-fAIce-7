@@ -514,7 +514,6 @@ public class MatchingService {
             return null;
         } else {
             for (int i = 0; i < userList.size(); i++) {
-
                 Optional<Hobby> userHobby = hobbyRepository.findById(userList.get(i).getEmail());
                 if (userHobby.isEmpty()) {
                     continue;
@@ -523,7 +522,7 @@ public class MatchingService {
                 hobbyOfUsers.add(userHobby);
             }
 
-            Map<String, List<Pair>> score = HobbyUtils.hobbyScoreOfUsers(hobbyOfUsers);
+            Map<String, List<Pair>> score = HobbyUtils.hobbyScoreOfUsers(hobbyOfUsers);  //선호도 점수 맵
             List<Pair> wantTo = new ArrayList<>(Collections.nCopies(userList.size(), null));
             List<Pair> maxScore = new ArrayList<>(Collections.nCopies(userList.size(), new Pair("", 0.0)));
             Map<String, String> currentMatch = new HashMap<>(); // 현재 매칭 상태를 저장하는 맵
