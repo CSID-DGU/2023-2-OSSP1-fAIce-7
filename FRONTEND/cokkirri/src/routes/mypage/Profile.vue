@@ -1,7 +1,8 @@
 <template>
     <!-- 마이페이지의 프로필 세부사항 -->
     <div class="background-setting">
-        <div class="container" >
+        <div class="container">
+            <router-link to="/my" class="my-link">&lt;</router-link>
             <div>
                 <div class="frame-head">
                     <div class="user-img"></div>
@@ -17,11 +18,10 @@
                 </div>
                 <div class="frame-body">
                     <div>
-                        <router-link to="/my" class="my-link">&lt;</router-link>
                         <div style="clear:both;"></div>
                         <div v-if="!stateTF.isPasswordEditState">
                             <div v-if="stateTF.isEditState" class="frame-sub-body">
-                                <div class="font-head" :style="{'margin-top': '20px'}">아이디</div>
+                                <div class="font-head" :style="{'margin-top': '5px'}">아이디</div>
                                 <div class="font-body" :style="{'margin-top': '-75px'}">{{userInfo.id}}</div>
                                 <div style="clear:both;"></div>
 
@@ -226,6 +226,24 @@ export default {
         align-items: center;
         justify-content: center;
     }
+    .my-link{
+            width: 35px;
+            height: 31px;
+            margin-top: 5px;
+            margin-left: 17px;
+            float:left;
+
+            cursor: pointer;
+            text-decoration: none;
+
+            font-size: 35px;
+            color: #B87514;
+            display: flex;
+
+            position:absolute;
+            top: 60px;
+            left: 225px;
+        }
     .frame-head{
         width: 996px;
         height: 125px;
@@ -305,27 +323,10 @@ export default {
         background-color: #FFFEF9;
         border: 7px solid #ECBC76;
         border-radius: 20px;
-
-        .my-link{
-            width: 35px;
-            height: 31px;
-            margin-top: 5px;
-            margin-left: 17px;
-            float:left;
-
-            cursor: pointer;
-            text-decoration: none;
-
-            font-size: 35px;
-            color: #B87514;
-            display: flex;
-
-            align-items: center;
-        }
         .frame-sub-body{
             width: 910px;
             height: 337px;
-            margin-top: 0px;
+            margin-top: 30px;
             margin-left: 43px;
             background-image: url("../../assets/mypage/profile/sub-frame.png");
             background-size: cover;
@@ -336,7 +337,7 @@ export default {
         .frame-sub-form-body{
             width: 910px;
             height: 337px;
-            margin-top: 0px;
+            margin-top: 30px;
             margin-left: 43px;
 
             display: flex;
