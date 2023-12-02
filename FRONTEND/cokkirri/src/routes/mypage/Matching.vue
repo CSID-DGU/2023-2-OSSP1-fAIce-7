@@ -436,7 +436,7 @@
     }
     .frame-sub-body{
         width: 950px;
-        height: 400px;
+        height: 415px;
         margin-top: 5px;
         margin-left: 0px;
 
@@ -502,13 +502,12 @@
                 background-repeat: no-repeat;
             }
             .record-type{
-                width: 100px;
+                width: 120px;
                 height: 74px;
 
-                margin-top: 18px;
-                margin-left: 49px;
+                margin-top: 15px;
+                margin-left: 20px;
                 float: left;
-
                 
                 font-style: normal;
                 font-weight: 500;

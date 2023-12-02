@@ -21,8 +21,8 @@
                         <div style="clear:both;"></div>
                         <div v-if="!stateTF.isPasswordEditState">
                             <div v-if="stateTF.isEditState" class="frame-sub-body">
-                                <div class="font-head" :style="{'margin-top': '35px'}">아이디</div>
-                                <div class="font-body" :style="{'margin-top': '35px'}">{{userInfo.id}}</div>
+                                <div class="font-head" :style="{'margin-top': '20px'}">아이디</div>
+                                <div class="font-body" :style="{'margin-top': '-75px'}">{{userInfo.id}}</div>
                                 <div style="clear:both;"></div>
 
                                 <div class="font-head">전공</div>
@@ -47,8 +47,8 @@
 
                             </div>
                             <div v-else class="frame-sub-body">
-                                <div class="font-head" :style="{'margin-top': '35px'}">아이디</div>
-                                <div class="font-body" :style="{'margin-top': '35px'}">{{userInfo.id}}</div>
+                                <div class="font-head" :style="{'margin-top': '5px'}">아이디 </div>
+                                <div class="font-body" :style="{'margin-top': '-75px'}">{{userInfo.id}}</div>
                                 <div style="clear:both;"></div>
 
                                 <div class="font-head">전공</div>
@@ -301,7 +301,7 @@ export default {
     .frame-body{
         width: 996px;
         height: 397px;
-        margin-top: 47px;
+        margin-top: 40px;
         background-color: #FFFEF9;
         border: 7px solid #ECBC76;
         border-radius: 20px;
@@ -361,7 +361,7 @@ export default {
         .font-head{
             width: 144px;
             height: 75px;
-            margin-top: 0px;
+            margin-top: 10px;
             margin-left: 0px;
 
             float: left;
@@ -369,7 +369,6 @@ export default {
             justify-content: center;
             align-items: center;
             text-align: center;
-
             
             font-style: normal;
             font-weight: 500;
@@ -379,7 +378,7 @@ export default {
         .font-body{
             width: 754px;
             height: 75px;
-            margin-top: 0px;
+            margin-top: -73px;
             margin-left: 12px;
 
             float: left;
