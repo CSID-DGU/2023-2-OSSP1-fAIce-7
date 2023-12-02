@@ -529,6 +529,7 @@ public class MatchingService {
                 return null;
             }
 
+            // 유저별로 선호도 목록과 매칭 상태를 저장하는 맵
             Map<String, Queue<Pair>> preferences = new HashMap<>();
             Map<String, String> matches = new HashMap<>(); // 매칭 결과 저장
             Map<String, String> reverseMatches = new HashMap<>();
@@ -567,6 +568,7 @@ public class MatchingService {
             } while (changed);
 
 
+            // 매칭된 사람들의 이메일 리스트 생성
             List<String> matchedEmails = new ArrayList<>();
             for (Map.Entry<String, String> entry : matches.entrySet()) {
                 // 매칭이 성공한 경우에만 이메일 추가
@@ -576,20 +578,27 @@ public class MatchingService {
                 }
             }
 
+            // 중복 제거
             Set<String> uniqueMatchedEmails = new HashSet<>(matchedEmails);
             matchedEmails = new ArrayList<>(uniqueMatchedEmails);
 
+            // 매칭된 사람들의 이메일 리스트 설정
             matched.setEmailList(matchedEmails);
 
+            // 매칭 타입 설정 (이 예시에서는 "hobby"로 가정)
             matched.setMatchingType("hobby");
 
+            // 매칭 희망 인원 설정
             matched.setHeadCount(count);
 
+            // 매칭 결과 상태 설정 ("매칭중"으로 가정)
             matched.setMatchingRes("매칭중");
 
+            // 매칭 시간 설정 (현재 날짜로 설정)
             LocalDate date = LocalDate.now();
             matched.setMatchingTime(date);
 
+            // 매칭 결과 반환
             return matched;
         }
     }
@@ -685,40 +694,6 @@ public class MatchingService {
 
         return classMatchedList;
     }
-
-    //            List<String> propose = new ArrayList<>();
-//
-//            int idx = 0;
-//            List<Boolean> isMatched = new ArrayList<>();
-//
-//            while(idx < 10) {
-//                for (int i = 0; i < count; i++) {
-//                    String key = userId.get(i);
-//                    for (int j = 0; j < count; j++) {
-//                        String temp = score.get(userId.get(j)).get(idx).getId();
-//                        if(temp.equals(key)){
-//                            propose.add(temp);
-//                        }
-//                    }
-//                    for (int j = 0; j < propose.size(); j++) {
-//                        for (int k = idx; k < count; k++) {
-//
-//                        }
-//                        if(score.get(key).get(idx).getId().equals(propose.get(j))) {
-//                            // 매칭된 쌍 빼주기
-//                            score.remove(score.get(key).get(idx).getId());
-//                            score.remove(propose.get(j));
-//
-//                        }
-//                    }
-//                    propose.clear();
-//                }
-//                idx++;
-//            }
-
-
-
-
 
 
     public HobbyMatchedList hobbyMatch(HobbyMatching user){
