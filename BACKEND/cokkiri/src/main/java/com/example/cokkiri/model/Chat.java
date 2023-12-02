@@ -29,7 +29,7 @@ public class Chat {
 
     @Column
     //매칭타입
-    //공강=free , 수업=class
+    //공강=free , 수업=class, 관심분야=hobby
     private  String matchingType;
 
     //보낸 사람
