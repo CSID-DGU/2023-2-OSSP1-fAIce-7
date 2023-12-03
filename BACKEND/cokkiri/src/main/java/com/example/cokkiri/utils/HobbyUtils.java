@@ -185,10 +185,10 @@ public class HobbyUtils {
                 if(otherFullHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
 
                 String userHobby = extractHobby(userFullHobby);  //>> 이후 내용만 추출
-                String userHobbyBit = hobbies.getOrDefault(userHobby, "530");  //해시맵에서 해당하는 값을 찾아서 할당(해당 값이 없을 경우 "000")
+                String userHobbyBit = hobbies.getOrDefault(userHobby, "530");  //해시맵에서 해당하는 값을 찾아서 할당(해당 값이 없을 경우 "530" 기타로 분류)
                 String otherHobby = extractHobby(otherFullHobby);  //>> 이후 내용만 추출
                 String otherHobbyBit = hobbies.getOrDefault(otherHobby, "530");
-                totalScore += compareHobbyBits(userHobbyBit, otherHobbyBit);  //두 취미의 비트 값을 비교하여 점수 계산
+                totalScore += compareHobbyBits(userHobbyBit, otherHobbyBit);  //두 취미의 비트 값을 비교하여 점수 계산  //해시맵에서 해당하는 값을 찾아서 할당(해당 값이 없을 경우 "530" 기타로 분류)
                 compareCount++;
             }
         }
@@ -227,7 +227,15 @@ public class HobbyUtils {
                 Set<String> intersection = new HashSet<>(user.getHobby());
                 intersection.retainAll(other.getHobby());
 
-                double score = intersection.isEmpty() ? 0 : (double) (intersection.size() / unions.size())*0.6;  //카테고리 점수와 맞추기 위해 값 정규화
+                int unionSize;  //자카드 유사도의 분모를 합집합의 크기에 따라 조정
+                if(unions.size() <= 2)  //2이하 2
+                    unionSize = 2;
+                else if(unions.size() >= 6)  //6이상 6
+                    unionSize = 6;
+                else  //2에서 6사이면 2~6
+                    unionSize=unions.size();
+
+                double score = intersection.isEmpty() ? 0 : (double) (intersection.size() / unionSize)*0.6;  //카테고리 점수와 맞추기 위해 값 정규화
                 score += calculateCategoryScore(user, other);  //카테고리 점수 계산
                 scoresForUser.add(new Pair(otherEmail, score));
             }
