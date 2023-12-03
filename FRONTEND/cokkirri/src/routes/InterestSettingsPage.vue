@@ -279,6 +279,15 @@ export default {
     justify-content: center;
 }
 
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
 .interest-settings {
     width: 996px;
     height: 600px;
