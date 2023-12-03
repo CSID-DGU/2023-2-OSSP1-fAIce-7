@@ -1,37 +1,33 @@
-  <template>
+<template>
+<div class="background-setting">
   <div class="layout">
+    <!-- 관심분야 설정 섹션 -->
     <div class="interest-settings">
+      <router-link to="/my" class="my-link">&#60; </router-link>
       <h2>관심분야 설정</h2>
       <div v-for="(interest, index) in interests" :key="index" class="interest-section">
-        <!-- 사용자 입력 필드 -->
         <div class="input-wrapper">
-          <!-- 인덱스 표시 -->
           <div class="index-number">{{ index + 1 }}.</div>
-          <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력">
-          <!-- 휴지통 버튼 -->
+          <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
           <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
             <div class="trash-icon">🗑️</div>
           </div>
-          <!-- 삭제 버튼 -->
           <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-            <div class  ="circle-button">-</div>
+            <div class="circle-button">-</div>
           </div>
-          <!-- '기타 입력란' 활성화 -->
           <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
         </div>
-        <!-- 필터링된 항목 리스트 -->
         <ul v-if="interest.inputText && interest.filteredItems.length">
           <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
             {{ formatItem(item) }}
           </li>
         </ul>
       </div>
-      <!-- 항목 추가 버튼 -->
       <button @click="addInterest" :disabled="interests.length >= 10" class="add-button">+</button>
-      <!-- 항목 완료 버튼 -->
       <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -268,9 +264,11 @@ export default {
     height: 100vh;
     width: 100vw;
     margin: 0;
-    background-color: #ECBC76; 
-    display: grid;
-    grid-template-rows: auto;
+    background-image: url("../assets/mypage/background.png"); // 배경 이미지
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: flex;
     justify-items: center;
     align-items: center;
 }
@@ -283,161 +281,102 @@ export default {
 
 .layout {
   display: flex;
-  justify-content: space-between;
-  align-items: stretch; /* 자식 요소들의 높이를 부모 컨테이너에 맞춤 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   width: 100%;
 }
 
 .interest-settings {
-  width: 100%; /* 전체 너비의 100% */
-  background-color: #FFF;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  margin: 0; /* 마진 제거 */
-}
+    width: 996px;
+    height: 600px;
+    background-color: #FFFFFF;
+    border: 7px solid #ECBC76;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
 
-.interest-section {
-  margin-bottom: 15px; /* 각 섹션의 하단 마진 */
-}
+    .my-link {
+        width: 51px;
+        height: 46px;
+        margin-top: 17px;
+        margin-left: 17px;
+        float: left;
+        cursor: pointer;
+        text-decoration: none;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 40px;
+        line-height: 75px;
+        color: #B87514;
+        display: flex;
+        align-items: center;
+    }
 
-label {
-  display: block;
-  margin-bottom: 5px; /* 라벨 아래 마진 */
-}
+    .interest-section {
+        margin-top: 30px;
+        border-top: 1px solid #B87514;
+        padding-top: 20px;
+    }
 
-select {
-  width: 100%; /* 셀렉트 박스 너비 */
-  padding: 10px; /* 셀렉트 박스 내부 패딩 */
-  border: 1px solid #ccc; /* 테두리 스타일 */
-  border-radius: 4px; /* 테두리 둥근 정도 */
-  box-sizing: border-box; /* 박스 모델 설정 */
-}
+    .add-button, .complete-button {
+        width: 163px;
+        height: 55px;
+        margin-top: 20px;
+        border-radius: 20px;
+        font-size: 23px;
+        line-height: 28px;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
 
-button {
-  width: 100%; /* 버튼 너비 */
-  padding: 10px; /* 버튼 내부 패딩 */
-  background-color: #4CAF50; /* 버튼 배경 색상 */
-  color: white; /* 버튼 글자 색상 */
-  border: none; /* 테두리 없음 */
-  border-radius: 4px; /* 테두리 둥근 정도 */
-  cursor: pointer; /* 마우스 오버 시 커서 변경 */
-}
+    .add-button {
+        background-color: #B87514;
+    }
 
-button:disabled {
-  background-color: #ccc; /* 비활성화 버튼의 배경 색상 */
-}
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px; /* 버튼 상단 마진 추가 */
-  margin-bottom: 15px; /* 버튼 하단 마진 추가 */
-}
+    .complete-button {
+        background-color: #4CAF50;
+    }
 
-/* 삭제 버튼 스타일 */
-.input-wrapper {
-  display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
-}
+    .add-button:hover, .complete-button:hover {
+        background-color: darken($color: #B87514, $amount: 10%);
+    }
 
-.remove-button {
-  display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
-  cursor: pointer;
-}
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
 
-.circle-button {
-  width: 20px;
-  height: 20px;
-  background-color: #4CAF50; /* 초록색 배경 */
-  color: white; /* 흰색 글자 색상 */
-  border-radius: 50%; /* 원 모양의 버튼을 만듭니다. */
-  text-align: center;
-  line-height: 20px;
-  cursor: pointer;
-  margin-left: 5px; /* 텍스트 필드와 간격 조절 */
-}
+    .index-number, .trash-button, .remove-button {
+        margin-right: 10px;
+    }
 
-.circle-button:hover {
-  background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
-}
+    .circle-button, .trash-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        cursor: pointer;
+        color: white;
+        font-size: 12px;
+    }
 
-/* 번호 표시 스타일 */
-.index-number {
-  margin-right: 10px; /* 숫자와 텍스트 필드 사이의 공간 조정 */
-}
+    .circle-button {
+        background-color: #4CAF50;
+    }
 
-/* 휴지통 모양의 아이콘 스타일 */
-.trash-button {
-  display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
-  cursor: pointer;
-}
+    .trash-icon {
+        background-color: #FF4141;
+    }
 
-.trash-icon {
-  width: 20px;
-  height: 20px;
-  /* 원하는 아이콘 배경 스타일을 설정하세요 */
-  background-color: #4CAF50; /* 배경 색상 */
-  border-radius: 50%; /* 원 모양의 배경 */
-  text-align: center;
-  line-height: 20px;
-  cursor: pointer;
-  margin-left: 5px; /* 텍스트 필드와 간격 조절 */
-  color: white; /* 아이콘 색상 */
-  font-size: 12px; /* 아이콘 크기 설정 */
-}
-
-/* 휴지통 아이콘 마우스 오버 시 스타일 */
-.trash-icon:hover {
-  background-color: #45a049; /* 마우스 오버 시 배경 색상 변경 */
-}
-
-/* 추가 버튼 스타일 */
-.add-button {
-  width: 30px; /* 버튼 너비 */
-  height: 30px; /* 버튼 높이 */
-  background-color: #4CAF50; /* 버튼 배경 색상 */
-  color: white; /* 버튼 글자 색상 */
-  border: none; /* 테두리 없음 */
-  border-radius: 50%; /* 원 모양의 버튼을 만듭니다. */
-  cursor: pointer; /* 마우스 오버 시 커서 변경 */
-  display: flex; /* 내부 요소 수평 정렬을 위해 필요한 설정 */
-  justify-content: center; /* 내부 요소 수평 정렬을 위해 필요한 설정 */
-  align-items: center; /* 내부 요소 수직 정렬을 위해 필요한 설정 */
-  font-size: 18px; /* 아이콘 크기 설정 */
-  margin-left: 80px;
-  margin-bottom: 20px;
-  &:disabled {
-    background-color: #ccc !important; /* 배경 색상 변경 */
-    cursor: not-allowed !important; /* 비활성화된 상태에서는 색상 변경 금지 */
-  }
-}
-
-.add-button:hover {
-  background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
-}
-
-/* 완료 버튼 스타일 */
-.complete-button {
-  width: 100%; /* 버튼 너비 */
-  padding: 10px; /* 버튼 내부 패딩 */
-  background-color: #4CAF50; /* 버튼 배경 색상 */
-  color: white; /* 버튼 글자 색상 */
-  border: none; /* 테두리 없음 */
-  border-radius: 4px; /* 테두리 둥근 정도 */
-  cursor: pointer; /* 마우스 오버 시 커서 변경 */
-  &:disabled {
-    background-color: #ccc !important; /* 배경 색상 변경 */
-    cursor: not-allowed !important; /* 비활성화된 상태에서는 색상 변경 금지 */
-  }
-}
-
-.complete-button:hover {
-  background-color: #45a049; /* 마우스 호버 시 배경 색상 변경 */
-}
-
-.additional-input {
-  margin-left: 10px;
+    .circle-button:hover, .trash-icon:hover {
+        background-color: darken($color: #4CAF50, $amount: 10%);
+    }
 }
 </style>
