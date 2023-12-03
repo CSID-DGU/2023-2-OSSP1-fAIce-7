@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 public class HobbyUtils {
 
+    private static final Logger logger = Logger.getLogger(HobbyUtils.class.getName());
     public static HashMap<String, String> hobbies = new HashMap<>();
     static {
         hobbies.put("전시회 관람 (미술, 사진, 건축, 디자인 등)", "000");
@@ -234,9 +235,15 @@ public class HobbyUtils {
             // 선호도 점수에 따라 오름차순으로 정렬
             Collections.sort(scoresForUser, Comparator.comparing(Pair::getId));
             preferenceScores.put(userEmail, scoresForUser);
+
+            // 선호도 점수를 로깅합니다.
+            logger.info("User ID: " + userEmail);
+            for (Pair pair : scoresForUser) {
+                String otherUserId = pair.getId();
+                double score = pair.getScore();
+                logger.info("  Other User ID: " + otherUserId + ", Score: " + score);
+            }
         }
-
-
         return preferenceScores;
     }
 }

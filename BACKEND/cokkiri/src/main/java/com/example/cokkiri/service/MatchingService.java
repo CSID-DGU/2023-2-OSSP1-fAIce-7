@@ -828,8 +828,7 @@ public class MatchingService {
         for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
             String email = matchedList.getEmailList().get(i);
             Optional<User> user = userRepository.findById(email);
-            user.get().setPublicMatching(false);
-            user.get().setHeart((user.get().getHeart())-0); //하트 10개 차감
+            user.get().setHobbyMatching(false);
             userRepository.save(user.get());
 
             Optional<HobbyMatchingWait> waitUser = hobbyMatchingWaitRepository.findByEmail(email);
