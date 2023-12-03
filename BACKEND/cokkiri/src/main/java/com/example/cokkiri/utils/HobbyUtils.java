@@ -163,6 +163,13 @@ public class HobbyUtils {
         hobbies.put("기타", "530");
     }
 
+    // ">>"를 기준으로 문자열을 분할해 두 번째 요소를 반환
+    public static String extractHobby(String fullHobby) {
+        String[] parts = fullHobby.split(">>");  // ">>"를 기준으로 문자열을 분할
+        // 분할된 문자열 배열의 두 번째 요소(인덱스 1)가 취미 이름
+        // 배열 길이를 확인하여 ">>" 이후의 부분이 있는지 확인해 반환
+        return parts.length > 1 ? parts[1].trim() : "";
+    }
 
     //두 사용자의 취미를 비교하여 점수를 계산하는 메소드(카테고리 점수)
     public static double calculateCategoryScore(Hobby user, Hobby other) {
@@ -171,12 +178,15 @@ public class HobbyUtils {
 
         int totalScore = 0;  //총점
         int compareCount = 0;  //비교 횟수
-        for (String userHobby : userHobbies) {  //사용자와 다른 사용자의 취미들을 모두 비트 연산
-            if(userHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
-            for (String otherHobby : otherHobbies) {
-                if(otherHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
-                String userHobbyBit = hobbies.getOrDefault(userHobby, "000");  //해시맵에서 해당하는 값을 찾아서 할당(해당 값이 없을 경우 "000")
-                String otherHobbyBit = hobbies.getOrDefault(otherHobby, "000");
+        for (String userFullHobby : userHobbies) {  //사용자와 다른 사용자의 취미들을 모두 비트 연산
+            if(userFullHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
+            for (String otherFullHobby : otherHobbies) {
+                if(otherFullHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
+
+                String userHobby = extractHobby(userFullHobby);  //>> 이후 내용만 추출
+                String userHobbyBit = hobbies.getOrDefault(userHobby, "530");  //해시맵에서 해당하는 값을 찾아서 할당(해당 값이 없을 경우 "000")
+                String otherHobby = extractHobby(otherFullHobby);  //>> 이후 내용만 추출
+                String otherHobbyBit = hobbies.getOrDefault(otherHobby, "530");
                 totalScore += compareHobbyBits(userHobbyBit, otherHobbyBit);  //두 취미의 비트 값을 비교하여 점수 계산
                 compareCount++;
             }
