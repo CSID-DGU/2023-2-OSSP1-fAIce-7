@@ -108,7 +108,7 @@ export default {
         border-radius: 20px;
 
         .link-describe{
-            margin-left: 346px;
+            margin-left: 360px;
             margin-top: 53px;
             margin-bottom: 0px;
 

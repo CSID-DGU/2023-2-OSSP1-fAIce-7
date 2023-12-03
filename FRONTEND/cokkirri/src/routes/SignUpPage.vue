@@ -2,6 +2,7 @@
     <!-- 회원가입 -->
     <div class="background-setting">
         <div class="container" >
+            <router-link to="/" class="my-link">&lt;</router-link>
             <div class="form-frame">
                 <div>
                     <p class="describe-link-to-login">
@@ -250,6 +251,24 @@ export default {
         align-items: center;
         justify-content: center;
     }
+    .my-link{
+            width: 35px;
+            height: 31px;
+            margin-top: -30px;
+            margin-left: 230px;
+            float:left;
+
+            cursor: pointer;
+            text-decoration: none;
+
+            font-size: 35px;
+            color: #B87514;
+            display: flex;
+
+            position:absolute;
+            top: 60px;
+            left: 225px;
+    }
     // form 틀 만들기
     .form-frame {
         width: 570px;
@@ -261,7 +280,7 @@ export default {
         overflow-y: scroll;
 
         .describe-link-to-login{
-            margin-left: 350px;
+            margin-left: 360px;
             margin-top: 53px;
             margin-bottom: 0px;
 
