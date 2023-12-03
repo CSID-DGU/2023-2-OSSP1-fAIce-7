@@ -26,7 +26,12 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
     public void saveEventCache(String eventCacheId, Object event) {
-        eventCache.put(eventCacheId, event);
+        if (event != null) {
+            eventCache.put(eventCacheId, event);
+        } else {
+            // 이벤트가 null인 경우 예외 처리 또는 다른 처리를 수행해야 합니다.
+            log.error("Event is null for eventCacheId: " + eventCacheId);
+        }
     }
 
     @Override
