@@ -180,7 +180,7 @@ public class HobbyUtils {
                 compareCount++;
             }
         }
-        return compareCount > 0 ? (double)totalScore/compareCount : 0;  //평균 점수 반환
+        return compareCount > 0 ? (double)(totalScore/compareCount)*(1/3.0) : 0;  //평균 점수 반환, 자카드 점수와 맞추기 위해 값 정규화
     }
 
     // 두 취미의 비트 값을 비교하여 점수 계산
@@ -215,7 +215,7 @@ public class HobbyUtils {
                 Set<String> intersection = new HashSet<>(user.getHobby());
                 intersection.retainAll(other.getHobby());
 
-                double score = intersection.isEmpty() ? 0 : (double) intersection.size() / unions.size();
+                double score = intersection.isEmpty() ? 0 : (double) (intersection.size() / unions.size())*0.6;  //카테고리 점수와 맞추기 위해 값 정규화
                 score += calculateCategoryScore(user, other);  //카테고리 점수 계산
                 scoresForUser.add(new Pair(otherEmail, score));
             }
