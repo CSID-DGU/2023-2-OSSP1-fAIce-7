@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="layout">
     <div class="interest-settings">
       <h2>관심분야 설정</h2>
@@ -14,7 +14,7 @@
           </div>
           <!-- 삭제 버튼 -->
           <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-            <div class="circle-button">-</div>
+            <div class  ="circle-button">-</div>
           </div>
           <!-- '기타 입력란' 활성화 -->
           <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
