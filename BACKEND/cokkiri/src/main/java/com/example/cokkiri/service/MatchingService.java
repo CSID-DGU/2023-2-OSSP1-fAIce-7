@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Service("matching")
 public class MatchingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchingService.class);
+
     // 싱글스레드 호출
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     // 수업 레포지토리
