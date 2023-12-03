@@ -73,7 +73,6 @@ export default {
                 await axios.post('/matching/hobby',{
                     headCount: this.headCount,
                     email: this.email,
-                    courseNumber: this.courseNumber,
                     interests: this.filteredInterests,
                     matchingType:"hobby"
                 }).then(()=>{

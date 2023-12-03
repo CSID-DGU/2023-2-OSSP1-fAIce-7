@@ -2,6 +2,7 @@ package com.example.cokkiri.utils;
 
 import com.example.cokkiri.model.Hobby;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class HobbyUtils {
 
@@ -224,6 +225,7 @@ public class HobbyUtils {
             Collections.sort(scoresForUser, Comparator.comparing(Pair::getId));
             preferenceScores.put(userEmail, scoresForUser);
         }
+
 
         return preferenceScores;
     }
