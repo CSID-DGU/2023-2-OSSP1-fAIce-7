@@ -26,7 +26,7 @@
                                 <div style="clear:both;"></div>
 
                                 <div class="font-head">전공</div>
-                                <input type="text" class="font-input" v-model="userInfo.major">
+                                <div class="font-input"> <input type="text" v-model="userInfo.major"> </div>
                                 <div style="clear:both;"></div>
 
                                 <div class="font-head">이름</div>
@@ -34,7 +34,7 @@
                                 <div style="clear:both;"></div>
 
                                 <div class="font-head">H.P</div>
-                                <input type="text" class="font-input" v-model="userInfo.number">
+                                <div class="font-input"> <input type="text" v-model="userInfo.number"> </div>
                                 <div style="clear:both;"></div>
 
                                 <div class="font-head">성별</div>
@@ -243,7 +243,7 @@ export default {
             position:absolute;
             top: 60px;
             left: 225px;
-        }
+    }
     .frame-head{
         width: 996px;
         height: 125px;
@@ -397,12 +397,9 @@ export default {
         .font-input{
             width: 300px;
             height: 49px;
-            margin-top: 13px;
-            margin-left: 239px;
+            margin-top: 23px;
+            margin-left: 100px;
             margin-bottom: 13px;
-
-            border: 5px solid #ECBC76;
-            border-radius: 20px;
 
             float: left;
             display: flex;
@@ -415,6 +412,9 @@ export default {
             font-weight: 500;
             font-size: 25px;
             color: #000000;
+        }
+        .font-input input{
+            text-align:center;
         }
     }
 

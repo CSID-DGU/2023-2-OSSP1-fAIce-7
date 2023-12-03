@@ -1,5 +1,4 @@
-<template>
-<div class="background-setting">
+  <template>
   <div class="layout">
     <div class="interest-settings">
       <h2>관심분야 설정</h2>
@@ -15,7 +14,7 @@
           </div>
           <!-- 삭제 버튼 -->
           <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-            <div class="circle-button">-</div>
+            <div class  ="circle-button">-</div>
           </div>
           <!-- '기타 입력란' 활성화 -->
           <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
@@ -32,7 +31,6 @@
       <!-- 항목 완료 버튼 -->
       <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
     </div>
-  </div>
   </div>
 </template>
 
@@ -270,35 +268,24 @@ export default {
     height: 100vh;
     width: 100vw;
     margin: 0;
-    background-image: url("../assets/mypage/background.png"); /* MyPage에서 사용된 배경 이미지 경로 */
-    background-size: cover; /* 이미지가 배경 전체를 커버하도록 설정 */
-    background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
-    background-position: center center; /* 이미지가 배경 중앙에 위치하도록 설정 */
-    display: flex;
+    background-color: #ECBC76; 
+    display: grid;
     grid-template-rows: auto;
     justify-items: center;
     align-items: center;
 }
 
 .container {
-  max-width: 800px; // 원하는 너비에 따라 조절
-  margin: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background: #FFF;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column; // 세로 방향 정렬
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .layout {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: stretch; /* 자식 요소들의 높이를 부모 컨테이너에 맞춤 */
   width: 100%;
-  max-width: 800px;
-  margin: auto;
 }
 
 .interest-settings {
@@ -307,7 +294,7 @@ export default {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  margin: 50px 0; /* 마진 제거 */
+  margin: 0; /* 마진 제거 */
 }
 
 .interest-section {

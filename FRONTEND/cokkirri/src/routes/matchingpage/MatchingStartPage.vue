@@ -1,6 +1,7 @@
 <template>
     <div class="background-setting">
         <div class="container">
+            <router-link to="/my" class="my-link">&lt;</router-link>
             <div class="frame-first-step-body">
                 <div class="upper-area">
                     <div class="interest-title">나의 관심 분야</div>
@@ -113,7 +114,24 @@ export default {
         background: #FFFFFF;
         border-radius: 20px;
     }
-    
+    .my-link{
+            width: 35px;
+            height: 31px;
+            margin-top: 10px;
+            margin-left: 17px;
+            float:left;
+
+            cursor: pointer;
+            text-decoration: none;
+
+            font-size: 35px;
+            color: #B87514;
+            display: flex;
+
+            position:absolute;
+            top: 70px;
+            left: 218px;
+    }
     .frame-first-step-body {
         width: 996px;
         height: 625px;
@@ -132,6 +150,8 @@ export default {
     .interest-title {
         width: 30%;
         display: flex;
+        margin-top: 40px;
+        margin-left: 30px;
         align-items: center;
         justify-content: center;
         font-size: 2vw;
@@ -170,7 +190,7 @@ export default {
         height: 60px;
         margin-top: 20px;
         margin-left: 293px;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
         background: #B87514;
         border-radius: 50px;
         cursor: pointer;
