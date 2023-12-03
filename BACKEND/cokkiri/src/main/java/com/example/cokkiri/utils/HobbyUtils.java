@@ -4,21 +4,9 @@ import com.example.cokkiri.model.Hobby;
 import java.util.*;
 
 public class HobbyUtils {
-<<<<<<< HEAD
-    public static HashMap<String, String> HOBBIES = new HashMap<>();
-=======
 
-    public static final List<String> HOBBIES = Arrays.asList(
-            "축구", "농구", "야구", "당구",
-            "컴퓨터", "스위치", "보드게임", "오락실",
-            "영화", "드라마", "뮤지컬", "전시회",
-            "의류", "악세사리", "화장품", "네일",
-            "강아지", "고양이", "조류", "식물",
-            "그림", "음악", "사진", "글쓰기"
-    );
-    /*
     public static HashMap<String, String> hobbies = new HashMap<>();
-    static{
+    static {
         hobbies.put("전시회 관람 (미술, 사진, 건축, 디자인 등)", "000");
         hobbies.put("미술 활동(그림, 서예, 조각, 디자인, 도예, 만화 등)", "001");
         hobbies.put("사진 촬영(디지털 카메라 포함)", "002");
@@ -173,11 +161,39 @@ public class HobbyUtils {
         hobbies.put("클럽/나이트/디스코/캬바레 가기", "520");
         hobbies.put("기타", "530");
     }
-    */
->>>>>>> e464711f6e72d2f0323253a0ae4b18c30bf4a8ef
 
-    static{
-        HOBBIES.put("축구", "100");
+
+    //두 사용자의 취미를 비교하여 점수를 계산하는 메소드(카테고리 점수)
+    public static double calculateCategoryScore(Hobby user, Hobby other) {
+        List<String> userHobbies = user.getHobby();  //사용자의 취미 목록
+        List<String> otherHobbies = other.getHobby();  //다른 사용자의 취미 목록
+
+        int totalScore = 0;  //총점
+        int compareCount = 0;  //비교 횟수
+        for (String userHobby : userHobbies) {  //사용자와 다른 사용자의 취미들을 모두 비트 연산
+            if(userHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
+            for (String otherHobby : otherHobbies) {
+                if(otherHobby == null) break;  //null인 취미가 나오면 이후 취미는 비교 X
+                String userHobbyBit = hobbies.getOrDefault(userHobby, "000");  //해시맵에서 해당하는 값을 찾아서 할당(해당 값이 없을 경우 "000")
+                String otherHobbyBit = hobbies.getOrDefault(otherHobby, "000");
+                totalScore += compareHobbyBits(userHobbyBit, otherHobbyBit);  //두 취미의 비트 값을 비교하여 점수 계산
+                compareCount++;
+            }
+        }
+        return compareCount > 0 ? (double)(totalScore/compareCount)*(1/3.0) : 0;  //평균 점수 반환, 자카드 점수와 맞추기 위해 값 정규화
+    }
+
+    // 두 취미의 비트 값을 비교하여 점수 계산
+    private static int compareHobbyBits(String userHobbyBit, String otherHobbyBit) {
+        int score = 0;
+        for (int i = 0; i < userHobbyBit.length(); i++) {  //userHobbyBit 각 문자에 대해 반복
+            if (userHobbyBit.charAt(i) == otherHobbyBit.charAt(i)) {  //userHobbyBit와 otherHobbyBit의 i번째 문자가 같은지 비교
+                score++;
+            }
+            else  //두 비트가 다를 경우 현재까지의 점수를 반환하고 뒤의 비트는 계산하지 않음 
+                return score;  
+        }
+        return score;
     }
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
         Map<String, List<Pair>> preferenceScores = new HashMap<>();
@@ -193,18 +209,14 @@ public class HobbyUtils {
                 Hobby other = otherOpt.get();
                 String otherEmail = other.getId();
 
-                // 기본 자카드 유사도 계산
-                Set<String> unions = new HashSet<>(user.getHobby()); 
-                Set<String> intersection = new HashSet<>(user.getHobby()); 
-                intersection.retainAll(other.getHobby()); // 교집합
-                unions.addAll(other.getHobby()); // 합집합
+                Set<String> unions = new HashSet<>(user.getHobby());
+                unions.addAll(other.getHobby());
 
-                //TODO 카테고리 유사도 계산 구현
-                
-                // 최종 점수
-                double score = intersection.isEmpty() ? 0 : (double) intersection.size() / unions.size();
-                
-                // 유저 id와 score를 Pair 객체를 새로 생성해서 특정 유저가 또 다른 유저와의 선호도를 저장해서 추가
+                Set<String> intersection = new HashSet<>(user.getHobby());
+                intersection.retainAll(other.getHobby());
+
+                double score = intersection.isEmpty() ? 0 : (double) (intersection.size() / unions.size())*0.6;  //카테고리 점수와 맞추기 위해 값 정규화
+                score += calculateCategoryScore(user, other);  //카테고리 점수 계산
                 scoresForUser.add(new Pair(otherEmail, score));
             }
 
@@ -214,7 +226,5 @@ public class HobbyUtils {
         }
 
         return preferenceScores;
-
     }
 }
-

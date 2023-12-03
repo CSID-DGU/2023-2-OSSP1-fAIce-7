@@ -503,18 +503,17 @@ public class MatchingService {
     public HobbyMatchedList findHobbyMatch(List<HobbyMatching>userList, int count) {
         // 객체 생성
         HobbyMatchedList matched = new HobbyMatchedList();
-        List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
         List<Boolean> isFree = new ArrayList<>(Collections.nCopies(userList.size(), false));
         int countFalse = isFree.size();
 
-        List<String> userId = new ArrayList<>();
-
-        if (userList.size() < 2) {
+        if(userList.size()<2){
             saveHobbyMatchingWaitUser(userList);
             return null;
-        } else {
+        }
+        else {
+            List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
+            List<String> userId = new ArrayList<>();
             for (int i = 0; i < userList.size(); i++) {
-
                 Optional<Hobby> userHobby = hobbyRepository.findById(userList.get(i).getEmail());
                 if (userHobby.isEmpty()) {
                     continue;
@@ -524,56 +523,80 @@ public class MatchingService {
             }
 
             Map<String, List<Pair>> score = HobbyUtils.hobbyScoreOfUsers(hobbyOfUsers);
-            List<Pair> wantTo = new ArrayList<>(Collections.nCopies(userList.size(), null));
-            List<Pair> maxScore = new ArrayList<>(Collections.nCopies(userList.size(), new Pair("", 0.0)));
-            Map<String, String> currentMatch = new HashMap<>(); // 현재 매칭 상태를 저장하는 맵
 
-            while (countFalse > 0) {
-                // 제안 하기
-                for (int t = 0; t < hobbyOfUsers.size(); t++) {
-                    String proposer = userId.get(t);
-                    if (wantTo.get(t) == null && !currentMatch.containsKey(proposer)) {
-                        List<Pair> proposerPreferences = score.get(proposer);
-                        if (proposerPreferences != null && !proposerPreferences.isEmpty()) {
-                            Pair topChoice = proposerPreferences.remove(0); // 가장 선호하는 선택
-                            wantTo.set(t, topChoice);
-                            String proposeTo = topChoice.getId();
-                            Pair currentBest = maxScore.get(userId.indexOf(proposeTo));
+            if (userList.size() < 2) {
+                saveHobbyMatchingWaitUser(userList);
+                return null;
+            }
 
-                            // 제안 받기
-                            if (currentBest.getScore() < topChoice.getScore()) {
-                                // 새로운 매칭이 더 좋은 경우
-                                currentMatch.put(proposeTo, proposer); // 매칭 업데이트
-                                maxScore.set(userId.indexOf(proposeTo), topChoice);
-                                countFalse--;
-                            }
+            // 유저별로 선호도 목록과 매칭 상태를 저장하는 맵
+            Map<String, Queue<Pair>> preferences = new HashMap<>();
+            Map<String, String> matches = new HashMap<>(); // 매칭 결과 저장
+            Map<String, String> reverseMatches = new HashMap<>();
+
+            for (HobbyMatching user : userList) {
+                Queue<Pair> prefQueue = new LinkedList<>(score.get(user.getEmail()));
+                preferences.put(user.getEmail(), prefQueue);
+                matches.put(user.getEmail(), null);  // 초기에는 모든 사용자가 매치되지 않은 상태
+            }
+
+            boolean changed;
+            do {
+                changed = false;
+                for (String proposer : preferences.keySet()) {
+                    if (matches.get(proposer) != null) continue; // 이미 매치된 경우 건너뛰기
+
+                    Queue<Pair> proposerPreferences = preferences.get(proposer);
+                    if (proposerPreferences.isEmpty()) continue; // 선호도 목록이 비어있으면 건너뛰기
+
+                    Pair topChoice = proposerPreferences.poll(); // 가장 선호하는 사용자
+                    String topChoiceUser = topChoice.getId();
+
+                    String currentMatch = reverseMatches.get(topChoiceUser);
+                    if (currentMatch == null || topChoice.getScore() > score.get(topChoiceUser).stream()
+                            .filter(p -> p.getId().equals(proposer))
+                            .findFirst().get().getScore()) {
+                        // 새로운 매칭이 더 좋은 경우
+                        if (currentMatch != null) {
+                            matches.put(currentMatch, null); // 이전 매치 해제
                         }
+                        matches.put(proposer, topChoiceUser);
+                        reverseMatches.put(topChoiceUser, proposer);
+                        changed = true;
                     }
+                }
+            } while (changed);
+
+
+            // 매칭된 사람들의 이메일 리스트 생성
+            List<String> matchedEmails = new ArrayList<>();
+            for (Map.Entry<String, String> entry : matches.entrySet()) {
+                // 매칭이 성공한 경우에만 이메일 추가
+                if (entry.getValue() != null) {
+                    matchedEmails.add(entry.getKey());  // 제안자
+                    matchedEmails.add(entry.getValue());  // 수락자
                 }
             }
 
-            // 매칭된 사용자 정보 추출 및 저장
-            List<String> matchedEmails = new ArrayList<>(currentMatch.values());
-            List<String> unmatchedEmails = new ArrayList<>(currentMatch.keySet());
+            // 중복 제거
+            Set<String> uniqueMatchedEmails = new HashSet<>(matchedEmails);
+            matchedEmails = new ArrayList<>(uniqueMatchedEmails);
 
-            // 매칭된 사용자의 이메일 리스트 설정
+            // 매칭된 사람들의 이메일 리스트 설정
             matched.setEmailList(matchedEmails);
 
-            // userList 내의 매치된 사용자 삭제 및 매칭되지 않은 사용자 처리
-            userList.removeIf(user -> matchedEmails.contains(user.getEmail()) || unmatchedEmails.contains(user.getEmail()));
+            // 매칭 타입 설정 (이 예시에서는 "hobby"로 가정)
+            matched.setMatchingType("hobby");
 
-            // 매칭 타입, 희망 인원, 매칭 결과 상태, 매칭 시간 설정
-            HobbyMatching userLast = userList.get(userList.size() - 1); // 마지막 사용자의 정보 사용
-            matched.setMatchingType(userLast.getMatchingType());
-            matched.setHeadCount(userLast.getHeadCount());
+            // 매칭 희망 인원 설정
+            matched.setHeadCount(count);
+
+            // 매칭 결과 상태 설정 ("매칭중"으로 가정)
             matched.setMatchingRes("매칭중");
+
+            // 매칭 시간 설정 (현재 날짜로 설정)
             LocalDate date = LocalDate.now();
             matched.setMatchingTime(date);
-
-            // 매칭되지 않은 사용자 처리
-            if (!userList.isEmpty()) {
-                saveHobbyMatchingWaitUser(userList);
-            }
 
             // 매칭 결과 반환
             return matched;
@@ -672,6 +695,7 @@ public class MatchingService {
         return classMatchedList;
     }
 
+
     public HobbyMatchedList hobbyMatch(HobbyMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
@@ -687,16 +711,14 @@ public class MatchingService {
         }
         if(userInfo.get().isPublicMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
-                if(userInfo.get().getHeart() < 0){
-                    return null;
-                }
                 hobbyLectureUsers.add(user);
+                LOGGER.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
                 hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
                 if(hobbyMatchedList!=null){
                     for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
                         String email = hobbyMatchedList.getEmailList().get(i);
                         Optional<User> userMatched = userRepository.findById(email);
-                        userMatched.get().setPublicMatching(false);
+                        userMatched.get().setHobbyMatching(false);
                         userRepository.save(userMatched.get());
                     }
 
