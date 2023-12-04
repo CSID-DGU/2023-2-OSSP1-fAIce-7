@@ -1,5 +1,6 @@
   <template>
   <div class="layout">
+    <router-link to="/my" class="my-link">&lt;</router-link>
     <div class="interest-settings">
       <h2>관심분야 설정</h2>
       <div v-for="(interest, index) in interests" :key="index" class="interest-section">
@@ -275,17 +276,30 @@ export default {
     align-items: center;
 }
 
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .layout {
   display: flex;
   justify-content: space-between;
   align-items: stretch; /* 자식 요소들의 높이를 부모 컨테이너에 맞춤 */
   width: 100%;
+}
+
+.my-link{
+  width: 35px;
+  height: 31px;
+  margin-top: 5px;
+  margin-left: 17px;
+  float:left;
+
+  cursor: pointer;
+  text-decoration: none;
+
+  font-size: 35px;
+  color: #B87514;
+  display: flex;
+
+  position:absolute;
+  top: 60px;
+  left: 225px;
 }
 
 .interest-settings {
