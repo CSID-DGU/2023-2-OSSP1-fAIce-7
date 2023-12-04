@@ -223,6 +223,7 @@ export default {
         display: flex;
         border: 7px solid #ECBC76;
         border-radius: 20px;
+        flex-direction: column; //행 방향 정렬
         align-items: center;
         justify-content: center;
     }
@@ -245,9 +246,10 @@ export default {
             left: 225px;
     }
     .frame-head{
-        width: 996px;
+        width: 900px;
         height: 125px;
-        background-color: #FFFEF9;
+
+        background-color: #FFFFFF;
         border-radius: 20px;
         display: flex;
         border: 7px solid #ECBC76;
@@ -263,9 +265,8 @@ export default {
             float: left;
         }
         .user-name{
-            width: 286px;
+            width: 200px;
             height: 57px;
-            margin-left: 0px;
 
             font-size: 35px; 
             display: flex; 
@@ -323,36 +324,34 @@ export default {
         }
     }
     .frame-body{
-        width: 996px;
+        width: 900px;
         height: 397px;
         margin-top: 40px;
-        background-color: #FFFEF9;
+        background-color: #FFFFFF;
         border: 7px solid #ECBC76;
         border-radius: 20px;
         .frame-sub-body{
-            width: 910px;
+            width: 850px;
             height: 337px;
-            margin-top: 30px;
-            margin-left: 43px;
+            margin-top: 20px;
+            margin-left: 20px;
             background-image: url("../../assets/mypage/profile/sub-frame.png");
-            background-size: cover;
-            background-repeat: no-repeat;
             float: left;
             overflow-y: scroll;
         }
         .frame-sub-form-body{
-            width: 910px;
+            width: 850px;
             height: 337px;
-            margin-top: 30px;
-            margin-left: 43px;
+            margin-top: 20px;
+            margin-left: 20px;
 
             display: flex;
-            justify-content: center;
             flex-direction: column; 
-
+            justify-content: center;
+           
             background-image: url("../../assets/mypage/profile/sub-frame.png");
             background-size: cover;
-            background-repeat: no-repeat;
+          
             float: left;
             overflow-y: scroll;
         }
@@ -369,7 +368,6 @@ export default {
             width: 144px;
             height: 75px;
             margin-top: 10px;
-            margin-left: 0px;
 
             float: left;
             display: flex;
@@ -392,8 +390,7 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-
+            text-align: center; 
             
             font-style: normal;
             font-weight: 500;
@@ -413,7 +410,6 @@ export default {
             align-items: center;
             text-align: center;
 
-            
             font-style: normal;
             font-weight: 500;
             font-size: 25px;
@@ -423,5 +419,31 @@ export default {
             text-align:center;
         }
     }
-
+        //스크롤바 스타일
+        .frame-sub-body::-webkit-scrollbar {  //스크롤바의 너비
+            width: 8px;
+        }
+        .frame-sub-body::-webkit-scrollbar-track {  //트랙(바탕 부분)의 색
+            width: 30px;
+            background: #FFDBAA;
+            border-radius: 10px;
+        }
+        .frame-sub-body::-webkit-scrollbar-thumb {  //스크롤바의 이동 부분
+            height: 10%;
+            background-color: #B87514;
+            border-radius: 10px;
+        }
+        .frame-sub-form-body::-webkit-scrollbar {  //스크롤바의 너비
+            width: 8px;
+        }
+        .frame-sub-form-body::-webkit-scrollbar-track {  //트랙(바탕 부분)의 색
+            width: 30px;
+            background: #ECBC76;
+            border-radius: 20px;
+        }
+        .frame-sub-form-body::-webkit-scrollbar-thumb {  //스크롤바의 이동 부분
+            height: 10%;
+            background-color: #B87514;
+            border-radius: 10px;
+        }
 </style>

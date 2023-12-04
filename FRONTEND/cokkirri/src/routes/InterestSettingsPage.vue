@@ -19,17 +19,18 @@
                         <div class="line-for-division"></div>
 
                         <div class="frame-sub-body">
+
                             <!-- 관심분야 설정 섹션 -->
                             <div class="interest-settings" :style="{height: settingsHeight + 'px'}">
                                 <div v-for="(interest, index) in interests" :key="index" class="interest-section">
                                     <div class="input-wrapper">
                                         <div class="index-number">{{ index + 1 }}.</div>
                                         <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
+                                        <div class="remove-button" @click="removeInterest(index)">
+                                            <div class="remove-icon">-</div>
+                                        </div>
                                         <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
                                              <div class="trash-icon">🗑️</div>
-                                        </div>
-                                        <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-                                            <div class="remove-icon">-</div>
                                         </div>
                                         <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
                                     </div>
@@ -39,6 +40,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div v-if="interests.length === 0" class="no-interests-message">+ 를 눌러 취미를 추가하세요.</div>  <!-- 선택한 취미가 없을 때 표시 -->
                                 <div class ="button-container">
                                   <button class="add-button" @click="addInterest" :disabled="interests.length >= 10">+</button>
                                   <button class="delete-button" @click="deleteInterest" :disabled="interests.length <= 0">-</button>
@@ -312,8 +314,6 @@ export default {
     display: flex;
     flex-direction: column; //행 방향 정렬
     align-items: center;  //가로 방향 정렬
-    //justify-content: center;  //세로 방향 중앙 정렬
-    //height: 100%;  //부모 요소의 높이 100%
 }
 .frame-body{
     width: 996px;
@@ -415,11 +415,11 @@ export default {
         border: 1px solid #B87514
     } 
     .frame-sub-body{
-        width: 900px;
+        width: 870px;
         height: 350px;
         
         margin-left: 100px;
-        margin-top: 30px;
+        margin-top: 30px; 
 
         background: #FFFFFF;
         border-radius: 20px;
@@ -462,6 +462,7 @@ export default {
                 background-color: #FF4141;
             }
             .remove-button {
+                margin-left: 10px;
                 margin-right: 10px;
             }
             .remove-icon { 
@@ -475,6 +476,16 @@ export default {
                 font-size: 12px;
 
                 background-color: #4CAF50;
+            }
+            .no-interests-message{
+                display: flex;
+                justify-content: center;
+
+                font-style: normal;
+                font-weight: 500;
+                font-size: 25px;
+                line-height: 38px;
+                color: #B87514;
             }
             .button-container{
                 display: flex;  
@@ -514,4 +525,17 @@ export default {
         }
     }
 }
+        //스크롤바 스타일
+        .frame-sub-body::-webkit-scrollbar {  //스크롤바의 너비
+            width: 8px;
+        }
+        .frame-sub-body::-webkit-scrollbar-track {  //트랙(바탕 부분)의 색
+            width: 30px;
+            background: #FFDBAA;
+        }
+        .frame-sub-body::-webkit-scrollbar-thumb {  //스크롤바의 이동 부분
+            height: 10%;
+            background-color: #B87514;
+            border-radius: 10px;
+        }
 </style>
