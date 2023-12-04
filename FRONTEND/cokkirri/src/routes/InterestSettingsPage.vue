@@ -6,7 +6,7 @@
                     <div>
                         <router-link to="/my" class="my-link">&lt;</router-link>
                         <div style="clear:both;"></div>
-
+  
                         <div class="heart-img-box">
                             <div class="heart-img"></div>
                         </div>
@@ -39,8 +39,11 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <button @click="addInterest" :disabled="interests.length >= 10" class="add-button">+</button>
-                                <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
+                                <div class ="button-container">
+                                  <button class="add-button" @click="addInterest" :disabled="interests.length >= 10">+</button>
+                                  <button class="delete-button" @click="deleteInterest" :disabled="interests.length <= 0">-</button>
+                                </div>
+                                <!-- <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button> -->
                             </div>   
                         </div>
                     </div>
@@ -284,7 +287,6 @@ export default {
 .background-setting {
     height: 100vh;
     width: 100vw;
-    margin: 0;
     
     background-image: url("../assets/mypage/background.png"); // 배경 이미지
     background-size: cover;
@@ -299,8 +301,10 @@ export default {
 //container 클래스 위치 조정
 .container{
     display: flex;
-    align-items: center;
-    justify-content: center;       
+    flex-direction: column; //행 방향 정렬
+    align-items: center;  //가로 방향 정렬
+    //justify-content: center;  //세로 방향 중앙 정렬
+    //height: 100%;  //부모 요소의 높이 100%
 }
 .frame-body{
     width: 996px;
@@ -347,7 +351,6 @@ export default {
         float: left;
 
         background-image: url("../assets/mypage/heart.png");
-        background-size: cover;
         background-repeat: no-repeat;
     }
     .heart-txt{
@@ -390,25 +393,26 @@ export default {
     .line-for-division{
         width: 891px;
         height: 1px;
-        margin-top: 30px;
+        margin-top: 25px;
         margin-left: 53px;
         margin-bottom: 0px;
 
         border: 1px solid #B87514
     } 
     .frame-sub-body{
-        width: 996px;
-        height: 432px;
-        margin-top: 5px;
-        margin-left: 0px;
+        width: 900px;
+        height: 350px;
+        
+        margin-left: 100px;
+        margin-top: 30px;
 
-        background: #FFFEF9;
+        background: #FFFFFF;
         border-radius: 20px;
         overflow-y: scroll;
 
         .interest-settings {
-            width: 996px;
-            height: 600px;
+            width: 800px;
+            height: 700px;
             background-color: #FFFFFF;
             border: 7px solid #ECBC76;
             border-radius: 20px;
@@ -458,7 +462,37 @@ export default {
 
                 background-color: #4CAF50;
             }
-            .add-button, .complete-button {
+            .button-container{
+                display: flex;  
+                justify-content: center;
+                width: 100%;
+            }
+            .add-button {
+                width: 163px;
+                height: 55px;
+                margin-top: 20px;
+                margin-right: 10px;
+                border-radius: 20px;
+                font-size: 23px;
+                line-height: 28px;
+                color: #FFFFFF;
+                cursor: pointer;
+                background-color: #B87514;
+            }
+            .delete-button {
+                width: 163px;
+                height: 55px;
+                margin-top: 20px;
+                margin-left: 10px;
+                border-radius: 20px;
+                font-size: 23;
+                line-height: 28px;
+                color: #FFFFFF;
+                cursor: pointer;
+                background-color: #B87514;
+            }
+            /*
+            .complete-button {
                 width: 163px;
                 height: 55px;
                 margin-top: 20px;
@@ -470,17 +504,13 @@ export default {
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-            }
-            .add-button {
-                background-color: #B87514;
-            }
-            .complete-button {
                 background-color: #4CAF50;
             }
-            .add-button:hover, .complete-button:hover {
+            */
+            .add-button:hover, .delete-button:hover {
                 background-color: darken($color: #B87514, $amount: 10%);
             }
-            .circle-button:hover, .trash-icon:hover {
+            .trash-button:hover, .trash-icon:hover {
                 background-color: darken($color: #4CAF50, $amount: 10%);
             }
         }
