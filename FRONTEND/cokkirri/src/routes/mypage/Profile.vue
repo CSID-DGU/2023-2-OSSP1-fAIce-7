@@ -251,9 +251,8 @@ export default {
 
         background-color: #FFFFFF;
         border-radius: 20px;
-        display: flex;
         border: 7px solid #ECBC76;
-        border-radius: 20px;
+        display: flex;
         align-items: center;
         .user-img{
             width: 92px;
@@ -270,7 +269,6 @@ export default {
 
             font-size: 35px; 
             display: flex; 
-            border-radius: 20px;
             justify-content: center;
             align-items: center;
             float: left;

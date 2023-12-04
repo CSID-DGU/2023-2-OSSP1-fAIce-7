@@ -106,9 +106,19 @@ export default {
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
     settingsHeight(){
-      const baseHeight = 160;  //padding 등의 기본 높이
+      const baseHeight = 180;  //padding 등의 기본 높이
       const itemHeight = 65;  //각 관심분야 항목의 높이
-      return baseHeight + (itemHeight * this.interests.length);
+      const dropdownHeight = 17.5;  //각 드롭다운 항목의 추정 높이
+
+      let dropdownTotalHeight = 0;
+        this.interests.forEach(interest => {
+            if (interest.filteredItems.length > 0) {
+                // 드롭다운 항목 수에 따라 추가 높이 계산
+                dropdownTotalHeight += dropdownHeight * interest.filteredItems.length;
+            }
+        });
+
+      return baseHeight + (itemHeight * this.interests.length)+dropdownTotalHeight;
     }
   },
   mounted() {
