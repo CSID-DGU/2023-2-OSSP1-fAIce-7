@@ -1,7 +1,7 @@
 <template>
     <!--  마이페이지의 시간표 및 관리  -->
     <div class="background-setting">
-        <div class="container" >
+        <div class="container">
             <div>
                 <div class="frame-body">
                     <div>
@@ -12,7 +12,6 @@
                             <div class="timetable-img"></div>
                         </div>
                         
-
                         <div class="timetable-txt">내 시간표</div>
 
                         <div class="timetable-btn-edit" @click="userInfoUpdateClientToServer()">저장</div>
@@ -210,7 +209,6 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        
     }
     .frame-body{
         width: 996px;
@@ -264,14 +262,11 @@ export default {
             width: 200px;
             height: 55px;
 
-            margin-top: 0px;
-            margin-left: 0px;
             float: left;
 
             display: flex;
             justify-content: left;
             align-items: center;
-
             
             font-style: normal;
             font-weight: 400;

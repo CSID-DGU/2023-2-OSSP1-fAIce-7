@@ -1,33 +1,53 @@
 <template>
-<div class="background-setting">
-  <div class="layout">
-    <router-link to="/my" class="my-link">&lt;</router-link>
-    <!-- 관심분야 설정 섹션 -->
-    <div class="interest-settings">
-      <h2>관심분야 설정</h2>
-      <div v-for="(interest, index) in interests" :key="index" class="interest-section">
-        <div class="input-wrapper">
-          <div class="index-number">{{ index + 1 }}.</div>
-          <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
-          <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
-            <div class="trash-icon">🗑️</div>
-          </div>
-          <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-            <div class="circle-button">-</div>
-          </div>
-          <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
+    <div class="background-setting">
+        <div class="container">
+            <div>
+                <div class="frame-body">
+                    <div>
+                        <router-link to="/my" class="my-link">&lt;</router-link>
+                        <div style="clear:both;"></div>
+
+                        <div class="heart-img-box">
+                            <div class="heart-img"></div>
+                        </div>
+                        
+                        <div class="heart-txt">관심분야 </div>
+
+                        <div class="heart-btn-edit" @click="submitInterests()">저장</div>
+                        <div style="clear:both;"></div>
+
+                        <div class="line-for-division"></div>
+
+                        <div class="frame-sub-body">
+                            <!-- 관심분야 설정 섹션 -->
+                            <div class="interest-settings">
+                                <div v-for="(interest, index) in interests" :key="index" class="interest-section">
+                                    <div class="input-wrapper">
+                                        <div class="index-number">{{ index + 1 }}.</div>
+                                        <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
+                                        <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                             <div class="trash-icon">🗑️</div>
+                                        </div>
+                                        <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
+                                            <div class="remove-icon">-</div>
+                                        </div>
+                                        <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
+                                    </div>
+                                    <ul v-if="interest.inputText && interest.filteredItems.length">
+                                        <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
+                                            {{ formatItem(item) }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <button @click="addInterest" :disabled="interests.length >= 10" class="add-button">+</button>
+                                <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <ul v-if="interest.inputText && interest.filteredItems.length">
-          <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
-            {{ formatItem(item) }}
-          </li>
-        </ul>
-      </div>
-      <button @click="addInterest" :disabled="interests.length >= 10" class="add-button">+</button>
-      <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
     </div>
-  </div>
-</div>
 </template>
 
 <script>
@@ -260,64 +280,46 @@ export default {
 <style lang="scss" scoped>
 @import "../scss/main";
 
+//배경화면 설정
 .background-setting {
     height: 100vh;
     width: 100vw;
     margin: 0;
+    
     background-image: url("../assets/mypage/background.png"); // 배경 이미지
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    display: flex;
+    display: grid;
+    grid-template-rows: auto;
     justify-items: center;
     align-items: center;
 }
 
-.layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+//container 클래스 위치 조정
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;       
 }
-
-.my-link{
-  width: 35px;
-  height: 31px;
-  margin-top: 5px;
-  margin-left: 17px;
-  float:left;
-
-  cursor: pointer;
-  text-decoration: none;
-
-  font-size: 35px;
-  color: #B87514;
-  display: flex;
-
-  position:absolute;
-  top: 60px;
-  left: 225px;
-}
-
-.interest-settings {
+.frame-body{
     width: 996px;
     height: 600px;
     background-color: #FFFFFF;
     border: 7px solid #ECBC76;
     border-radius: 20px;
-    padding: 20px;
-    box-sizing: border-box;
-
-    .my-link {
+  
+    .my-link{
         width: 51px;
         height: 46px;
-        margin-top: 17px;
+
+        margin-top: 0px;
         margin-left: 17px;
-        float: left;
+        float:left;
+
         cursor: pointer;
         text-decoration: none;
+
         font-style: normal;
         font-weight: 400;
         font-size: 40px;
@@ -326,70 +328,162 @@ export default {
         display: flex;
         align-items: center;
     }
+    .heart-img-box{
+        width: 69px;
+        height: 55px;
+            
+        margin-top: 0px;
+        margin-left: 68px;
+        float: left;
 
-    .interest-section {
-        margin-top: 30px;
-        border-top: 1px solid #B87514;
-        padding-top: 20px;
+        display: flex;
+        justify-content: left;
+        align-items: center;
     }
+    .heart-img{
+        width: 40px;
+        height: 40px;
 
-    .add-button, .complete-button {
+        float: left;
+
+        background-image: url("../assets/mypage/heart.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .heart-txt{
+        width: 200px;
+        height: 55px;
+
+        float: left;
+
+        display: flex;
+        justify-content: left;
+        align-items: center;
+            
+        font-style: normal;
+        font-weight: 400;
+        font-size: 30px;
+        line-height: 45px;
+    }
+    .heart-btn-edit{
         width: 163px;
         height: 55px;
-        margin-top: 20px;
+        background-color: #B87514;
+
+        cursor: pointer;
+
+        margin-top: 0px;
+        margin-left: 444px;
         border-radius: 20px;
-        font-size: 23px;
-        line-height: 28px;
+        float: left;
+
         color: #FFFFFF;
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
-    }
 
-    .add-button {
-        background-color: #B87514;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 23px;
+        line-height: 28px;
     }
+    .line-for-division{
+        width: 891px;
+        height: 1px;
+        margin-top: 30px;
+        margin-left: 53px;
+        margin-bottom: 0px;
 
-    .complete-button {
-        background-color: #4CAF50;
-    }
+        border: 1px solid #B87514
+    } 
+    .frame-sub-body{
+        width: 996px;
+        height: 432px;
+        margin-top: 5px;
+        margin-left: 0px;
 
-    .add-button:hover, .complete-button:hover {
-        background-color: darken($color: #B87514, $amount: 10%);
-    }
+        background: #FFFEF9;
+        border-radius: 20px;
+        overflow-y: scroll;
 
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
+        .interest-settings {
+            width: 996px;
+            height: 600px;
+            background-color: #FFFFFF;
+            border: 7px solid #ECBC76;
+            border-radius: 20px;
+            padding: 40px;
+            box-sizing: border-box;
 
-    .index-number, .trash-button, .remove-button {
-        margin-right: 10px;
-    }
+            .interest-section {
+                margin-top: 30px;
+                border-top: 1px solid #B87514;
+                padding-top: 20px;
+            }
+            .input-wrapper {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            .index-number {
+                margin-right: 10px;
+            }
+            .trash-button {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 12px;
 
-    .circle-button, .trash-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 20px;
-        cursor: pointer;
-        color: white;
-        font-size: 12px;
-    }
+                margin-right: 10px;
+            } 
+            .trash-icon {
+                background-color: #FF4141;
+            }
+            .remove-button {
+                margin-right: 10px;
+            }
+            .remove-icon { 
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 12px;
 
-    .circle-button {
-        background-color: #4CAF50;
-    }
-
-    .trash-icon {
-        background-color: #FF4141;
-    }
-
-    .circle-button:hover, .trash-icon:hover {
-        background-color: darken($color: #4CAF50, $amount: 10%);
+                background-color: #4CAF50;
+            }
+            .add-button, .complete-button {
+                width: 163px;
+                height: 55px;
+                margin-top: 20px;
+                border-radius: 20px;
+                font-size: 23px;
+                line-height: 28px;
+                color: #FFFFFF;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+            .add-button {
+                background-color: #B87514;
+            }
+            .complete-button {
+                background-color: #4CAF50;
+            }
+            .add-button:hover, .complete-button:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+            }
+            .circle-button:hover, .trash-icon:hover {
+                background-color: darken($color: #4CAF50, $amount: 10%);
+            }
+        }
     }
 }
 </style>
