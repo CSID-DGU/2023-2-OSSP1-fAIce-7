@@ -332,6 +332,9 @@
             color: #B87514;
             display: flex;
         }
+        .my-link:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .matching-img-box{
             width: 68px;
             height: 55px;
