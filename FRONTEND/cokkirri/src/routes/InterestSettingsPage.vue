@@ -385,6 +385,9 @@ export default {
         display: flex;
         align-items: center;
     }
+    .my-link:hover{
+        color: darken($color: #B87514, $amount: 20%);
+    }
     .heart-img-box{
         width: 69px;
         height: 55px;

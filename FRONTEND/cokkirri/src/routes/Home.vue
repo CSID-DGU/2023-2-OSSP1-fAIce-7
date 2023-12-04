@@ -119,13 +119,14 @@ export default {
             margin-left: 436px;
             color: #B87514;
         }
-
+        .link-to-signup:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .font-h1{
             margin-top: 18px;
             margin-left: 44px;
             font-size: 55px;
         }
-
         .font-login-describe{
             margin-top: 52px;
             margin-left: 44px;

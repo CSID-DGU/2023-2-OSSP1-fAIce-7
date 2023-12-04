@@ -292,6 +292,9 @@ export default {
 
             color: #B87514;
         }
+        .link-to-login:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .font-h1{
             padding-top: 10px;
             margin-left: 44px;

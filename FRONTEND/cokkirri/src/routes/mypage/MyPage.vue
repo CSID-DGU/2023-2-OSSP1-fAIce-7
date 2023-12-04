@@ -99,6 +99,7 @@
             background-size: cover;
             background-repeat: no-repeat;
         }
+        
         .link-text{
             width: 100px;
             height: 21px;
@@ -111,6 +112,13 @@
             line-height: 25px;
             color: #B87514;
         }
+        
+    }
+    .link-box:hover .link-img{
+            background-image: url("../../assets/mypage/dark-home.png");       
+    }
+    .link-box:hover .link-text{
+            color: darken($color: #B87514, $amount: 30%);
     }
     .frame-head{
         width: 996px;
@@ -213,6 +221,9 @@
             justify-content: right;
             align-items: center;
         }
+        .heart-btn:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .timetable-img{
             width: 40px;
             height: 40px;
@@ -248,7 +259,9 @@
             justify-content: right;
             align-items: center;
         }
-
+        .timetable-btn:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .matching-img{
             width: 40px;
             height: 40px;
@@ -283,6 +296,9 @@
             display: flex;
             justify-content: right;
             align-items: center;
+        }
+        .matching-btn:hover{
+            color: darken($color: #B87514, $amount: 20%);
         }
         .line-for-division{
             width: 891px;
