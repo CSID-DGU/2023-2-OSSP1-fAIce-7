@@ -1,9 +1,9 @@
 <template>
 <div class="background-setting">
   <div class="layout">
+    <router-link to="/my" class="my-link">&lt;</router-link>
     <!-- 관심분야 설정 섹션 -->
     <div class="interest-settings">
-      <router-link to="/my" class="my-link">&#60; </router-link>
       <h2>관심분야 설정</h2>
       <div v-for="(interest, index) in interests" :key="index" class="interest-section">
         <div class="input-wrapper">
@@ -317,12 +317,6 @@ export default {
     align-items: center;
 }
 
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .layout {
   display: flex;
   flex-direction: column;
@@ -330,6 +324,25 @@ export default {
   justify-content: center;
   height: 100%;
   width: 100%;
+}
+
+.my-link{
+  width: 35px;
+  height: 31px;
+  margin-top: 5px;
+  margin-left: 17px;
+  float:left;
+
+  cursor: pointer;
+  text-decoration: none;
+
+  font-size: 35px;
+  color: #B87514;
+  display: flex;
+
+  position:absolute;
+  top: 60px;
+  left: 225px;
 }
 
 .interest-settings {
