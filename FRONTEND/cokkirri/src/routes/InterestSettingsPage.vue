@@ -13,14 +13,14 @@
                         
                         <div class="heart-txt">관심분야 </div>
 
-                        <div class="heart-btn-edit" @click="submitInterests()">저장</div>
+                        <button class="heart-btn-edit" @click="submitInterests()" :disabled="!isComplete">저장</button>
                         <div style="clear:both;"></div>
 
                         <div class="line-for-division"></div>
 
                         <div class="frame-sub-body">
                             <!-- 관심분야 설정 섹션 -->
-                            <div class="interest-settings">
+                            <div class="interest-settings" :style="{height: settingsHeight + 'px'}">
                                 <div v-for="(interest, index) in interests" :key="index" class="interest-section">
                                     <div class="input-wrapper">
                                         <div class="index-number">{{ index + 1 }}.</div>
@@ -43,7 +43,6 @@
                                   <button class="add-button" @click="addInterest" :disabled="interests.length >= 10">+</button>
                                   <button class="delete-button" @click="deleteInterest" :disabled="interests.length <= 0">-</button>
                                 </div>
-                                <!-- <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button> -->
                             </div>   
                         </div>
                     </div>
@@ -115,6 +114,11 @@ export default {
 
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
+    settingsHeight(){
+      const baseHeight = 160;  //padding 등의 기본 높이
+      const itemHeight = 65;  //각 관심분야 항목의 높이
+      return baseHeight + (itemHeight * this.interests.length);
+    }
   },
   mounted() {
     if (this.$store.state.isSetInterests) {
@@ -182,6 +186,11 @@ export default {
       }
       if (this.interests.length < 10) {
         this.interests.push({ inputText: '', filteredItems: [] });
+      }
+    },
+    deleteInterest() {
+      if(this.interests.length > 0){
+        this.interests.pop();
       }
     },
     removeInterest(index) {
@@ -254,6 +263,7 @@ export default {
         return acc;
       }, {});
 
+
       const payload = { // JSON 객체로 구성
         userId: userId, // Vuex 스토어에서 사용자 ID 로드
         interests: interestData
@@ -265,12 +275,12 @@ export default {
         .then(response => {
             console.log('제출 성공:', response.data); // 성공 로그
             alert("관심분야 설정이 완료되었습니다.");
-            this.$router.push('/Starting');
+            this.$router.push('/my');
         })
         .catch(error => {
             console.error('제출 실패:', error); // 오류 로그
             alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-            this.$router.push('/login');
+            this.$router.push('/interestSettingPage');
         });
       // this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
@@ -412,22 +422,21 @@ export default {
 
         .interest-settings {
             width: 800px;
-            height: 700px;
+            height: 800px;
             background-color: #FFFFFF;
             border: 7px solid #ECBC76;
             border-radius: 20px;
-            padding: 40px;
+            padding: 20px;
             box-sizing: border-box;
 
             .interest-section {
-                margin-top: 30px;
-                border-top: 1px solid #B87514;
-                padding-top: 20px;
+                margin-top: 20px;
+                border-bottom: 1px solid #B87514;
             }
             .input-wrapper {
                 display: flex;
                 align-items: center;
-                margin-bottom: 10px;
+                margin-bottom: 20px;
             }
             .index-number {
                 margin-right: 10px;
@@ -491,22 +500,6 @@ export default {
                 cursor: pointer;
                 background-color: #B87514;
             }
-            /*
-            .complete-button {
-                width: 163px;
-                height: 55px;
-                margin-top: 20px;
-                border-radius: 20px;
-                font-size: 23px;
-                line-height: 28px;
-                color: #FFFFFF;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                background-color: #4CAF50;
-            }
-            */
             .add-button:hover, .delete-button:hover {
                 background-color: darken($color: #B87514, $amount: 10%);
             }
