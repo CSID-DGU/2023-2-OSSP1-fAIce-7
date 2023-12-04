@@ -263,7 +263,6 @@ export default {
         return acc;
       }, {});
 
-
       const payload = { // JSON 객체로 구성
         userId: userId, // Vuex 스토어에서 사용자 ID 로드
         interests: interestData
@@ -280,7 +279,7 @@ export default {
         .catch(error => {
             console.error('제출 실패:', error); // 오류 로그
             alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-            this.$router.push('/interestSettingPage');
+            this.$router.push('/interestSettingsPage');
         });
       // this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
@@ -399,6 +398,9 @@ export default {
         font-weight: 400;
         font-size: 23px;
         line-height: 28px;
+    }
+    .heart-btn-edit:hover {
+            background-color: darken($color: #B87514, $amount: 10%);
     }
     .line-for-division{
         width: 891px;

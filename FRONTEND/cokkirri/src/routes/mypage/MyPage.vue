@@ -165,6 +165,9 @@
             font-size: 23px;
             line-height: 28px;
         }
+        .user-btn:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+        }
     }
     .frame-body{
         width: 996px;
@@ -210,7 +213,6 @@
             justify-content: right;
             align-items: center;
         }
-
         .timetable-img{
             width: 40px;
             height: 40px;

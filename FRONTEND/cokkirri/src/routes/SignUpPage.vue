@@ -351,5 +351,8 @@ export default {
 
             color: #FFFFFF;
         }
+        .btn-style:hover {
+            background-color: darken($color: #B87514, $amount: 10%);
+        }
     }
 </style>

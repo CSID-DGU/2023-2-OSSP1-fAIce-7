@@ -89,6 +89,9 @@ export default {
 
   color: #FFFFFF;
 }
+.mybutton:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+}
 
 .Gotopage{
  /* 세 개 묶음 박스 width여기서 수정 */

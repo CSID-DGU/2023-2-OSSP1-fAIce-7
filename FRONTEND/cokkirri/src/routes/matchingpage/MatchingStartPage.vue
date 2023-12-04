@@ -206,4 +206,7 @@ export default {
         line-height: 24px;
         letter-spacing: 0.5px;
     }
+    .matching-submit-btn:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+    }
 </style>
