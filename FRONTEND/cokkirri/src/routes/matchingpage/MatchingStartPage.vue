@@ -133,6 +133,9 @@ export default {
             top: 70px;
             left: 218px;
     }
+    .my-link:hover{
+            color: darken($color: #B87514, $amount: 20%);
+    }
     .frame-first-step-body {
         width: 996px;
         height: 625px;
