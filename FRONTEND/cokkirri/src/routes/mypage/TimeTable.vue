@@ -296,6 +296,9 @@ export default {
             font-size: 23px;
             line-height: 28px;
         }
+        .timetable-btn-edit:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+        }
         .timetable-btn-complete{
             width: 163px;
             height: 55px;
@@ -432,6 +435,9 @@ export default {
                     font-size: 23px;
                     line-height: 28px;
                     color: #FFFFFF;
+                }
+                .search-resister-btn-add:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
                 }
                 .search-resister-btn-delete{
                     width: 163px;

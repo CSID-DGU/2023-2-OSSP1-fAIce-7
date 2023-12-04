@@ -294,6 +294,9 @@ export default {
             font-size: 23px;
             line-height: 28px;
         }
+        .user-btn-edit:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+        }
         .user-btn-complete{
             width: 163px;
             height: 55px;
@@ -314,6 +317,9 @@ export default {
             font-weight: 400;
             font-size: 23px;
             line-height: 28px;
+        }
+        .user-btn-complete:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
         }
     }
     .frame-body{

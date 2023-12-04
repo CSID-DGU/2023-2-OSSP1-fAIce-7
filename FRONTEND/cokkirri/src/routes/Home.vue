@@ -192,5 +192,8 @@ export default {
             font-size: 16px;
             color: #FFFFFF;
         }
+        .submit-btn:hover {
+            background-color: darken($color: #B87514, $amount: 10%);
+        }
     }
 </style>
