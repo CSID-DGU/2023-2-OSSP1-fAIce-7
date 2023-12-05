@@ -108,8 +108,8 @@ export default {
         border-radius: 20px;
 
         .link-describe{
-            margin-left: 346px;
-            margin-top: 53px;
+            margin-left: 360px;
+            margin-top: 40px;
             margin-bottom: 0px;
 
             font-size: 16px;
@@ -119,13 +119,14 @@ export default {
             margin-left: 436px;
             color: #B87514;
         }
-
+        .link-to-signup:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .font-h1{
             margin-top: 18px;
             margin-left: 44px;
             font-size: 55px;
         }
-
         .font-login-describe{
             margin-top: 52px;
             margin-left: 44px;
@@ -191,6 +192,9 @@ export default {
 
             font-size: 16px;
             color: #FFFFFF;
+        }
+        .submit-btn:hover {
+            background-color: darken($color: #B87514, $amount: 10%);
         }
     }
 </style>

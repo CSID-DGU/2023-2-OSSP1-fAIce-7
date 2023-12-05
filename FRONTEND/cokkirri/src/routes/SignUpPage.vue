@@ -1,7 +1,8 @@
 <template>
     <!-- 회원가입 -->
     <div class="background-setting">
-        <div class="container" >
+        <div class="container">
+            <router-link to="/" class="my-link">&lt;</router-link>
             <div class="form-frame">
                 <div>
                     <p class="describe-link-to-login">
@@ -250,10 +251,28 @@ export default {
         align-items: center;
         justify-content: center;
     }
+     .my-link{
+            width: 35px;
+            height: 31px;
+            margin-top: 5px;
+            margin-left: 17px;
+            float:left;
+
+            cursor: pointer;
+            text-decoration: none;
+
+            font-size: 35px;
+            color: #B87514;
+            display: flex;
+
+            position:absolute;
+            top: 50px;
+            left: 440px;
+    }
     // form 틀 만들기
     .form-frame {
         width: 570px;
-        height: 741px;
+        height: 700px;
         background: #FFFFFF;
         box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
         border: 7px solid #ECBC76; 
@@ -261,17 +280,20 @@ export default {
         overflow-y: scroll;
 
         .describe-link-to-login{
-            margin-left: 350px;
-            margin-top: 53px;
+            margin-left: 382px;
+            margin-top: 40px;
             margin-bottom: 0px;
 
             font-size: 16px;
             color: #8D8D8D;
         }
         .link-to-login{
-            margin-left: 436px;
+            margin-left: 458px;
 
             color: #B87514;
+        }
+        .link-to-login:hover{
+            color: darken($color: #B87514, $amount: 20%);
         }
         .font-h1{
             padding-top: 10px;
@@ -331,6 +353,9 @@ export default {
             text-align: center;
 
             color: #FFFFFF;
+        }
+        .btn-style:hover {
+            background-color: darken($color: #B87514, $amount: 10%);
         }
     }
 </style>

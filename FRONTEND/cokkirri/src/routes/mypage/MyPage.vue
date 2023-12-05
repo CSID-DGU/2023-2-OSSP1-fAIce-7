@@ -81,6 +81,7 @@
         display: grid;
         border: 7px solid #ECBC76; 
         border-radius: 20px;
+        flex-direction: column; //행 방향 정렬
         align-items: center;
         justify-content: center;
     }
@@ -99,6 +100,7 @@
             background-size: cover;
             background-repeat: no-repeat;
         }
+        
         .link-text{
             width: 100px;
             height: 21px;
@@ -111,16 +113,23 @@
             line-height: 25px;
             color: #B87514;
         }
+        
+    }
+    .link-box:hover .link-img{
+            background-image: url("../../assets/mypage/dark-home.png");       
+    }
+    .link-box:hover .link-text{
+            color: darken($color: #B87514, $amount: 30%);
     }
     .frame-head{
-        width: 996px;
+        width: 900px;
         height: 125px;
 
         margin-top: 28px;
 
         background-color: #FFFFFF;
-        border: 7px solid #ECBC76;
         border-radius: 20px;
+        border: 7px solid #ECBC76;
         display: flex;
         align-items: center;
         .user-img{
@@ -133,7 +142,7 @@
             float: left;
         }
         .user-name{
-            width: 286px;
+            width: 200px;
             height: 57px;
             margin-left: 0px;
 
@@ -165,11 +174,14 @@
             font-size: 23px;
             line-height: 28px;
         }
+        .user-btn:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+        }
     }
     .frame-body{
-        width: 996px;
+        width: 900px;
         height: 397px;
-        margin-top: 30px;
+        margin-top: 20px;
         background-color: #FFFFFF;
         border: 7px solid #ECBC76;
         border-radius: 20px;
@@ -178,18 +190,18 @@
         .heart-img{
             width: 43px;
             height: 40px;
-            margin-top: 59px;
-            margin-left: 69px;
+            margin-top: 40px;
+            margin-left: 50px;
             background-image: url("../../assets/mypage/heart.png");
             background-size: cover;
             
             float: left;
         }
         .heart-txt{
-            width: 200px;
+            width: 180px;
             height: 40px;
-            margin-top: 59px;
-            margin-left: 28px;
+            margin-top: 40px;
+            margin-left: 30px;
             float: left;
 
             font-size: 30px; 
@@ -197,9 +209,9 @@
             align-items: center;
         }
         .heart-btn{
-            width: 596px;
+            width: 530px;
             height: 40px;
-            margin-top: 59px;
+            margin-top: 40px;
             float:left;
 
             text-decoration: none;
@@ -210,22 +222,24 @@
             justify-content: right;
             align-items: center;
         }
-
+        .heart-btn:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .timetable-img{
             width: 40px;
             height: 40px;
             margin-top: 40px;
-            margin-left: 69px;
+            margin-left: 49px;
             background-image: url("../../assets/mypage/timetable.png");
             background-size: cover;
             background-repeat: no-repeat;
             float: left;
         }
         .timetable-txt{
-            width: 200px;
+            width: 180px;
             height: 40px;
             margin-top: 40px;
-            margin-left: 31px;
+            margin-left: 30px;
             float: left;
 
             font-size: 30px; 
@@ -233,7 +247,7 @@
             align-items: center;
         }
         .timetable-btn{
-            width: 596px;
+            width: 530px;
             height: 40px;
             margin-top: 40px;
             float:left;
@@ -246,22 +260,24 @@
             justify-content: right;
             align-items: center;
         }
-
+        .timetable-btn:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .matching-img{
             width: 40px;
             height: 40px;
             margin-top: 40px;
-            margin-left: 69px;
+            margin-left: 49px;
             background-image: url("../../assets/mypage/matching.png");
             background-size: cover;
             background-repeat: no-repeat;
             float: left;
         }
         .matching-txt{
-            width: 200px;
+            width: 180px;
             height: 40px;
             margin-top: 40px;
-            margin-left: 31px;
+            margin-left: 30px;
             float: left;
 
             font-size: 30px; 
@@ -269,7 +285,7 @@
             align-items: center;
         }
         .matching-btn{
-            width: 596px;
+            width: 530px;
             height: 40px;
             margin-top: 40px;
             float:left;
@@ -282,12 +298,14 @@
             justify-content: right;
             align-items: center;
         }
+        .matching-btn:hover{
+            color: darken($color: #B87514, $amount: 20%);
+        }
         .line-for-division{
-            width: 891px;
+            width: 810px;
             height: 1px;
             margin-top: 39px;
-            margin-left: 53px;
-            margin-bottom: 0px;
+            margin-left: 40px;
 
             border: 1px solid #B87514
         }
