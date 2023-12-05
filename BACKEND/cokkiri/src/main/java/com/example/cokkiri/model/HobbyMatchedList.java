@@ -22,7 +22,7 @@ public class HobbyMatchedList {
     @Column
     private int matchingId;
 
-    //학수번호
+    //관심분야 리스트
     @Column
     @ElementCollection
     private List<String> hobby;
