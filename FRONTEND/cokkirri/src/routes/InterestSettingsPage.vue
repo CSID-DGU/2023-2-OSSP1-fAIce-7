@@ -61,10 +61,9 @@ import axios from '../api/index.js';
 export default {
   data() {
     return {
-      categories: {},
-      interests: [{ inputText: '', filteredItems: [] }],
-      // 이미 입력된 관심분야 목록을 저장할 배열 추가
-      existingInterests: [],
+      categories: {}, // 카테고리 데이터
+      interests: [{ inputText: '', filteredItems: [] }], // 현재 설정 중인 관심분야 목록
+      existingInterests: [] // 이미 설정된 관심분야 목록
     };
   },
   computed: {
@@ -153,6 +152,7 @@ export default {
         console.error('CSV 파일 로딩 오류:', error);
       }
     },
+
     parseCSVLine(line) {
       const items = [];
       let currentItem = '';
@@ -182,7 +182,6 @@ export default {
 
       return items;
     },
-
 
     filterItems(index) {
       const inputText = this.interests[index].inputText.toLowerCase();
