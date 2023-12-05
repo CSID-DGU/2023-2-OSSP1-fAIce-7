@@ -321,21 +321,19 @@
         .my-link{
             width: 51px;
             height: 46px;
-
-            margin-top: 0px;
+            margin-top: 5px;
             margin-left: 17px;
             float:left;
 
             cursor: pointer;
             text-decoration: none;
             
-            font-style: normal;
-            font-weight: 400;
-            font-size: 40px;
-            line-height: 75px;
+            font-size: 35px;
             color: #B87514;
             display: flex;
-            align-items: center;
+        }
+        .my-link:hover{
+            color: darken($color: #B87514, $amount: 20%);
         }
         .matching-img-box{
             width: 68px;
@@ -400,6 +398,9 @@
             font-size: 23px;
             line-height: 28px;
         }
+        .matching-refresh:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+        }
         .matching-btn{
             width: 163px;
             height: 55px;
@@ -423,7 +424,9 @@
             font-size: 23px;
             line-height: 28px;
         }
-
+        .matching-btn:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+        }
         .line-for-division{
             width: 891px;
             height: 1px;

@@ -1,33 +1,57 @@
 <template>
-<div class="background-setting">
-  <div class="layout">
-    <!-- 관심분야 설정 섹션 -->
-    <div class="interest-settings">
-      <router-link to="/my" class="my-link">&#60; </router-link>
-      <h2>관심분야 설정</h2>
-      <div v-for="(interest, index) in interests" :key="index" class="interest-section">
-        <div class="input-wrapper">
-          <div class="index-number">{{ index + 1 }}.</div>
-          <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
-          <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
-            <div class="trash-icon">🗑️</div>
-          </div>
-          <div class="remove-button" @click="removeInterest(index)" v-if="interest.inputText">
-            <div class="circle-button">-</div>
-          </div>
-          <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
+    <div class="background-setting">
+        <div class="container">
+            <div>
+                <div class="frame-body">
+                    <div>
+                        <router-link to="/my" class="my-link">&lt;</router-link>
+                        <div style="clear:both;"></div>
+  
+                        <div class="heart-img-box">
+                            <div class="heart-img"></div>
+                        </div>
+                        
+                        <div class="heart-txt">관심분야 </div>
+
+                        <button class="heart-btn-edit" @click="submitInterests()" :disabled="!isComplete">저장</button>
+                        <div style="clear:both;"></div>
+
+                        <div class="line-for-division"></div>
+
+                        <div class="frame-sub-body">
+
+                            <!-- 관심분야 설정 섹션 -->
+                            <div class="interest-settings" :style="{height: settingsHeight + 'px'}">
+                                <div v-for="(interest, index) in interests" :key="index" class="interest-section">
+                                    <div class="input-wrapper">
+                                        <div class="index-number">{{ index + 1 }}.</div>
+                                        <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
+                                        <div class="remove-button" @click="removeInterest(index)">
+                                            <div class="remove-icon">-</div>
+                                        </div>
+                                        <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                             <div class="trash-icon">🗑️</div>
+                                        </div>
+                                        <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
+                                    </div>
+                                    <ul v-if="interest.inputText && interest.filteredItems.length">
+                                        <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
+                                            {{ formatItem(item) }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div v-if="interests.length === 0" class="no-interests-message">+ 를 눌러 취미를 추가하세요.</div>  <!-- 선택한 취미가 없을 때 표시 -->
+                                <div class ="button-container">
+                                  <button class="add-button" @click="addInterest" :disabled="interests.length >= 10">+</button>
+                                  <button class="delete-button" @click="deleteInterest" :disabled="interests.length <= 0">-</button>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <ul v-if="interest.inputText && interest.filteredItems.length">
-          <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
-            {{ formatItem(item) }}
-          </li>
-        </ul>
-      </div>
-      <button @click="addInterest" :disabled="interests.length >= 10" class="add-button">+</button>
-      <button @click="submitInterests" :disabled="!isComplete" class="complete-button">완료</button>
     </div>
-  </div>
-</div>
 </template>
 
 <script>
@@ -37,20 +61,9 @@ import axios from '../api/index.js';
 export default {
   data() {
     return {
-      categories: {
-        // 카테고리 데이터
-        '문화예술관람활동': ['전시회 관람 (미술, 사진, 건축, 디자인 등)', '박물관 관람', '음악 연주회 관람(클래식, 오페라 등)', '전통예술공연 관람(국악, 민속놀이 등)', '연극공연 관람(뮤지컬 포함)', '무용 공연 관람', '영화 관람', '연예 공연 관람(쇼, 콘서트, 마술 쇼 등)'],
-        '문화예술참여활동': ['문학 행사 참여', '글짓기/독서 토론', '미술 활동(그림, 서예, 조각, 디자인, 도예, 만화 등)', '악기 연주/노래 교실', '전통예술 배우기(사물놀이, 줄타기 등)', '사진 촬영(디지털 카메라 포함)', '연극', '춤/무용(발레, 한국무용, 현대무용, 방송댄스, 스트릿댄스, 비보잉 등)'],
-        '스포츠관람활동': ['농구 관람', '배구 관람', '야구 관람', '축구 관람', '족구 관람', '테니스 관람', '스쿼시 관람', '당구 관람', '포켓볼 관람', '볼링 관람', '탁구 관람', '골프 관람', '수영 관람', '윈드서핑 관람', '수상스키 관람', '스노보드 관람', '스키 관람', '아이스 스케이트 관람', '아이스 하키 관람', '보디빌딩', '배드민턴 관람', '줄넘기 관람', '체조  관람', '훌라후프 관람', '마라톤 관람', '태권도 관람', '유도 관람', '합기도 관람', '검도 관람', '권투 관람', '사이클링 관람', '산악자전거 관람', '인라인 스케이트 관람', '승마 관람', '클라이밍 관람'],
-        '스포츠참여활동': ['농구', '배구', '야구', '축구', '족구', '테니스', '스쿼시', '당구', '포켓볼', '볼링', '탁구', '골프', '수영', '윈드서핑', '수상스키', '스킨스쿠버다이빙', '래프팅', '요트', '스노보드', '스키', '아이스 스케이트', '아이스 하키', '헬스', '에어로빅', '요가', '필라테스', '배드민턴', '줄넘기', '체조', '훌라후프', '마라톤', '태권도', '유도', '합기도', '검도', '권투', '탱고', '왈츠', '자이보', '맘보', '폴카', '차차차', '사이클링', '산악자전거', '인라인 스케이트', '승마', '클라이밍'],
-        '관광활동': ['문화유적 방문(고궁, 절, 유적지 등)', '자연명승 및 풍경 관람', '삼림욕', '국내여행', '해외여행', '소풍/야유회', '온천/해수욕', '유람선 타기', '테마파크/놀이공원/동물원/식물원 가기', '지역축제 참가', '자동차 드라이브'],
-        '취미오락활동': ['수집 활동(스크랩 포함)', '생활공예(십자수, 비즈공예, DIY, 꽃꽂이 등)', '요리', '다도', '반려 동물 돌보기', '노래방 가기', '인테리어(집, 자동차 등)', '등산', '낚시', '홈페이지/블로그 관리', 'SNS', '미디어 제작', '인터넷 서핑', '컴퓨터 게임', '모바일 게임', '콘솔 게임', '보드 게임', '퍼즐/큐브', '바둑', '체스', '장기', '쇼핑', '외식', '독서(웹소설 포함)', '만화(애니, 웹툰)', '피부 관리', '헤어 관리', '네일 아트', '마사지', '공부', '이색/테마카페 체험(방탈출, VR, 낚시카페 등)', '원예(화분, 화단 가꾸기 등)'],
-        '휴식활동': ['산책', '목욕/사우나/찜질방', '낮잠', 'TV시청', '영상 시청(VOD, 유튜브, 넷플릭스, 웨이브, 티빙, 디즈니플러스 등)', '라디오/팟캐스트 청취', '음악 감상', '신문/잡지 보기'],
-        '사회 및 기타활동': ['사회봉사활동', '종교 활동', '클럽/나이트/디스코/캬바레 가기', '기타']
-      },
-      interests: [{ inputText: '', filteredItems: [] }],
-      // 이미 입력된 관심분야 목록을 저장할 배열 추가
-      existingInterests: [],
+      categories: {}, // 카테고리 데이터
+      interests: [{ inputText: '', filteredItems: [] }], // 현재 설정 중인 관심분야 목록
+      existingInterests: [] // 이미 설정된 관심분야 목록
     };
   },
   computed: {
@@ -92,14 +105,84 @@ export default {
 
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
+    settingsHeight(){
+      const baseHeight = 180;  //padding 등의 기본 높이
+      const itemHeight = 65;  //각 관심분야 항목의 높이
+      const dropdownHeight = 17.5;  //각 드롭다운 항목의 추정 높이
+
+      let dropdownTotalHeight = 0;
+        this.interests.forEach(interest => {
+            if (interest.filteredItems.length > 0) {
+                // 드롭다운 항목 수에 따라 추가 높이 계산
+                dropdownTotalHeight += dropdownHeight * interest.filteredItems.length;
+            }
+        });
+
+      return baseHeight + (itemHeight * this.interests.length)+dropdownTotalHeight;
+    }
   },
   mounted() {
     if (this.$store.state.isSetInterests) {
       this.loadUserInterests(); // 첫 로그인을 제외하고 관심분야 데이터 로드
       console.log("loadUserInterests 실행");
     }
+    this.loadCSV();
   },
   methods: {
+    async loadCSV() {
+      try {
+        const response = await fetch('/hobbies.csv');
+        const text = await response.text();
+        const lines = text.split('\n');
+
+        this.categories = {}; // 카테고리 초기화
+        lines.forEach(line => {
+          const items = this.parseCSVLine(line);
+          if (items.length >= 2) {
+            const category = items[0]; // 카테고리
+            const item = items[1]; // 항목
+
+            if (!this.categories[category]) {
+              this.categories[category] = [];
+            }
+            this.categories[category].push(item);
+          }
+        });
+      } catch (error) {
+        console.error('CSV 파일 로딩 오류:', error);
+      }
+    },
+
+    parseCSVLine(line) {
+      const items = [];
+      let currentItem = '';
+      let quoteCount = 0;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+          quoteCount++;
+          if (quoteCount === 3) {
+            // 트리플 따옴표를 만나면 따옴표를 무시하고 다음 문자부터 시작
+            quoteCount = 0;
+          }
+        } else if (char === ',' && quoteCount === 0) {
+          // 쉼표가 트리플 따옴표 외부에 있을 때만 새 항목으로 구분
+          items.push(currentItem.trim());
+          currentItem = '';
+        } else {
+          currentItem += char;
+        }
+      }
+
+      if (currentItem.length > 0) {
+        items.push(currentItem.trim()); // 마지막 항목 추가
+      }
+
+      return items;
+    },
+
     filterItems(index) {
       const inputText = this.interests[index].inputText.toLowerCase();
       this.interests[index].filteredItems = Object.entries(this.categories)
@@ -159,6 +242,11 @@ export default {
       }
       if (this.interests.length < 10) {
         this.interests.push({ inputText: '', filteredItems: [] });
+      }
+    },
+    deleteInterest() {
+      if(this.interests.length > 0){
+        this.interests.pop();
       }
     },
     removeInterest(index) {
@@ -242,12 +330,12 @@ export default {
         .then(response => {
             console.log('제출 성공:', response.data); // 성공 로그
             alert("관심분야 설정이 완료되었습니다.");
-            this.$router.push('/Starting');
+            this.$router.push('/my');
         })
         .catch(error => {
             console.error('제출 실패:', error); // 오류 로그
             alert("설정이 완료되지 않아 서비스를 이용할 수 없습니다.");
-            this.$router.push('/login');
+            this.$router.push('/interestSettingsPage');
         });
       // this.updateUserInterests(this.interests.map(interest => interest.inputText));
     },
@@ -260,51 +348,45 @@ export default {
 <style lang="scss" scoped>
 @import "../scss/main";
 
+//배경화면 설정
 .background-setting {
     height: 100vh;
     width: 100vw;
-    margin: 0;
+    
     background-image: url("../assets/mypage/background.png"); // 배경 이미지
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    display: flex;
+    display: grid;
+    grid-template-rows: auto;
     justify-items: center;
     align-items: center;
 }
 
-.container {
+//container 클래스 위치 조정
+.container{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column; //행 방향 정렬
+    align-items: center;  //가로 방향 정렬
 }
-
-.layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
-
-.interest-settings {
+.frame-body{
     width: 996px;
     height: 600px;
     background-color: #FFFFFF;
     border: 7px solid #ECBC76;
     border-radius: 20px;
-    padding: 20px;
-    box-sizing: border-box;
-
-    .my-link {
+  
+    .my-link{
         width: 51px;
         height: 46px;
-        margin-top: 17px;
+
+        margin-top: 0px;
         margin-left: 17px;
-        float: left;
+        float:left;
+
         cursor: pointer;
         text-decoration: none;
+
         font-style: normal;
         font-weight: 400;
         font-size: 40px;
@@ -313,70 +395,201 @@ export default {
         display: flex;
         align-items: center;
     }
-
-    .interest-section {
-        margin-top: 30px;
-        border-top: 1px solid #B87514;
-        padding-top: 20px;
+    .my-link:hover{
+        color: darken($color: #B87514, $amount: 20%);
     }
+    .heart-img-box{
+        width: 69px;
+        height: 55px;
+            
+        margin-top: 0px;
+        margin-left: 68px;
+        float: left;
 
-    .add-button, .complete-button {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+    }
+    .heart-img{
+        width: 40px;
+        height: 40px;
+
+        float: left;
+
+        background-image: url("../assets/mypage/heart.png");
+        background-repeat: no-repeat;
+    }
+    .heart-txt{
+        width: 200px;
+        height: 55px;
+
+        float: left;
+
+        display: flex;
+        justify-content: left;
+        align-items: center;
+            
+        font-style: normal;
+        font-weight: 400;
+        font-size: 30px;
+        line-height: 45px;
+    }
+    .heart-btn-edit{
         width: 163px;
         height: 55px;
-        margin-top: 20px;
+        background-color: #B87514;
+
+        cursor: pointer;
+
+        margin-top: 0px;
+        margin-left: 444px;
         border-radius: 20px;
-        font-size: 23px;
-        line-height: 28px;
+        float: left;
+
         color: #FFFFFF;
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
-    }
 
-    .add-button {
-        background-color: #B87514;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 23px;
+        line-height: 28px;
     }
-
-    .complete-button {
-        background-color: #4CAF50;
+    .heart-btn-edit:hover {
+            background-color: darken($color: #B87514, $amount: 10%);
     }
+    .line-for-division{
+        width: 891px;
+        height: 1px;
+        margin-top: 25px;
+        margin-left: 53px;
+        margin-bottom: 0px;
 
-    .add-button:hover, .complete-button:hover {
-        background-color: darken($color: #B87514, $amount: 10%);
-    }
+        border: 1px solid #B87514
+    } 
+    .frame-sub-body{
+        width: 870px;
+        height: 350px;
+        
+        margin-left: 100px;
+        margin-top: 30px; 
 
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
+        background: #FFFFFF;
+        border-radius: 20px;
+        overflow-y: scroll;
 
-    .index-number, .trash-button, .remove-button {
-        margin-right: 10px;
-    }
+        .interest-settings {
+            width: 800px;
+            height: 800px;
+            background-color: #FFFFFF;
+            border: 7px solid #ECBC76;
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
 
-    .circle-button, .trash-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 20px;
-        cursor: pointer;
-        color: white;
-        font-size: 12px;
-    }
+            .interest-section {
+                margin-top: 20px;
+                border-bottom: 1px solid #B87514;
+            }
+            .input-wrapper {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            .index-number {
+                margin-right: 10px;
+            }
+            .trash-button {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 12px;
 
-    .circle-button {
-        background-color: #4CAF50;
-    }
+                margin-right: 10px;
+            } 
+            .trash-icon {
+                background-color: #FF4141;
+            }
+            .remove-button {
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            .remove-icon { 
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 12px;
 
-    .trash-icon {
-        background-color: #FF4141;
-    }
+                background-color: #4CAF50;
+            }
+            .no-interests-message{
+                display: flex;
+                justify-content: center;
 
-    .circle-button:hover, .trash-icon:hover {
-        background-color: darken($color: #4CAF50, $amount: 10%);
+                font-style: normal;
+                font-weight: 500;
+                font-size: 25px;
+                line-height: 38px;
+                color: #B87514;
+            }
+            .button-container{
+                display: flex;  
+                justify-content: center;
+                width: 100%;
+            }
+            .add-button {
+                width: 163px;
+                height: 55px;
+                margin-top: 20px;
+                margin-right: 10px;
+                border-radius: 20px;
+                font-size: 23px;
+                line-height: 28px;
+                color: #FFFFFF;
+                cursor: pointer;
+                background-color: #B87514;
+            }
+            .delete-button {
+                width: 163px;
+                height: 55px;
+                margin-top: 20px;
+                margin-left: 10px;
+                border-radius: 20px;
+                font-size: 23;
+                line-height: 28px;
+                color: #FFFFFF;
+                cursor: pointer;
+                background-color: #B87514;
+            }
+            .add-button:hover, .delete-button:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+            }
+            .trash-button:hover, .trash-icon:hover {
+                background-color: darken($color: #4CAF50, $amount: 10%);
+            }
+        }
     }
 }
+        //스크롤바 스타일
+        .frame-sub-body::-webkit-scrollbar {  //스크롤바의 너비
+            width: 8px;
+        }
+        .frame-sub-body::-webkit-scrollbar-track {  //트랙(바탕 부분)의 색
+            width: 30px;
+            background: #FFDBAA;
+        }
+        .frame-sub-body::-webkit-scrollbar-thumb {  //스크롤바의 이동 부분
+            height: 10%;
+            background-color: #B87514;
+            border-radius: 10px;
+        }
 </style>

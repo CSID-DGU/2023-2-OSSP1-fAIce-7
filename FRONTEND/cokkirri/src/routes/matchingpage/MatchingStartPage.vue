@@ -132,6 +132,9 @@ export default {
             top: 70px;
             left: 218px;
     }
+    .my-link:hover{
+            color: darken($color: #B87514, $amount: 20%);
+    }
     .frame-first-step-body {
         width: 996px;
         height: 625px;
@@ -204,5 +207,8 @@ export default {
         color: #FFFFFF;
         line-height: 24px;
         letter-spacing: 0.5px;
+    }
+    .matching-submit-btn:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
     }
 </style>
