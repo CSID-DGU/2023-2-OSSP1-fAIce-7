@@ -11,7 +11,7 @@ def load_hobbies_with_bits_and_probabilities(filepath):
     df = pd.read_csv(filepath, encoding='cp949', header=None, names=['Hobby', 'Bit', 'Probability'])
     hobbies_bit_map = df.set_index('Hobby')['Bit'].to_dict()
     probabilities = df['Probability'].values / df['Probability'].sum()  # 확률 정규화
-    return hobbies_bit_map, list(df['Hobby']), probabilities
+    return hobbies_bit_map, probabilities, list(df['Hobby'])
 
 # 사용자 데이터셋 생성 함수 (평균적으로 4개의 취미)
 def generate_user_dataset(hobbies, probabilities, num_users=10000, avg_hobbies=4):
@@ -20,7 +20,7 @@ def generate_user_dataset(hobbies, probabilities, num_users=10000, avg_hobbies=4
     for user_id in range(1, num_users + 1):
         num_hobbies = np.random.poisson(avg_hobbies)
         num_hobbies = max(1, min(num_hobbies, 10))
-        user_hobbies = np.random.choice(hobbies, size=num_hobbies, replace=False, p=probabilities)
+        user_hobbies = np.random.choice(list(hobbies.keys()), size=num_hobbies, replace=False, p=probabilities)
         users_dataset[user_id] = list(user_hobbies)
     return users_dataset
 
@@ -74,8 +74,9 @@ def gale_shapley_matching(users, score_map):
     return matches
 
 # 사용 예시
-hobbies_bit_map = load_hobbies_with_bits('hobbies.csv')
-users_dataset = generate_user_dataset(hobbies_bit_map)
+hobbies_bit_map, probabilities, names = load_hobbies_with_bits_and_probabilities('./Simulator/Simulator/hobbies.csv')
+print(hobbies_bit_map)
+users_dataset = generate_user_dataset(hobbies_bit_map, probabilities)
 
 # 생성된 사용자 데이터셋 중 10명의 예시 출력
 print("Example Users Dataset:")
