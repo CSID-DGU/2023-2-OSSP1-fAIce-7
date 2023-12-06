@@ -24,17 +24,34 @@ def generate_user_dataset(hobbies, probabilities, num_users=10000, avg_hobbies=4
         users_dataset[user_id] = list(user_hobbies)
     return users_dataset
 
+def jaccard_similarity(set1, set2):
+    intersection = len(set1.intersection(set2))
+    union = len(set1.union(set2))
+    
+    if union > 6:
+        union = 6
+    
+    if union < 2:
+        union = 2
+    
+    return 0.6 * intersection / union if union > 0 else 0
+
 # 유사도 점수 계산 함수
 def calculate_category_score(user_hobbies, other_hobbies, hobbies_bit_map):
     total_score = 0
     compare_count = 0
+    
+    j = jaccard_similarity(set(user_hobbies), set(other_hobbies))
+    
     for user_hobby in user_hobbies:
         for other_hobby in other_hobbies:
             user_hobby_bit = hobbies_bit_map.get(user_hobby, "530")
             other_hobby_bit = hobbies_bit_map.get(other_hobby, "530")
             total_score += compare_hobby_bits(user_hobby_bit, other_hobby_bit)
             compare_count += 1
-    return (total_score / compare_count) * (1 / 3.0) if compare_count > 0 else 0
+    
+    s = (total_score / compare_count) * (1 / 3.0) if compare_count > 0 else 0
+    return j + s
 
 def compare_hobby_bits(user_hobby_bit, other_hobby_bit):
     score = 0
