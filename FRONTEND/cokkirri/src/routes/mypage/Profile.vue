@@ -227,7 +227,7 @@ export default {
         align-items: center;
         justify-content: center;
     }
-    .my-link{
+    .my-link{/*
             width: 35px;
             height: 31px;
             margin-top: 5px;
@@ -244,6 +244,24 @@ export default {
             position:absolute;
             top: 60px;
             left: 225px;
+            */
+            width: 51px;
+            height: 46px;
+
+            margin-top: 0px;
+            margin-left: 17px;
+            float:left;
+
+            cursor: pointer;
+            text-decoration: none;
+
+            font-style: normal;
+            font-weight: 400;
+            font-size: 40px;
+            line-height: 75px;
+            color: #B87514;
+            display: flex;
+            align-items: center;
     }
     .frame-head{
         width: 900px;
