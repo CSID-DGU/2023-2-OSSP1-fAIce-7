@@ -68,9 +68,11 @@ public class UserService {
     public boolean login(String id,String password){
 
         Optional<User> user = userRepository.findById(id);
-        logger.info(Boolean.toString(user.get().isAuth()));
+//        logger.info(Boolean.toString(user.get().isAuth()));
         if (user.isPresent()) {
             updateAuth(user.get().getId());
+        } else {
+                return false;
         }
 
         return userRepository.existsByIdAndPasswordAndAuthTrue(id,password);

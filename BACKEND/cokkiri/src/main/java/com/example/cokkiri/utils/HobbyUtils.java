@@ -92,6 +92,10 @@ public class HobbyUtils {
                 Hobby other = otherOpt.get();
                 String otherEmail = other.getId();
 
+                if (userEmail.equals(otherEmail)) {
+                    continue;
+                }
+
                 Set<String> unions = new HashSet<>(user.getHobby());
                 unions.addAll(other.getHobby());
 
