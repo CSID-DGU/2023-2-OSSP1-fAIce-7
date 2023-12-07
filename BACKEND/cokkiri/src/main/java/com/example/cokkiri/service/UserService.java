@@ -1,15 +1,18 @@
 package com.example.cokkiri.service;
 
+import com.example.cokkiri.controller.UserController;
 import com.example.cokkiri.model.Hobby;
 import com.example.cokkiri.model.User;
 import com.example.cokkiri.repository.HobbyRepository;
 import com.example.cokkiri.repository.UserRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
@@ -18,6 +21,8 @@ public class UserService {
 
     @Autowired
     private HobbyRepository hobbyRepository;
+
+    private static final Logger logger = Logger.getLogger(UserService.class.getName());
 
     //모든 user반환
     public List<User> findAll(){
@@ -61,6 +66,13 @@ public class UserService {
 
     //login
     public boolean login(String id,String password){
+
+        Optional<User> user = userRepository.findById(id);
+        logger.info(Boolean.toString(user.get().isAuth()));
+        if (user.isPresent()) {
+            updateAuth(user.get().getId());
+        }
+
         return userRepository.existsByIdAndPasswordAndAuthTrue(id,password);
     }
 
@@ -96,10 +108,10 @@ public class UserService {
         }
     }
 
-    public void updateByIdAdmin(String id,User user){
+    public void updateByIdAdmin(String id,User user) {
         Optional<User> e = userRepository.findById(id);
 
-        if(e.isPresent()){
+        if (e.isPresent()) {
             e.get().setId(user.getId());
             e.get().setPassword(user.getPassword());
             e.get().setName(user.getName());
@@ -114,19 +126,10 @@ public class UserService {
             e.get().setAuth(user.isAuth());
             e.get().setClassMatching(user.isClassMatching());
             e.get().setPublicMatching(user.isPublicMatching());
+            e.get().setHobbyMatching(user.isHobbyMatching());
+
 
             userRepository.save(e.get());
         }
-    }
-
-    public User setUserInterests(String id) {
-
-        Optional<Hobby> user = hobbyRepository.findById(id);
-
-        return null;
-    }
-
-    public User getUserInterests(String userId) {
-        return null;
     }
 }

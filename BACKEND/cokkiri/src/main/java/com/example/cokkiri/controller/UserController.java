@@ -3,6 +3,7 @@ package com.example.cokkiri.controller;
 import com.example.cokkiri.model.*;
 //import com.example.cokkiri.service.MailSendService;
 import com.example.cokkiri.service.*;
+import org.apache.xpath.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ public class UserController {
 
     @Autowired
     private PaymentService paymentService;
+
+    private static final Logger logger = Logger.getLogger(UserService.class.getName());
 
     //로그인 처리 부분
     @PostMapping("/login")
@@ -64,7 +67,10 @@ public class UserController {
     public RedirectView signUpConfirm(@RequestParam(value = "id") String id,
                                       @RequestParam(value = "authKey") String authKey) {
         try {
-            if (userService.checkAuthKey(id, authKey)) {
+                logger.info(id + "-" + authKey);
+                boolean res = userService.checkAuthKey(id, authKey);
+                logger.info(Boolean.toString(res));
+                if (userService.checkAuthKey(id, authKey)) {
                 userService.updateAuth(id);
                 MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                 params.add("userId", id);
