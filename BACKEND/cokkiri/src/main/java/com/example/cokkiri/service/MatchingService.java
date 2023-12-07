@@ -6,7 +6,7 @@ import com.example.cokkiri.utils.HobbyUtils;
 import com.example.cokkiri.utils.Pair;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,12 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 @Transactional
 @Service("matching")
 public class MatchingService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MatchingService.class);
+    private static final Logger logger = Logger.getLogger(MatchingService.class.getName());
 
     // 싱글스레드 호출
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -54,7 +55,7 @@ public class MatchingService {
     @Autowired
     private HobbyAccusationRepository hobbyAccusationRepository;
     @Autowired
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private PublicMatchingWaitRepository publicMatchingWaitRepository;
@@ -68,6 +69,7 @@ public class MatchingService {
     List<ClassMatching> classLectureUsers = new ArrayList<>();
     //배열에 저장 (취미)
     List<HobbyMatching> hobbyLectureUsers = new ArrayList<>();
+
     //반환 배열
     List<PublicMatching> publicUsersList = new ArrayList<>();
     List<ClassMatching> classUserList =new ArrayList<>();
@@ -79,7 +81,7 @@ public class MatchingService {
             try {
                 executor.awaitTermination(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                LOGGER.error(e.toString());
+                logger.info(e.toString());
             }
         }));
     }
@@ -589,6 +591,12 @@ public class MatchingService {
             LocalDate date = LocalDate.now();
             matched.setMatchingTime(date);
 
+            logger.info("취미 매칭 대기 리스트: " + hobbyLectureUsers);
+            logger.info("이메일 리스트: " + matchedEmails);
+            logger.info("매칭 결과: " + matched);
+
+            hobbyLectureUsers.clear();
+
             // 매칭 결과 반환
             return matched;
         }
@@ -690,7 +698,7 @@ public class MatchingService {
     public HobbyMatchedList hobbyMatch(HobbyMatching user){
         // 매칭된 사람 수 = 희망인원
         int count = user.getHeadCount();
-        if(hobbyLectureUsers.contains(user.getEmail())==true){
+        if(hobbyLectureUsers.contains(user)==true){
             return null;
         }
         HobbyMatchedList hobbyMatchedList = new HobbyMatchedList();
@@ -703,7 +711,7 @@ public class MatchingService {
         if(userInfo.get().isHobbyMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
                 hobbyLectureUsers.add(user);
-                LOGGER.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
+                logger.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
                 hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
                 if(hobbyMatchedList!=null){
                     for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){

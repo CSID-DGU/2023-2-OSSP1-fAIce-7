@@ -1,8 +1,8 @@
 package com.example.cokkiri.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 
 import java.time.LocalTime;
 import java.util.List;
