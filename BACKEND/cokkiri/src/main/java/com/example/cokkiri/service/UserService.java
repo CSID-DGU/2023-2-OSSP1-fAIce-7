@@ -19,9 +19,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private HobbyRepository hobbyRepository;
-
     private static final Logger logger = Logger.getLogger(UserService.class.getName());
 
     //모든 user반환
@@ -129,7 +126,7 @@ public class UserService {
             e.get().setClassMatching(user.isClassMatching());
             e.get().setPublicMatching(user.isPublicMatching());
             e.get().setHobbyMatching(user.isHobbyMatching());
-
+            e.get().setSetInterests(user.isSetInterests());
 
             userRepository.save(e.get());
         }
