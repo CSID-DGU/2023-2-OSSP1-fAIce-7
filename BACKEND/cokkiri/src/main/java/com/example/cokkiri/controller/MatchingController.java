@@ -38,7 +38,6 @@ public class MatchingController {
         }
     }
 
-
     //데이터를 받아서 매치 타입 확인 후 match서비스로 연결 해준다.
     @PostMapping("/class")
     public ResponseEntity<ClassMatchedList> classMatch(@RequestBody ClassMatching user){
