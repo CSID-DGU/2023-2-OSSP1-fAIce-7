@@ -152,6 +152,7 @@ export default {
         console.error('CSV 파일 로딩 오류:', error);
       }
     },
+
     parseCSVLine(line) {
       const items = [];
       let currentItem = '';
@@ -181,7 +182,6 @@ export default {
 
       return items;
     },
-
 
     filterItems(index) {
       const inputText = this.interests[index].inputText.toLowerCase();
