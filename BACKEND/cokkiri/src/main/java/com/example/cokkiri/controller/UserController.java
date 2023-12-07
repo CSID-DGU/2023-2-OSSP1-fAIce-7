@@ -31,11 +31,12 @@ public class UserController {
     @Autowired
     private PaymentService paymentService;
 
-    private static final Logger logger = Logger.getLogger(UserService.class.getName());
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     //로그인 처리 부분
     @PostMapping("/login")
     public ResponseEntity <Boolean> login(String id,String password){
+        logger.info(id + "-" + password);
         return new ResponseEntity<Boolean>(userService.login(id,password),HttpStatus.OK);
     }
 
@@ -72,7 +73,7 @@ public class UserController {
                 MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                 params.add("userId", id);
                 params.add("status", "verified");
-                RedirectView redirectView = new RedirectView("/#/", true);
+                RedirectView redirectView = new RedirectView("/", true);
                 redirectView.setAttributesMap(params);
                 return redirectView;
             } else {

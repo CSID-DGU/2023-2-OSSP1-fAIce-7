@@ -1,6 +1,7 @@
 package com.example.cokkiri.controller;
 
 import com.example.cokkiri.model.*;
+import com.example.cokkiri.repository.UserRepository;
 import com.example.cokkiri.service.MailSendService;
 import com.example.cokkiri.service.MatchingService;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("matching")
@@ -24,6 +26,8 @@ public class MatchingController {
     private  NoShowMailSendService noShowMailSendService;
     @Autowired
     private MailSendService mss;
+    @Autowired
+    private UserRepository userRepository;
 
 
     //데이터를 받아서 매치 타입 확인 후 match서비스로 연결 해준다.
@@ -319,6 +323,14 @@ public class MatchingController {
     @GetMapping("delete/hobby/matchingWait")
     public ResponseEntity<HobbyMatchingWait> deleteHobbyMatchingWait(@RequestParam (value = "waitId")int id){
         HobbyMatchingWait deletedUser = matchingService.deleteHobbyMatchingWaitById(id);
+        String temp = deletedUser.getEmail();
+        Optional<User> user = userRepository.findById(temp);
+
+        if(user.isPresent()) {
+            user.get().setHobbyMatching(false);
+            userRepository.save(user.get());
+        }
+
         return new ResponseEntity<HobbyMatchingWait>(deletedUser, HttpStatus.OK);
     }
 
