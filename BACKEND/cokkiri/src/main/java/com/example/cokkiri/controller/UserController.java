@@ -20,8 +20,6 @@ import java.util.logging.Logger;
 @Controller
 public class UserController {
 
-    private static final Logger logger = Logger.getLogger(UserController.class.getName());
-
     @Autowired
     private MailSendService mss;
     @Autowired
@@ -33,7 +31,7 @@ public class UserController {
     @Autowired
     private PaymentService paymentService;
 
-    private static final Logger logger = Logger.getLogger(UserService.class.getName());
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     //로그인 처리 부분
     @PostMapping("/login")
