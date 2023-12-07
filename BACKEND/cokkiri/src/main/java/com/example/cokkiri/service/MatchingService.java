@@ -595,7 +595,14 @@ public class MatchingService {
             logger.info("이메일 리스트: " + matchedEmails);
             logger.info("매칭 결과: " + matched);
 
-            hobbyLectureUsers.clear();
+//            hobbyLectureUsers.clear();
+            // userList에서 matches에 있는 이메일을 가진 객체를 제거
+            for (String email : matches.keySet()) {
+                String value = matches.get(email);
+                if (value != null) {
+                    userList.removeIf(hobbyMatching -> email.equals(hobbyMatching.getEmail()));
+                }
+            }
 
             // 매칭 결과 반환
             return matched;
