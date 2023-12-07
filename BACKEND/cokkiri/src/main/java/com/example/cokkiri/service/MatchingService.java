@@ -595,7 +595,7 @@ public class MatchingService {
             logger.info("이메일 리스트: " + matchedEmails);
             logger.info("매칭 결과: " + matched);
 
-//            hobbyLectureUsers.clear();
+            // hobbyLectureUsers.clear();
             // userList에서 matches에 있는 이메일을 가진 객체를 제거
             for (String email : matches.keySet()) {
                 String value = matches.get(email);
@@ -704,8 +704,10 @@ public class MatchingService {
 
     public HobbyMatchedList hobbyMatch(HobbyMatching user){
         // 매칭된 사람 수 = 희망인원
+        logger.info(hobbyLectureUsers.toString());
         int count = user.getHeadCount();
         if(hobbyLectureUsers.contains(user)==true){
+            logger.info("hobbyLectureUsers.contains(user)==true");
             return null;
         }
         HobbyMatchedList hobbyMatchedList = new HobbyMatchedList();
@@ -935,7 +937,7 @@ public class MatchingService {
     public String deleteHobbyUser(int id) {
         HobbyMatchedList list = hobbyMatchedListRepository.findByMatchingId(id);
         if (list != null) {
-            hobbyMatchedListRepository.delete(list);;
+            hobbyMatchedListRepository.delete(list);
             return "삭제 되었습니다";
         }else{
             return "해당 매칭 아이디에 맞는 리스트가 조회되지 않습니다";

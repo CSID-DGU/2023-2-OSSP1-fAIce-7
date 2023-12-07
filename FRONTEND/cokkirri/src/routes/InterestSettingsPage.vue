@@ -28,9 +28,8 @@
                                     <div class="input-wrapper">
                                         <div class="index-number">{{ index + 1 }}.</div>
                                         <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
-                                        <!-- <div class="remove-button" @click="removeInterest(index)">
-                                            <div class="remove-icon">-</div>
-                                        </div> -->
+                                        <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                        </div>
                                         <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
                                              <div class="trash-icon">🗑️</div>
                                         </div>
