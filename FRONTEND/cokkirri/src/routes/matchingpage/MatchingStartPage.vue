@@ -13,7 +13,7 @@
                         
                         <div class="matching-txt"> 매칭 신청 </div>
 
-                        <button class="a-btn" > 수정 </button>
+                        <router-link to="/InterestSettingsPage" class="modify-hobby"> 수정 </router-link>
                         <div style="clear:both;"></div>
 
                         <div class="line-for-division"></div>
@@ -199,7 +199,7 @@ export default {
         font-size: 30px;
         line-height: 45px;
     }
-    .a-btn{
+    .modify-hobby{
         width: 163px;
         height: 55px;
         background-color: #B87514;
@@ -220,8 +220,10 @@ export default {
         font-weight: 400;
         font-size: 23px;
         line-height: 28px;
+
+        text-decoration: none; //밑줄 제거
     }
-    .a-btn:hover {
+    .modify-hobby:hover {
             background-color: darken($color: #B87514, $amount: 10%);
     }
     .line-for-division{

@@ -1,7 +1,7 @@
 <template>
     <!-- MyPage  -->
     <div class="background-setting">
-        <div class="container" >
+        <div class="container">
             <div>
                 <router-link to="/Starting" class="link-box">
                     <div class="link-img"></div>
