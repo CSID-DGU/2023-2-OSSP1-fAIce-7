@@ -31,8 +31,8 @@
                                       <!-- <div class="remove-button" @click="removeInterest(index)">
                                           <div class="remove-icon">-</div>
                                       </div> -->
-                                      <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
-                                           <div class="trash-icon">🗑️</div>
+                                      <div class="eraser-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                        <div class="eraser-icon"></div>
                                       </div>
                                       <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
                                   </div>
@@ -532,22 +532,24 @@ methods: {
           .remove-icon:hover{
               background-color: darken($color: #B87514, $amount: 10%);  
           }
-/*            .trash-button {
-              width: 20px;
-              height: 20px;
-              border-radius: 50%;
-              text-align: center;
-              line-height: 20px;
-              cursor: pointer;
-              color: white;
-              font-size: 12px;
-
-              margin-right: 10px;
-          } 
-          .trash-icon {
-              background-color: #FF4141;
+          .eraser-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ECBC76;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
-          */
+
+          .eraser-icon {
+            width: 20px;
+            height: 20px;
+            background-image: url('../assets/eraser-icon.png');
+            background-size: cover;
+            background-position: center;
+          }
           .no-interests-message{
               display: flex;
               justify-content: center;
