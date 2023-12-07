@@ -27,11 +27,15 @@
                               @click="toggleSelection(index)">
                                   <div class="input-wrapper">
                                       <div class="index-number">{{ index + 1 }}.</div>
-                                      <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
+                                      <input v-model="interest.inputText" 
+                                      @input="filterItems(index)" 
+                                      @click.stop 
+                                      placeholder="관심분야 입력" 
+                                      class="interest-input">
                                       <!-- <div class="remove-button" @click="removeInterest(index)">
                                           <div class="remove-icon">-</div>
                                       </div> -->
-                                      <div class="eraser-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                      <div class="eraser-button" @click.stop="clearInputText(index)" v-if="interest.inputText">
                                         <div class="eraser-icon"></div>
                                       </div>
                                       <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
