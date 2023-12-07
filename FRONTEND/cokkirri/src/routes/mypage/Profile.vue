@@ -2,7 +2,9 @@
     <!-- 마이페이지의 프로필 세부사항 -->
     <div class="background-setting">
         <div class="container">
-            <router-link to="/my" class="my-link">&lt;</router-link>
+            <div class="sub-frame">
+                <router-link to="/my" class="my-link">&lt;</router-link>
+            </div>
             <div>
                 <div class="frame-head">
                     <div class="user-img"></div>
@@ -217,8 +219,8 @@ export default {
     }
     // container 클래스 위치 조정
     .container{
-        width: 996px;
-        height: 667px;
+        width: 996px;   
+        height: 680px;
         background-color: #FFFFFF; 
         display: flex;
         border: 7px solid #ECBC76;
@@ -227,41 +229,27 @@ export default {
         align-items: center;
         justify-content: center;
     }
-    .my-link{/*
-            width: 35px;
-            height: 31px;
-            margin-top: 5px;
-            margin-left: 17px;
-            float:left;
+    .sub-frame{
+        width: 950px;
+        height: 70px;
+        margin-top:-35px;
+        background-color: #FFFFFF;
+    }
+    .my-link{
+        width: 51px;
+        height: 46px;
 
-            cursor: pointer;
-            text-decoration: none;
+        float:left;
 
-            font-size: 35px;
-            color: #B87514;
-            display: flex;
+        cursor: pointer;
+        text-decoration: none;
 
-            position:absolute;
-            top: 60px;
-            left: 225px;
-            */
-            width: 51px;
-            height: 46px;
-
-            margin-top: 0px;
-            margin-left: 17px;
-            float:left;
-
-            cursor: pointer;
-            text-decoration: none;
-
-            font-style: normal;
-            font-weight: 400;
-            font-size: 40px;
-            line-height: 75px;
-            color: #B87514;
-            display: flex;
-            align-items: center;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 40px;
+        line-height: 75px;
+        color: #B87514;
+        display: flex;
     }
     .frame-head{
         width: 900px;
