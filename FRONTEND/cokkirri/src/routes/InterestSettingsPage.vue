@@ -22,28 +22,30 @@
 
                             <!-- 관심분야 설정 섹션 -->
                             <div class="interest-settings" :style="{height: settingsHeight + 'px'}">
-                                <div v-for="(interest, index) in interests" :key="index" class="interest-section">
+                              <div v-for="(interest, index) in interests" :key="index" class="interest-section" 
+                                :class="{'selected': selectedInterests.includes(index)}" 
+                                @click="toggleSelection(index)">
                                     <div class="input-wrapper">
                                         <div class="index-number">{{ index + 1 }}.</div>
                                         <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
-                                        <div class="remove-button" @click="removeInterest(index)">
+                                        <!-- <div class="remove-button" @click="removeInterest(index)">
                                             <div class="remove-icon">-</div>
-                                        </div>
+                                        </div> -->
                                         <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
                                              <div class="trash-icon">🗑️</div>
                                         </div>
                                         <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
                                     </div>
-                                    <ul v-if="interest.inputText && interest.filteredItems.length">
+                                    <ul v-if="interest.inputText &&   interest.filteredItems.length">
                                         <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
                                             {{ formatItem(item) }}
-                                        </li>
+                                        </li> 
                                     </ul>
                                 </div>
                                 <div v-if="interests.length === 0" class="no-interests-message">+ 를 눌러 취미를 추가하세요.</div>  <!-- 선택한 취미가 없을 때 표시 -->
                                 <div class ="button-container">
                                   <button class="add-button" @click="addInterest" :disabled="interests.length >= 10">+</button>
-                                  <button class="delete-button" @click="deleteInterest" :disabled="interests.length <= 0">-</button>
+                                  <button class="delete-button" @click="deleteInterest" :disabled="selectedInterests.length === 0">-</button>
                                 </div>
                             </div>   
                         </div>
@@ -75,6 +77,7 @@ export default {
       interests: [{ inputText: '', filteredItems: [] }],
       // 이미 입력된 관심분야 목록을 저장할 배열 추가
       existingInterests: [],
+      selectedInterests: [],
     };
   },
   computed: {
@@ -116,20 +119,20 @@ export default {
 
       return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
     },
-    settingsHeight(){
-      const baseHeight = 180;  //padding 등의 기본 높이
-      const itemHeight = 65;  //각 관심분야 항목의 높이
-      const dropdownHeight = 17.5;  //각 드롭다운 항목의 추정 높이
+    settingsHeight() {
+      const baseHeight = 180;  // 기본 높이(패딩 등 포함)
+      const itemHeight = 65;  // 각 관심분야 항목의 높이
+      const dropdownHeight = 17.5;  // 각 드롭다운 항목의 추정 높이
 
       let dropdownTotalHeight = 0;
-        this.interests.forEach(interest => {
-            if (interest.filteredItems.length > 0) {
-                // 드롭다운 항목 수에 따라 추가 높이 계산
-                dropdownTotalHeight += dropdownHeight * interest.filteredItems.length;
-            }
-        });
+      this.interests.forEach(interest => {
+        if (interest.filteredItems.length > 0) {
+          // 드롭다운 항목 수에 따라 추가 높이 계산
+          dropdownTotalHeight += dropdownHeight * interest.filteredItems.length;
+        }
+      });
 
-      return baseHeight + (itemHeight * this.interests.length)+dropdownTotalHeight;
+      return baseHeight + (itemHeight * this.interests.length) + dropdownTotalHeight;
     }
   },
   mounted() {
@@ -189,6 +192,15 @@ export default {
         items.some(item => `${category} >> ${item}` === inputText)
       );
     },
+    // 관심분야 선택 및 해제
+    toggleSelection(index) {
+      const selectedIndex = this.selectedInterests.indexOf(index);
+      if (selectedIndex === -1) {
+        this.selectedInterests.push(index);
+      } else {
+        this.selectedInterests.splice(selectedIndex, 1);
+      }
+    },
     addInterest() {
       const lastInterest = this.interests[this.interests.length - 1];
       // 마지막 항목이 '기타' 항목인 경우
@@ -200,10 +212,12 @@ export default {
         this.interests.push({ inputText: '', filteredItems: [] });
       }
     },
+    // 선택된 관심분야 삭제
     deleteInterest() {
-      if(this.interests.length > 0){
-        this.interests.pop();
-      }
+      this.selectedInterests.sort().reverse().forEach(index => {
+        this.interests.splice(index, 1);
+      });
+      this.selectedInterests = [];
     },
     removeInterest(index) {
       if (index > -1 && index < this.interests.length) {
@@ -422,7 +436,7 @@ export default {
         margin-left: 53px;
         margin-bottom: 0px;
 
-        border: 1px solid #B87514
+        border: 1px solid #B87514;
     } 
     .frame-sub-body{
         width: 870px;
@@ -443,10 +457,15 @@ export default {
             border-radius: 20px;
             padding: 20px;
             box-sizing: border-box;
-
             .interest-section {
-                margin-top: 20px;
-                border-bottom: 1px solid #B87514;
+              padding-top: 20px; /* margin-top 대신 padding-top 사용 */
+              border-bottom: 1px solid #B87514;
+              background-color: transparent; /* 기본 배경색 설정 */
+              transition: background-color 0.3s; /* 부드러운 색상 전환 효과 */
+
+              &.selected {
+                background-color: #d3d3d3; /* 선택된 항목의 배경색 */
+              }
             }
             .input-wrapper {
                 display: flex;
@@ -456,7 +475,27 @@ export default {
             .index-number {
                 margin-right: 10px;
             }
-            .trash-button {
+            .remove-button {
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            .remove-icon { 
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                text-align: center;
+                align-items: center; /* 세로 방향 가운데 정렬 */
+                line-height: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 30px;
+
+                background-color: #B87514;
+            }
+            .remove-icon:hover{
+                background-color: darken($color: #B87514, $amount: 10%);  
+            }
+/*            .trash-button {
                 width: 20px;
                 height: 20px;
                 border-radius: 50%;
@@ -471,22 +510,7 @@ export default {
             .trash-icon {
                 background-color: #FF4141;
             }
-            .remove-button {
-                margin-left: 10px;
-                margin-right: 10px;
-            }
-            .remove-icon { 
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 20px;
-                cursor: pointer;
-                color: white;
-                font-size: 12px;
-
-                background-color: #4CAF50;
-            }
+            */
             .no-interests-message{
                 display: flex;
                 justify-content: center;
@@ -508,11 +532,11 @@ export default {
                 margin-top: 20px;
                 margin-right: 10px;
                 border-radius: 20px;
-                font-size: 23px;
+                font-size: 30px;
                 line-height: 28px;
                 color: #FFFFFF;
                 cursor: pointer;
-                background-color: #B87514;
+                background-color: #6BCB77;
             }
             .delete-button {
                 width: 163px;
@@ -520,14 +544,17 @@ export default {
                 margin-top: 20px;
                 margin-left: 10px;
                 border-radius: 20px;
-                font-size: 23;
+                font-size: 30px;
                 line-height: 28px;
                 color: #FFFFFF;
                 cursor: pointer;
-                background-color: #B87514;
+                background-color: #FF6961;
             }
-            .add-button:hover, .delete-button:hover {
-                background-color: darken($color: #B87514, $amount: 10%);
+            .add-button:not([disabled]):hover{
+                background-color: darken($color: #6BCB77, $amount: 10%);
+            }
+            .delete-button:not([disabled]):hover {
+                background-color: darken($color: #FF6961, $amount: 10%);
             }
             .trash-button:hover, .trash-icon:hover {
                 background-color: darken($color: #4CAF50, $amount: 10%);
