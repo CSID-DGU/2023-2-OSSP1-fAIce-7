@@ -128,6 +128,7 @@ public class UserService {
             e.get().setPublicMatching(user.isPublicMatching());
             e.get().setHobbyMatching(user.isHobbyMatching());
 
+
             userRepository.save(e.get());
         }
     }
