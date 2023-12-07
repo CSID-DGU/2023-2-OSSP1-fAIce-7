@@ -38,7 +38,7 @@
                                       <div class="eraser-button" @click.stop="clearInputText(index)" v-if="interest.inputText">
                                         <div class="eraser-icon"></div>
                                       </div>
-                                      <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
+                                      <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" @click.stop placeholder="기타 입력란">
                                   </div>
                                   <ul v-if="interest.inputText &&   interest.filteredItems.length">
                                       <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
