@@ -5,9 +5,11 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -16,22 +18,25 @@ public class HobbyUtils {
 
     private static final Logger logger = Logger.getLogger(HobbyUtils.class.getName());
     static HashMap<String, String> hobbies;
-    public static HashMap<String, String> loadHobbiesFromCSV(String filePath) {
+
+    public static HashMap<String, String> loadHobbiesFromCSV() throws IOException, CsvException {
         HashMap<String, String> hobbies = new HashMap<>();
-        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(filePath), "EUC-KR"))) {
+        Resource resource = new ClassPathResource("hobbies.csv");
+        InputStream inputStream = resource.getInputStream();
+        try (CSVReader reader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             List<String[]> allRows = reader.readAll();
             for (String[] row : allRows) {
-                hobbies.put(row[0], row[1]);
+                if (row.length >= 2) {
+                    hobbies.put(row[0], row[1]);
+                }
             }
-        } catch (IOException | CsvException e) {
-            e.printStackTrace();
         }
         return hobbies;
     }
+
     @PostConstruct
-    public void init() throws IOException {
-        File file = new ClassPathResource("hobbies.csv").getFile();
-        hobbies = loadHobbiesFromCSV(file.getAbsolutePath());
+    public void init() throws IOException, CsvException {
+        hobbies = loadHobbiesFromCSV();
     }
 
     // ">>"를 기준으로 문자열을 분할해 두 번째 요소를 반환
