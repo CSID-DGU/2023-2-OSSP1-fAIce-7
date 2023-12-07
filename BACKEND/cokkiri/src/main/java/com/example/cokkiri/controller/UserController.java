@@ -14,9 +14,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Controller
 public class UserController {
+
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     @Autowired
     private MailSendService mss;
@@ -32,6 +35,7 @@ public class UserController {
     //로그인 처리 부분
     @PostMapping("/login")
     public ResponseEntity <Boolean> login(String id,String password){
+        logger.info(id + "-" + password);
         return new ResponseEntity<Boolean>(userService.login(id,password),HttpStatus.OK);
     }
 
@@ -65,7 +69,7 @@ public class UserController {
                 MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                 params.add("userId", id);
                 params.add("status", "verified");
-                RedirectView redirectView = new RedirectView("/#/", true);
+                RedirectView redirectView = new RedirectView("/", true);
                 redirectView.setAttributesMap(params);
                 return redirectView;
             } else {
