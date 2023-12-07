@@ -29,15 +29,15 @@
                                         <div class="remove-button" @click="removeInterest(index)">
                                             <div class="remove-icon">-</div>
                                         </div>
-                                        <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                        <!-- <div class="trash-button" @click="clearInputText(index)" v-if="interest.inputText">
                                              <div class="trash-icon">🗑️</div>
-                                        </div>
+                                        </div> -->
                                         <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
                                     </div>
                                     <ul v-if="interest.inputText && interest.filteredItems.length">
                                         <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
                                             {{ formatItem(item) }}
-                                        </li>
+                                        </li> 
                                     </ul>
                                 </div>
                                 <div v-if="interests.length === 0" class="no-interests-message">+ 를 눌러 취미를 추가하세요.</div>  <!-- 선택한 취미가 없을 때 표시 -->
@@ -61,10 +61,9 @@ import axios from '../api/index.js';
 export default {
   data() {
     return {
-      categories: {},
-      interests: [{ inputText: '', filteredItems: [] }],
-      // 이미 입력된 관심분야 목록을 저장할 배열 추가
-      existingInterests: [],
+      categories: {}, // 카테고리 데이터
+      interests: [{ inputText: '', filteredItems: [] }], // 현재 설정 중인 관심분야 목록
+      existingInterests: [] // 이미 설정된 관심분야 목록
     };
   },
   computed: {
@@ -467,7 +466,7 @@ export default {
         margin-left: 53px;
         margin-bottom: 0px;
 
-        border: 1px solid #B87514
+        border: 1px solid #B87514;
     } 
     .frame-sub-body{
         width: 870px;
@@ -488,7 +487,6 @@ export default {
             border-radius: 20px;
             padding: 20px;
             box-sizing: border-box;
-
             .interest-section {
                 margin-top: 20px;
                 border-bottom: 1px solid #B87514;
@@ -501,7 +499,27 @@ export default {
             .index-number {
                 margin-right: 10px;
             }
-            .trash-button {
+            .remove-button {
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            .remove-icon { 
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                text-align: center;
+                align-items: center; /* 세로 방향 가운데 정렬 */
+                line-height: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 30px;
+
+                background-color: #B87514;
+            }
+            .remove-icon:hover{
+                background-color: darken($color: #B87514, $amount: 10%);  
+            }
+/*            .trash-button {
                 width: 20px;
                 height: 20px;
                 border-radius: 50%;
@@ -516,22 +534,7 @@ export default {
             .trash-icon {
                 background-color: #FF4141;
             }
-            .remove-button {
-                margin-left: 10px;
-                margin-right: 10px;
-            }
-            .remove-icon { 
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 20px;
-                cursor: pointer;
-                color: white;
-                font-size: 12px;
-
-                background-color: #4CAF50;
-            }
+            */
             .no-interests-message{
                 display: flex;
                 justify-content: center;
@@ -553,11 +556,11 @@ export default {
                 margin-top: 20px;
                 margin-right: 10px;
                 border-radius: 20px;
-                font-size: 23px;
+                font-size: 30px;
                 line-height: 28px;
                 color: #FFFFFF;
                 cursor: pointer;
-                background-color: #B87514;
+                background-color: #6BCB77;
             }
             .delete-button {
                 width: 163px;
@@ -565,14 +568,17 @@ export default {
                 margin-top: 20px;
                 margin-left: 10px;
                 border-radius: 20px;
-                font-size: 23;
+                font-size: 30px;
                 line-height: 28px;
                 color: #FFFFFF;
                 cursor: pointer;
-                background-color: #B87514;
+                background-color: #FF6961;
             }
-            .add-button:hover, .delete-button:hover {
-                background-color: darken($color: #B87514, $amount: 10%);
+            .add-button:not([disabled]):hover{
+                background-color: darken($color: #6BCB77, $amount: 10%);
+            }
+            .delete-button:not([disabled]):hover {
+                background-color: darken($color: #FF6961, $amount: 10%);
             }
             .trash-button:hover, .trash-icon:hover {
                 background-color: darken($color: #4CAF50, $amount: 10%);

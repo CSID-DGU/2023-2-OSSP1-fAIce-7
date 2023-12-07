@@ -25,9 +25,9 @@
                             <div style="clear:both;"></div>
                         <div class="line-for-division"></div>
 
-                        <div class="timetable-img"></div>
-                            <div class="timetable-txt">내 시간표</div>
-                            <router-link to="/my/timetable" class="timetable-btn">등록 및 수정 &gt;</router-link>
+                        <div class="puzzle-img"></div>
+                            <div class="puzzle-txt">매칭 신청</div>
+                            <router-link to="/MatchingStart" class="puzzle-btn">하러 가기 &gt;</router-link>
                             <div style="clear:both;"></div>
                         <div class="line-for-division"></div>
 
@@ -93,7 +93,7 @@
             width: 23px;
             height: 21px;
             
-            margin-left: 20px;
+            margin-left: 5px;
             float: left;
             
             background-image: url("../../assets/mypage/home.png");
@@ -225,17 +225,16 @@
         .heart-btn:hover{
             color: darken($color: #B87514, $amount: 20%);
         }
-        .timetable-img{
-            width: 40px;
-            height: 40px;
+        .puzzle-img{
+            width: 45px;
+            height: 45px;
             margin-top: 40px;
             margin-left: 49px;
-            background-image: url("../../assets/mypage/timetable.png");
-            background-size: cover;
+            background-image: url("../../assets/mypage/puzzle.png");
             background-repeat: no-repeat;
             float: left;
         }
-        .timetable-txt{
+        .puzzle-txt{
             width: 180px;
             height: 40px;
             margin-top: 40px;
@@ -246,7 +245,7 @@
             display: flex;
             align-items: center;
         }
-        .timetable-btn{
+        .puzzle-btn{
             width: 530px;
             height: 40px;
             margin-top: 40px;
@@ -260,7 +259,7 @@
             justify-content: right;
             align-items: center;
         }
-        .timetable-btn:hover{
+        .puzzle-btn:hover{
             color: darken($color: #B87514, $amount: 20%);
         }
         .matching-img{

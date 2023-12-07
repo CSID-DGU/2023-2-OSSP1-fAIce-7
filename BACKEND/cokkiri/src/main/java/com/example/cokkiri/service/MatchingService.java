@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Service("matching")
 public class MatchingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchingService.class);
+
     // 싱글스레드 호출
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     // 수업 레포지토리
@@ -40,8 +41,6 @@ public class MatchingService {
     @Autowired
     private HobbyRepository hobbyRepository;
 
-    @Autowired
-    private MatchingAgreeRepository matchingAgreeRepository;
     @Autowired
     private NoShowPublicMatchListRepository noShowPublicMatchListRepository;
     @Autowired
@@ -72,9 +71,6 @@ public class MatchingService {
     //반환 배열
     List<PublicMatching> publicUsersList = new ArrayList<>();
     List<ClassMatching> classUserList =new ArrayList<>();
-
-
-
 
     @PostConstruct
     public void init() {
@@ -503,14 +499,13 @@ public class MatchingService {
     public HobbyMatchedList findHobbyMatch(List<HobbyMatching>userList, int count) {
         // 객체 생성
         HobbyMatchedList matched = new HobbyMatchedList();
-        List<Boolean> isFree = new ArrayList<>(Collections.nCopies(userList.size(), false));
-        int countFalse = isFree.size();
 
         if(userList.size()<2){
             saveHobbyMatchingWaitUser(userList);
             return null;
         }
         else {
+            // 유사도 계산
             List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
             List<String> userId = new ArrayList<>();
             for (int i = 0; i < userList.size(); i++) {
@@ -524,11 +519,7 @@ public class MatchingService {
 
             Map<String, List<Pair>> score = HobbyUtils.hobbyScoreOfUsers(hobbyOfUsers);
 
-            if (userList.size() < 2) {
-                saveHobbyMatchingWaitUser(userList);
-                return null;
-            }
-
+            // 게일 - 섀플리 알고리즘
             // 유저별로 선호도 목록과 매칭 상태를 저장하는 맵
             Map<String, Queue<Pair>> preferences = new HashMap<>();
             Map<String, String> matches = new HashMap<>(); // 매칭 결과 저장
@@ -567,7 +558,7 @@ public class MatchingService {
                 }
             } while (changed);
 
-
+            // 후처리
             // 매칭된 사람들의 이메일 리스트 생성
             List<String> matchedEmails = new ArrayList<>();
             for (Map.Entry<String, String> entry : matches.entrySet()) {
@@ -709,7 +700,7 @@ public class MatchingService {
             System.out.println("회원가입 된 사용자가 아닙니다");
             return null;
         }
-        if(userInfo.get().isPublicMatching()==false){
+        if(userInfo.get().isHobbyMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
                 hobbyLectureUsers.add(user);
                 LOGGER.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
@@ -838,8 +829,7 @@ public class MatchingService {
         for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
             String email = matchedList.getEmailList().get(i);
             Optional<User> user = userRepository.findById(email);
-            user.get().setPublicMatching(false);
-            user.get().setHeart((user.get().getHeart())-0); //하트 10개 차감
+            user.get().setHobbyMatching(false);
             userRepository.save(user.get());
 
             Optional<HobbyMatchingWait> waitUser = hobbyMatchingWaitRepository.findByEmail(email);
