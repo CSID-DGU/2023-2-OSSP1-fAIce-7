@@ -158,8 +158,15 @@ public class SseService {
                     .isRead(false)
                     .notDummy(true)
                     .build();
-        }
-        else {
+        } else if (type.equals("hobby")) {
+            return Notification.builder()
+                    .receiver(receiver)     // 사용자 이메일
+                    .content(content)
+                    .notificationType(type)
+                    .isRead(false)
+                    .notDummy(true)
+                    .build();
+        } else {
             return null;
         }
     }
