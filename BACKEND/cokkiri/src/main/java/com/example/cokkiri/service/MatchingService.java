@@ -7,10 +7,10 @@ import com.example.cokkiri.utils.Pair;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -721,6 +721,11 @@ public class MatchingService {
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
                 hobbyLectureUsers.add(user);
                 logger.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
+                try {
+                    Thread.sleep(3000); // 3초 대기
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // 예외 처리
+                }
                 hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
                 if(hobbyMatchedList!=null){
                     for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
