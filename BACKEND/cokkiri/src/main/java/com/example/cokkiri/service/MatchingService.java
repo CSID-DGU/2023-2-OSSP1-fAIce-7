@@ -510,10 +510,10 @@ public class MatchingService {
     }
 
     public void findHobbyMatch(List<HobbyMatching>userList) {
-
+        logger.info("findHobbyMatch 함수 실행 중");
         isCalculating = true;
 
-        if(userList.size()<2){
+        if(hobbyLectureUsers.size()<2){
             isCalculating = false;
             return;
         }
@@ -521,12 +521,12 @@ public class MatchingService {
             // 유사도 계산
             List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
             List<String> userId = new ArrayList<>();
-            for (int i = 0; i < userList.size(); i++) {
-                Optional<Hobby> userHobby = hobbyRepository.findById(userList.get(i).getEmail());
+            for (int i = 0; i < hobbyLectureUsers.size(); i++) {
+                Optional<Hobby> userHobby = hobbyRepository.findById(hobbyLectureUsers.get(i).getEmail());
                 if (userHobby.isEmpty()) {
                     continue;
                 }
-                userId.add(userList.get(i).getEmail());
+                userId.add(hobbyLectureUsers.get(i).getEmail());
                 hobbyOfUsers.add(userHobby);
             }
 
@@ -538,7 +538,7 @@ public class MatchingService {
             Map<String, String> matches = new HashMap<>(); // 매칭 결과 저장
             Map<String, String> reverseMatches = new HashMap<>();
 
-            for (HobbyMatching user : userList) {
+            for (HobbyMatching user : hobbyLectureUsers) {
                 Queue<Pair> prefQueue = new LinkedList<>(score.get(user.getEmail()));
                 preferences.put(user.getEmail(), prefQueue);
                 matches.put(user.getEmail(), null);  // 초기에는 모든 사용자가 매치되지 않은 상태
@@ -571,8 +571,11 @@ public class MatchingService {
                 }
             } while (changed);
 
+
+            logger.info("매칭 연산 종료");
             HashSet<String> duplicated = new HashSet<>();
 
+            logger.info("후처리 시작");
             // 후처리
             for (Map.Entry<String, String> entry : matches.entrySet()) {
                 // 매칭이 성공한 경우에만 이메일 추가
@@ -584,16 +587,18 @@ public class MatchingService {
                     matchedEmails.add(entry.getValue());  // 수락자
                     if (duplicated.contains(entry.getKey())) continue;
 
+                    logger.info("매칭된 쌍: " + matchedEmails);
+
                     // 매칭된 사람들의 이메일 리스트 설정
                     matched.setEmailList(matchedEmails);
 
-                    // 매칭 타입 설정 (이 예시에서는 "hobby"로 가정)
+                    // 매칭 타입 설정
                     matched.setMatchingType("hobby");
 
                     // 매칭 희망 인원 설정
                     matched.setHeadCount(2);
 
-                    // 매칭 결과 상태 설정 ("매칭중"으로 가정)
+                    // 매칭 결과 상태 설정
                     matched.setMatchingRes("매칭중");
 
                     // 매칭 시간 설정 (현재 날짜로 설정)
@@ -606,8 +611,10 @@ public class MatchingService {
 
                     duplicated.add(entry.getKey());
                     duplicated.add(entry.getValue());
-                }
 
+                    logger.info("중복 체크: " + duplicated);
+                }
+                logger.info("후처리 종료");
                 if(matched!=null){
                     for (int i =0 ; i < matched.getEmailList().size(); i++){
                         String email = matched.getEmailList().get(i);
@@ -617,16 +624,12 @@ public class MatchingService {
                     }
 
                     sendSSEtoHobbyUser(matched);
+                    logger.info("대기중 유저 제거 시작");
                     saveHobbyUser(matched);
+                    logger.info("대기중 유저 제거 끝");
                 }
             }
 
-            // 중복 제거
-//            Set<String> uniqueMatchedEmails = new HashSet<>(matchedEmails);
-//            matchedEmails = new ArrayList<>(uniqueMatchedEmails);
-
-
-            // hobbyLectureUsers.clear();
             // hobbyLectureUsers에서 matches에 있는 이메일을 가진 객체를 제거
             for (String email : matches.keySet()) {
                 String value = matches.get(email);
@@ -769,12 +772,13 @@ public class MatchingService {
     }
 
 
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 20000)
     public void doingHobbyMatching() {
         logger.info("doingHobbyMatching 함수 진입");
         if (!isCalculating){
-            logger.info("findHobbyMatch 함수 실행 중");
+            logger.info("findHobbyMatch 함수 실행 시작");
             findHobbyMatch(hobbyLectureUsers);
+            logger.info("findHobbyMatch 함수 실행 끝");
         } else {
             return;
         }
