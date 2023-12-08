@@ -5,9 +5,13 @@ import com.example.cokkiri.repository.*;
 import com.example.cokkiri.utils.HobbyUtils;
 import com.example.cokkiri.utils.Pair;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -21,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Transactional
+@EnableScheduling
 @Service("matching")
 public class MatchingService {
     private static final Logger logger = Logger.getLogger(MatchingService.class.getName());
@@ -73,6 +78,8 @@ public class MatchingService {
     //반환 배열
     List<PublicMatching> publicUsersList = new ArrayList<>();
     List<ClassMatching> classUserList =new ArrayList<>();
+
+    boolean isCalculating = false;
 
     @PostConstruct
     public void init() {
@@ -214,18 +221,22 @@ public class MatchingService {
         return  waitUser;
     }
 
-    public HobbyMatchingWait saveHobbyMatchingWaitUser(List<HobbyMatching>userList) {
-        Optional<User> user = userRepository.findById(userList.get(userList.size()-1).getEmail());
-        user.get().setHobbyMatching(true);
-        userRepository.save(user.get());
+    public HobbyMatchingWait saveHobbyMatchingWaitUser(List<HobbyMatching> userList) {
+        logger.info("userList1: " + userList);
+        if (userList.size() > 0) {
+            Optional<User> user = userRepository.findById(userList.get(0).getEmail());
+            user.get().setHobbyMatching(true);
+            userRepository.save(user.get());
 
-        HobbyMatchingWait waitUser = new HobbyMatchingWait();
-        waitUser.setMatchingType(userList.get(userList.size()-1).getMatchingType());
-        waitUser.setEmail(userList.get(userList.size()-1).getEmail());
-        waitUser.setStatus("매칭 대기중");
+            HobbyMatchingWait waitUser = new HobbyMatchingWait();
+            waitUser.setMatchingType(userList.get(userList.size()-1).getMatchingType());
+            waitUser.setEmail(userList.get(userList.size()-1).getEmail());
+            waitUser.setStatus("매칭 대기중");
 
-        hobbyMatchingWaitRepository.save(waitUser);
-        return waitUser;
+            hobbyMatchingWaitRepository.save(waitUser);
+            return waitUser;
+        }
+        return null;
     }
 
     // 매칭 대기중 유저 모두 반환
@@ -498,13 +509,13 @@ public class MatchingService {
         }
     }
 
-    public HobbyMatchedList findHobbyMatch(List<HobbyMatching>userList, int count) {
-        // 객체 생성
-        HobbyMatchedList matched = new HobbyMatchedList();
+    public void findHobbyMatch(List<HobbyMatching>userList) {
+
+        isCalculating = true;
 
         if(userList.size()<2){
-            saveHobbyMatchingWaitUser(userList);
-            return null;
+            isCalculating = false;
+            return;
         }
         else {
             // 유사도 계산
@@ -560,55 +571,73 @@ public class MatchingService {
                 }
             } while (changed);
 
+            HashSet<String> duplicated = new HashSet<>();
+
             // 후처리
-            // 매칭된 사람들의 이메일 리스트 생성
-            List<String> matchedEmails = new ArrayList<>();
             for (Map.Entry<String, String> entry : matches.entrySet()) {
                 // 매칭이 성공한 경우에만 이메일 추가
+                HobbyMatchedList matched = new HobbyMatchedList();
+                List<String> matchedEmails = new ArrayList<>();
+
                 if (entry.getValue() != null) {
                     matchedEmails.add(entry.getKey());  // 제안자
                     matchedEmails.add(entry.getValue());  // 수락자
+                    if (duplicated.contains(entry.getKey())) continue;
+
+                    // 매칭된 사람들의 이메일 리스트 설정
+                    matched.setEmailList(matchedEmails);
+
+                    // 매칭 타입 설정 (이 예시에서는 "hobby"로 가정)
+                    matched.setMatchingType("hobby");
+
+                    // 매칭 희망 인원 설정
+                    matched.setHeadCount(2);
+
+                    // 매칭 결과 상태 설정 ("매칭중"으로 가정)
+                    matched.setMatchingRes("매칭중");
+
+                    // 매칭 시간 설정 (현재 날짜로 설정)
+                    LocalDate date = LocalDate.now();
+                    matched.setMatchingTime(date);
+
+                    logger.info("취미 매칭 대기 리스트: " + hobbyLectureUsers);
+                    logger.info("이메일 리스트: " + matchedEmails);
+                    logger.info("매칭 결과: " + matched);
+
+                    duplicated.add(entry.getKey());
+                    duplicated.add(entry.getValue());
+                }
+
+                if(matched!=null){
+                    for (int i =0 ; i < matched.getEmailList().size(); i++){
+                        String email = matched.getEmailList().get(i);
+                        Optional<User> userMatched = userRepository.findById(email);
+                        userMatched.get().setHobbyMatching(false);
+                        userRepository.save(userMatched.get());
+                    }
+
+                    sendSSEtoHobbyUser(matched);
+                    saveHobbyUser(matched);
                 }
             }
 
             // 중복 제거
-            Set<String> uniqueMatchedEmails = new HashSet<>(matchedEmails);
-            matchedEmails = new ArrayList<>(uniqueMatchedEmails);
+//            Set<String> uniqueMatchedEmails = new HashSet<>(matchedEmails);
+//            matchedEmails = new ArrayList<>(uniqueMatchedEmails);
 
-            // 매칭된 사람들의 이메일 리스트 설정
-            matched.setEmailList(matchedEmails);
-
-            // 매칭 타입 설정 (이 예시에서는 "hobby"로 가정)
-            matched.setMatchingType("hobby");
-
-            // 매칭 희망 인원 설정
-            matched.setHeadCount(count);
-
-            // 매칭 결과 상태 설정 ("매칭중"으로 가정)
-            matched.setMatchingRes("매칭중");
-
-            // 매칭 시간 설정 (현재 날짜로 설정)
-            LocalDate date = LocalDate.now();
-            matched.setMatchingTime(date);
-
-            logger.info("취미 매칭 대기 리스트: " + hobbyLectureUsers);
-            logger.info("이메일 리스트: " + matchedEmails);
-            logger.info("매칭 결과: " + matched);
 
             // hobbyLectureUsers.clear();
-            // userList에서 matches에 있는 이메일을 가진 객체를 제거
+            // hobbyLectureUsers에서 matches에 있는 이메일을 가진 객체를 제거
             for (String email : matches.keySet()) {
                 String value = matches.get(email);
                 if (value != null) {
-                    userList.removeIf(hobbyMatching -> email.equals(hobbyMatching.getEmail()));
+                    hobbyLectureUsers.removeIf(hobbyMatching -> email.equals(hobbyMatching.getEmail()));
                 }
             }
-
-            // 매칭 결과 반환
-            return matched;
         }
+        isCalculating = false;
+        return;
     }
-
 
     public PublicMatchedList publicMatch(PublicMatching user){
         // 매칭된 사람 수 = 희망인원
@@ -702,9 +731,9 @@ public class MatchingService {
     }
 
 
-    public HobbyMatchedList hobbyMatch(HobbyMatching user){
+    public String hobbyMatch(HobbyMatching user){
         // 매칭된 사람 수 = 희망인원
-        logger.info(hobbyLectureUsers.toString());
+        logger.info("hobbyMatch 호출: " + user);
         int count = user.getHeadCount();
         if(hobbyLectureUsers.contains(user)==true){
             logger.info("hobbyLectureUsers.contains(user)==true");
@@ -720,24 +749,10 @@ public class MatchingService {
         if(userInfo.get().isHobbyMatching()==false){
             if(userInfo.get().getRestrctionDate()==null || userInfo.get().getRestrctionDate().isBefore(LocalDateTime.now())){
                 hobbyLectureUsers.add(user);
+                List<HobbyMatching> temp = new ArrayList<>();
+                temp.add(user);
+                saveHobbyMatchingWaitUser(temp);
                 logger.info("=========현재 매칭 큐에 있는 사람:" + hobbyLectureUsers.size() + " " + hobbyLectureUsers);
-                try {
-                    Thread.sleep(3000); // 3초 대기
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // 예외 처리
-                }
-                hobbyMatchedList = findHobbyMatch(hobbyLectureUsers, count);
-                if(hobbyMatchedList!=null){
-                    for (int i =0 ; i < hobbyMatchedList.getEmailList().size(); i++){
-                        String email = hobbyMatchedList.getEmailList().get(i);
-                        Optional<User> userMatched = userRepository.findById(email);
-                        userMatched.get().setHobbyMatching(false);
-                        userRepository.save(userMatched.get());
-                    }
-
-                    sendSSEtoHobbyUser(hobbyMatchedList);
-                    saveHobbyUser(hobbyMatchedList);
-                }
             }else{
                 LocalDateTime restrictionDate = userInfo.get().getRestrctionDate();
                 String string = " : 매칭이 해당일자 까지 제한됩니다.";
@@ -750,7 +765,19 @@ public class MatchingService {
             hobbyMatchedList.setMatchingRes("중복 매칭은 불가합니다.");
         }
 
-        return hobbyMatchedList;
+        return "ok";
+    }
+
+
+    @Scheduled(fixedDelay = 3000)
+    public void doingHobbyMatching() {
+        logger.info("doingHobbyMatching 함수 진입");
+        if (!isCalculating){
+            logger.info("findHobbyMatch 함수 실행 중");
+            findHobbyMatch(hobbyLectureUsers);
+        } else {
+            return;
+        }
     }
 
     //수업 매칭 전부 반환
@@ -848,6 +875,7 @@ public class MatchingService {
     };
 
     public HobbyMatchedList saveHobbyUser(HobbyMatchedList matchedList) {
+        logger.info("삭제할 리스트: " + matchedList);
         for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
             String email = matchedList.getEmailList().get(i);
             Optional<User> user = userRepository.findById(email);
