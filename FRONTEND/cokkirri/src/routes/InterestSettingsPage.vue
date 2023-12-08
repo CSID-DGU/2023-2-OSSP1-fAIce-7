@@ -27,14 +27,18 @@
                               @click="toggleSelection(index)">
                                   <div class="input-wrapper">
                                       <div class="index-number">{{ index + 1 }}.</div>
-                                      <input v-model="interest.inputText" @input="filterItems(index)" placeholder="관심분야 입력" class="interest-input">
+                                      <input v-model="interest.inputText" 
+                                      @input="filterItems(index)" 
+                                      @click.stop 
+                                      placeholder="관심분야 입력" 
+                                      class="interest-input">
                                       <!-- <div class="remove-button" @click="removeInterest(index)">
                                           <div class="remove-icon">-</div>
                                       </div> -->
-                                      <div class="eraser-button" @click="clearInputText(index)" v-if="interest.inputText">
+                                      <div class="eraser-button" @click.stop="clearInputText(index)" v-if="interest.inputText">
                                         <div class="eraser-icon"></div>
                                       </div>
-                                      <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" placeholder="기타 입력란">
+                                      <input v-if="interest.inputText === '사회 및 기타활동 >> 기타'" v-model="interest.additionalInput" class="additional-input" @click.stop placeholder="기타 입력란">
                                   </div>
                                   <ul v-if="interest.inputText &&   interest.filteredItems.length">
                                       <li v-for="(item, itemIndex) in interest.filteredItems" :key="itemIndex" @click="selectItem(index, item)">
@@ -72,6 +76,16 @@ data() {
 },
 computed: {
   isComplete() {
+
+    // 설정된 취미 목록이 없으면 저장 불가
+    const isValidHobbyExists = this.interests.some(interest => {
+      if (interest.hobby1 !== null)
+        return true;
+      else
+        return false;
+    });
+
+    // 중복된 취미 설정 불가
     const hasDuplicate = this.interests.some((interest, index) => {
       // '사회 및 기타활동 >> 기타'는 중복 검증에서 제외
       if (interest.inputText === '사회 및 기타활동 >> 기타') {
@@ -82,6 +96,7 @@ computed: {
         (this.isExistingInterest(inputText) || this.isDuplicateInterest(index));
     });
 
+    // 기타 항목에서 기타입력란 입력 감지
     const isAdditionalInputComplete = this.interests.every(interest => {
       if (interest.inputText === '사회 및 기타활동 >> 기타') {
         return interest.additionalInput && interest.additionalInput.trim() !== '';
@@ -89,6 +104,7 @@ computed: {
       return true;
     });
 
+    // 기타 항목에서 기타입력란 중복 감지
     const isAdditionalInputUnique = this.interests.every((interest, index) => {
       if (interest.inputText === '사회 및 기타활동 >> 기타' && interest.additionalInput) {
         const additionalInputLower = interest.additionalInput.toLowerCase();
@@ -102,12 +118,13 @@ computed: {
       return true;
     });
 
+    // 모든 항목이 형식을 지켜 입력하였는지 확인
     const areAllInterestsValid = this.interests.every(interest => {
       const inputText = interest.inputText || ''; // undefined 방지
       return inputText && this.isValidItem(inputText);
     });
 
-    return !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
+    return isValidHobbyExists && !hasDuplicate && areAllInterestsValid && isAdditionalInputComplete && isAdditionalInputUnique;
   },
   settingsHeight() {
     const baseHeight = 180;  // 기본 높이(패딩 등 포함)
@@ -125,11 +142,10 @@ computed: {
     return baseHeight + (itemHeight * this.interests.length) + dropdownTotalHeight;
   }
 },
+// 해당 페이지를 열 때마다 자동 실행되는 로직
 mounted() {
-  if (this.$store.state.isSetInterests) {
-    this.loadUserInterests(); // 첫 로그인을 제외하고 관심분야 데이터 로드
-    console.log("loadUserInterests 실행");
-  }
+  this.loadUserInterests();
+  console.log("loadUserInterests 실행");
   this.loadCSV();
 },
 methods: {
