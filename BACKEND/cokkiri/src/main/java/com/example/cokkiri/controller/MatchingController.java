@@ -56,7 +56,7 @@ public class MatchingController {
 
     //데이터를 받아서 매치 타입 확인 후 match서비스로 연결 해준다.
     @PostMapping("/hobby")
-    public ResponseEntity<HobbyMatchedList> hobbyMatch(@RequestBody HobbyMatching user){
+    public ResponseEntity<String> hobbyMatch(@RequestBody HobbyMatching user){
         if(user.getMatchingType().equals("hobby")) {
             return  new ResponseEntity<>(matchingService.hobbyMatch(user), HttpStatus.OK);
         }else{
