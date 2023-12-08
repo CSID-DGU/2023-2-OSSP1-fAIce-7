@@ -1,5 +1,4 @@
 <!--매칭페이지로 넘어가기 전 스타팅페이지-->
-
 <template>
   <div class="background-setting">
     <div class="Gotopage">
@@ -7,13 +6,10 @@
       <router-link class="link-page2" to="/my">마이페이지</router-link>
       <div class="link-page3" @click="logout()">로그아웃</div>
     </div>
-    <div class="whole">
-      <div class="question">
-        <div class="img-box"></div>
-        <div style="clear:both;"></div>
-        <div class="img-box-2"></div>
-        <router-link class="mybutton" to="/my/matching">매칭 페이지</router-link>
-      </div>
+    <div class="button-frame">
+      <div class="title">Co-kirri</div>
+      <div class="subtitle">: 동국대생들을 위한 취미 매칭 서비스</div>
+      <router-link class="mybutton" to="/my/matching">매칭 페이지</router-link>
     </div>
   </div>
 </template>
@@ -52,45 +48,6 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.whole{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.mybutton{
-  width: 230px;
-  height: 67px;
-
-  background: #B87514;
-  border-radius: 50px;
-
-  cursor: pointer;
-  text-decoration : none;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-style: normal;
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 24px;
-  text-align: center;
-  letter-spacing: 0.5px;
-
-  color: #FFFFFF;
-}
-.mybutton:hover {
-                background-color: darken($color: #B87514, $amount: 10%);
 }
 
 .Gotopage{
@@ -98,7 +55,7 @@ export default {
   width: 500px;
   height: 30px;
 
-  margin-left : 700px;
+  margin-left : 1000px;
   margin-bottom: 0px;
 
   .link-page1{
@@ -152,62 +109,63 @@ export default {
       padding-right : 20px;
   }
 }
+.button-frame{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.title{
+  width: 620px;
+  height: 100px;
+  
+  margin-top: 50px;
 
+  font-weight: 600;
+  font-size: 180px;
+  line-height: 50px;
+  color: #FF7518;
+}
+.subtitle{
+  width: 400px;
+  height: 50px;
 
+  margin-bottom:5px;
 
-/* 각 요소 스타일 수정 */
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 50px;
+  color: #FF7518;
+}
+.mybutton{
+  width: 230px;
+  height: 67px;
 
+  margin-top: 10px;
+  margin-right: 60px;
 
-.question{ /* 중독입니다.*/
-  width: 500px;
-  height: 800px;
+  background: #EC9619;
+  border-radius: 50px;
+
+  cursor: pointer;
+  text-decoration : none;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  
-  .img-box{
-    //background-image: url('../assets/startmainpage/user_question.png');
-    background-size: cover;
-    background-repeat: no-repeat;
 
-    width: 484px;
-    height: 230px;
-  }
-  .text-1{
-    margin-left: 30px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 24px;
+  text-align: center;
+  letter-spacing: 0.5px;
 
-    font-style: normal;
-    font-weight: bold;
-    font-size: 40px;
-    line-height: 24px;
-
-    letter-spacing: 2.5px;
-
-    color: #FFFFFF;
-  }
-  .img-box-2{
-    //background-image: url('../assets/startmainpage/user_answer.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    width: 484px;
-    height: 230px;
-
-    margin-top: 80px;
-  }
-  .text-2{
-    margin-left: 30px; 
-
-    font-style: normal;
-    font-weight: bold;
-    font-size: 40px;
-    line-height: 24px;
-
-    letter-spacing: 2.5px;
-
-    color: #000000;
-  }
+  color: #FFFFFF;
 }
+.mybutton:hover {
+                background-color: darken($color: #B87514, $amount: 10%);
+}
+
 </style>
