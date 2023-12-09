@@ -37,6 +37,7 @@ public class HobbyMatchedList {
 
     //매칭된 사람들 이메일
     @ElementCollection
+    @Column
     private List<String> emailList;
 
     // 매칭 완료 누르면 이메일 주소 이동

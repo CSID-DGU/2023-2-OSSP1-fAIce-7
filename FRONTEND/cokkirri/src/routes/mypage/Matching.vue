@@ -24,7 +24,6 @@
                                 <div class="matching-describe">
                                     # 신청 날짜 : {{this.$store.state.classMatchingWait.matchingTime}}
                                     <div class="btn-report" @click="cancelClassWait(this.$store.state.classMatchingWait.id)">매칭 신청 취소</div>
-                                    <div>&nbsp;# 매칭 완료 후 하트 10개 차감 예정~!</div>
                                 </div>
                                 <div class="matching-box">
                                     <div class="record-img"></div>

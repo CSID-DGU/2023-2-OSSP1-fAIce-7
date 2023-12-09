@@ -1,6 +1,7 @@
 package com.example.cokkiri.controller;
 
 import com.example.cokkiri.model.*;
+import com.example.cokkiri.repository.HobbyMatchedListRepository;
 import com.example.cokkiri.repository.UserRepository;
 import com.example.cokkiri.service.MailSendService;
 import com.example.cokkiri.service.MatchingService;

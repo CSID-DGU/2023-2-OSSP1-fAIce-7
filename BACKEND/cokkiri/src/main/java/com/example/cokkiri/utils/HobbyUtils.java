@@ -5,9 +5,11 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -16,22 +18,25 @@ public class HobbyUtils {
 
     private static final Logger logger = Logger.getLogger(HobbyUtils.class.getName());
     static HashMap<String, String> hobbies;
-    public static HashMap<String, String> loadHobbiesFromCSV(String filePath) {
+
+    public static HashMap<String, String> loadHobbiesFromCSV() throws IOException, CsvException {
         HashMap<String, String> hobbies = new HashMap<>();
-        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(filePath), "EUC-KR"))) {
+        Resource resource = new ClassPathResource("hobbies.csv");
+        InputStream inputStream = resource.getInputStream();
+        try (CSVReader reader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             List<String[]> allRows = reader.readAll();
             for (String[] row : allRows) {
-                hobbies.put(row[0], row[1]);
+                if (row.length >= 2) {
+                    hobbies.put(row[0], row[1]);
+                }
             }
-        } catch (IOException | CsvException e) {
-            e.printStackTrace();
         }
         return hobbies;
     }
+
     @PostConstruct
-    public void init() throws IOException {
-        File file = new ClassPathResource("hobbies.csv").getFile();
-        hobbies = loadHobbiesFromCSV(file.getAbsolutePath());
+    public void init() throws IOException, CsvException {
+        hobbies = loadHobbiesFromCSV();
     }
 
     // ">>"를 기준으로 문자열을 분할해 두 번째 요소를 반환
@@ -46,6 +51,12 @@ public class HobbyUtils {
     public static double calculateCategoryScore(Hobby user, Hobby other) {
         List<String> userHobbies = user.getHobby();  //사용자의 취미 목록
         List<String> otherHobbies = other.getHobby();  //다른 사용자의 취미 목록
+
+        logger.info("user 정보: " + user);
+        logger.info("other 정보: " + other);
+
+        logger.info("사용자의 취미 목록: " + userHobbies);
+        logger.info("다른 사용자의 취미 목록: " + otherHobbies);
 
         int totalScore = 0;  //총점
         int compareCount = 0;  //비교 횟수
@@ -62,12 +73,16 @@ public class HobbyUtils {
                 compareCount++;
             }
         }
-        return compareCount > 0 ? (double)(totalScore/compareCount)*(1/3.0) : 0;  //평균 점수 반환, 자카드 점수와 맞추기 위해 값 정규화
+        double temp = compareCount > 0 ? ((double)totalScore/(double)compareCount)*(1.0/3.0) : 0.0;
+        logger.info("카테고리 계산 결과: " + temp);
+        return compareCount > 0 ? (((double)(totalScore)) / ((double)(compareCount)))*(1.0/3.0) : 0.0;  //평균 점수 반환, 자카드 점수와 맞추기 위해 값 정규화
     }
 
     // 두 취미의 비트 값을 비교하여 점수 계산
     private static int compareHobbyBits(String userHobbyBit, String otherHobbyBit) {
         int score = 0;
+        logger.info("유저 bit: " + userHobbyBit);
+        logger.info("타 유저 bit: " + otherHobbyBit);
         for (int i = 0; i < userHobbyBit.length(); i++) {  //userHobbyBit 각 문자에 대해 반복
             if (userHobbyBit.charAt(i) == otherHobbyBit.charAt(i)) {  //userHobbyBit와 otherHobbyBit의 i번째 문자가 같은지 비교
                 score++;
@@ -75,6 +90,7 @@ public class HobbyUtils {
             else  //두 비트가 다를 경우 현재까지의 점수를 반환하고 뒤의 비트는 계산하지 않음
                 return score;
         }
+        logger.info("compareHobbyBits 함수 score: " + score);
         return score;
     }
     public static Map<String, List<Pair>> hobbyScoreOfUsers(List<Optional<Hobby>> hobbyOfUsers) {
@@ -88,6 +104,7 @@ public class HobbyUtils {
             List<Pair> scoresForUser = new ArrayList<>();
 
             for (Optional<Hobby> otherOpt : hobbyOfUsers) {
+                logger.info("계산 시작");
                 if (!otherOpt.isPresent() || otherOpt == userOpt) continue;
                 Hobby other = otherOpt.get();
                 String otherEmail = other.getId();
@@ -110,13 +127,19 @@ public class HobbyUtils {
                 else  //2에서 6사이면 2~6
                     unionSize=unions.size();
 
-                double score = intersection.isEmpty() ? 0 : (double) (intersection.size() / unionSize)*0.6;  //카테고리 점수와 맞추기 위해 값 정규화
-                score += calculateCategoryScore(user, other);  //카테고리 점수 계산
+                logger.info("자카드 intersection: " + intersection);
+                logger.info("자카드 크기: " + intersection.size());
+
+                double score = intersection.isEmpty() ? 0 : ((double)(intersection.size()) / (double)(unionSize))*0.6;  //카테고리 점수와 맞추기 위해 값 정규화
+                logger.info("자카드 계산 결과: " + score);
+                score += calculateCategoryScore(user, other); //카테고리 점수 계산
+                logger.info("총합 계산 결과: " + score);
                 scoresForUser.add(new Pair(otherEmail, score));
             }
 
             // 선호도 점수에 따라 오름차순으로 정렬
-            Collections.sort(scoresForUser, Comparator.comparing(Pair::getId));
+            Collections.sort(scoresForUser, Comparator.comparing(Pair::getScore).reversed());
+
             preferenceScores.put(userEmail, scoresForUser);
 
             // 선호도 점수를 로깅합니다.
@@ -127,6 +150,7 @@ public class HobbyUtils {
                 logger.info("  Other User ID: " + otherUserId + ", Score: " + score);
             }
         }
+        logger.info("유사도 계산 배열 출력: " + preferenceScores);
         return preferenceScores;
     }
 }
