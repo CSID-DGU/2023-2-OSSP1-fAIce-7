@@ -616,23 +616,24 @@ public class MatchingService {
                     duplicated.add(entry.getKey());
                     duplicated.add(entry.getValue());
 
-                    logger.info("중복 체크: " + duplicated);
 
-                    logger.info("후처리 종료");
-                    if(matched!=null) {
-                        for (int i = 0; i < matchedEmails.size(); i++) {
-                            String email = matchedEmails.get(i);
-                            Optional<User> userMatched = userRepository.findById(email);
-                            userMatched.get().setHobbyMatching(false);
-                            userRepository.save(userMatched.get());
-                        }
-                    }
-
-                    logger.info("대기중 유저 제거 시작");
-                    saveHobbyUser(matched, matchedEmails);
-                    logger.info("대기중 유저 제거 끝");
-                    sendSSEtoHobbyUser(matched);
                 }
+
+                logger.info("중복 체크: " + duplicated);
+                logger.info("후처리 종료");
+                if(matched!=null) {
+                    for (int i = 0; i < matchedEmails.size(); i++) {
+                        String email = matchedEmails.get(i);
+                        Optional<User> userMatched = userRepository.findById(email);
+                        userMatched.get().setHobbyMatching(false);
+                        userRepository.save(userMatched.get());
+                    }
+                }
+
+                logger.info("대기중 유저 제거 시작");
+                saveHobbyUser(matched, matchedEmails);
+                logger.info("대기중 유저 제거 끝");
+                sendSSEtoHobbyUser(matched);
             }
 
             // hobbyLectureUsers에서 matches에 있는 이메일을 가진 객체를 제거
