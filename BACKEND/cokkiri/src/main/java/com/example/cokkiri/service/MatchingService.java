@@ -513,7 +513,7 @@ public class MatchingService {
         logger.info("findHobbyMatch 함수 실행 중");
         isCalculating = true;
 
-        if(hobbyLectureUsers.size()<2){
+        if(userList.size()<2){
             isCalculating = false;
             return;
         }
@@ -521,12 +521,12 @@ public class MatchingService {
             // 유사도 계산
             List<Optional<Hobby>> hobbyOfUsers = new ArrayList<>();
             List<String> userId = new ArrayList<>();
-            for (int i = 0; i < hobbyLectureUsers.size(); i++) {
-                Optional<Hobby> userHobby = hobbyRepository.findById(hobbyLectureUsers.get(i).getEmail());
+            for (int i = 0; i < userList.size(); i++) {
+                Optional<Hobby> userHobby = hobbyRepository.findById(userList.get(i).getEmail());
                 if (userHobby.isEmpty()) {
                     continue;
                 }
-                userId.add(hobbyLectureUsers.get(i).getEmail());
+                userId.add(userList.get(i).getEmail());
                 hobbyOfUsers.add(userHobby);
             }
 
@@ -538,7 +538,7 @@ public class MatchingService {
             Map<String, String> matches = new HashMap<>(); // 매칭 결과 저장
             Map<String, String> reverseMatches = new HashMap<>();
 
-            for (HobbyMatching user : hobbyLectureUsers) {
+            for (HobbyMatching user : userList) {
                 Queue<Pair> prefQueue = new LinkedList<>(score.get(user.getEmail()));
                 preferences.put(user.getEmail(), prefQueue);
                 matches.put(user.getEmail(), null);  // 초기에는 모든 사용자가 매치되지 않은 상태
@@ -572,15 +572,19 @@ public class MatchingService {
             } while (changed);
 
 
+
+            logger.info("매칭 연산 결과: " + matches);
             logger.info("매칭 연산 종료");
             HashSet<String> duplicated = new HashSet<>();
 
             logger.info("후처리 시작");
+            logger.info("매칭 entrySet: " + matches.entrySet());
             // 후처리
             for (Map.Entry<String, String> entry : matches.entrySet()) {
                 // 매칭이 성공한 경우에만 이메일 추가
                 HobbyMatchedList matched = new HobbyMatchedList();
                 List<String> matchedEmails = new ArrayList<>();
+
 
                 if (entry.getValue() != null) {
                     matchedEmails.add(entry.getKey());  // 제안자
@@ -605,7 +609,7 @@ public class MatchingService {
                     LocalDate date = LocalDate.now();
                     matched.setMatchingTime(date);
 
-                    logger.info("취미 매칭 대기 리스트: " + hobbyLectureUsers);
+                    logger.info("취미 매칭 대기 리스트: " + userList);
                     logger.info("이메일 리스트: " + matchedEmails);
                     logger.info("매칭 결과: " + matched);
 
@@ -613,20 +617,21 @@ public class MatchingService {
                     duplicated.add(entry.getValue());
 
                     logger.info("중복 체크: " + duplicated);
-                }
-                logger.info("후처리 종료");
-                if(matched!=null){
-                    for (int i =0 ; i < matched.getEmailList().size(); i++){
-                        String email = matched.getEmailList().get(i);
-                        Optional<User> userMatched = userRepository.findById(email);
-                        userMatched.get().setHobbyMatching(false);
-                        userRepository.save(userMatched.get());
+
+                    logger.info("후처리 종료");
+                    if(matched!=null) {
+                        for (int i = 0; i < matchedEmails.size(); i++) {
+                            String email = matchedEmails.get(i);
+                            Optional<User> userMatched = userRepository.findById(email);
+                            userMatched.get().setHobbyMatching(false);
+                            userRepository.save(userMatched.get());
+                        }
                     }
 
-                    sendSSEtoHobbyUser(matched);
                     logger.info("대기중 유저 제거 시작");
-                    saveHobbyUser(matched);
+                    saveHobbyUser(matched, matchedEmails);
                     logger.info("대기중 유저 제거 끝");
+                    sendSSEtoHobbyUser(matched);
                 }
             }
 
@@ -638,6 +643,7 @@ public class MatchingService {
                 }
             }
         }
+        logger.info("매칭 함수 전체 과정 종료");
         isCalculating = false;
         return;
     }
@@ -772,7 +778,7 @@ public class MatchingService {
     }
 
 
-    @Scheduled(fixedDelay = 20000)
+    @Scheduled(fixedDelay = 10000)
     public void doingHobbyMatching() {
         logger.info("doingHobbyMatching 함수 진입");
         if (!isCalculating){
@@ -878,13 +884,17 @@ public class MatchingService {
         return publicMatchedListRepository.save(matchedList); // 데베에 저장
     };
 
-    public HobbyMatchedList saveHobbyUser(HobbyMatchedList matchedList) {
+    public HobbyMatchedList saveHobbyUser(HobbyMatchedList matchedList, List<String> matchedEmails) {
         logger.info("삭제할 리스트: " + matchedList);
-        for(int i = 0 ; i <matchedList.getEmailList().size(); i++){
-            String email = matchedList.getEmailList().get(i);
+        logger.info("삭제할 이메일: " + matchedList.getEmailList());
+        for(int i = 0 ; i < 2; i++){
+            String email = matchedEmails.get(i);
+            logger.info("saveHobbyUser 내의 이메일: " + email);
             Optional<User> user = userRepository.findById(email);
             user.get().setHobbyMatching(false);
+            logger.info("유저 레포 저장 시작");
             userRepository.save(user.get());
+            logger.info("유저 레포 저장 끝");
 
             Optional<HobbyMatchingWait> waitUser = hobbyMatchingWaitRepository.findByEmail(email);
             if(waitUser.isEmpty()){
@@ -895,6 +905,7 @@ public class MatchingService {
                 }
             }
         }
+        logger.info("saveHobbyUser: 최종 매칭 결과 저장 시작");
         return hobbyMatchedListRepository.save(matchedList); // 데베에 저장
     }
 
